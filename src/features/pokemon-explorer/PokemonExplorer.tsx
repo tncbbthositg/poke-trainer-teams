@@ -138,20 +138,14 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
       { accessorKey: 'score', header: sortableHeader('Focus score'), cell: (info) => number(info.getValue<number>()) },
       {
         accessorKey: 'fastMove',
-        header: 'Fast move',
+        header: () => <FastMoveHeader />,
         cell: (info) => (
-          <MoveChip type={info.row.original.fastMoveType} name={info.getValue<string>()} />
+          <MoveChip
+            type={info.row.original.fastMoveType}
+            name={info.getValue<string>()}
+            metric={`${number(info.row.original.dpt)}/${number(info.row.original.ept)}`}
+          />
         ),
-      },
-      {
-        accessorKey: 'dpt',
-        header: sortableHeader('DPT'),
-        cell: (info) => <NumericCell value={number(info.getValue<number>())} />,
-      },
-      {
-        accessorKey: 'ept',
-        header: sortableHeader('EPT'),
-        cell: (info) => <NumericCell value={number(info.getValue<number>())} />,
       },
       {
         accessorKey: 'chargedOne',
@@ -226,7 +220,7 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
         </span>
       </div>
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[1280px] text-left text-sm">
+        <table className="w-full min-w-[1080px] text-left text-sm">
           <thead className="bg-[rgb(var(--muted)/0.55)] text-xs text-[rgb(var(--muted-foreground))]">
             {table.getHeaderGroups().map((group) => (
               <tr key={group.id}>
@@ -253,7 +247,7 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
                   </tr>
                   {isExpanded ? (
                     <tr key={`${row.id}-details`} className="border-t border-[rgb(var(--border))] bg-[rgb(var(--muted)/0.35)]">
-                      <td colSpan={columns.length} className="px-3 py-3">
+                      <td colSpan={columns.length} className="px-3 py-2">
                         <ExpandedDetails row={row.original} />
                       </td>
                     </tr>
@@ -314,8 +308,12 @@ function MoveChip({ type, name, metric }: { type: PokemonType; name: string; met
   )
 }
 
-function NumericCell({ value }: { value: string }) {
-  return <span className="tabular-nums text-[rgb(var(--foreground))]">{value}</span>
+function FastMoveHeader() {
+  return (
+    <span>
+      Fast move <span className="font-normal text-[rgb(var(--muted-foreground))]">(dpt/ept)</span>
+    </span>
+  )
 }
 
 function ChargedHeader({ label }: { label: string }) {
@@ -328,7 +326,7 @@ function ChargedHeader({ label }: { label: string }) {
 
 function ExpandedDetails({ row }: { row: ExplorerRow }) {
   return (
-    <div className="grid gap-3 text-xs text-[rgb(var(--muted-foreground))] md:grid-cols-4">
+    <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-[rgb(var(--muted-foreground))] sm:grid-cols-4 xl:grid-cols-[80px_210px_110px_110px_110px_145px_90px_minmax(260px,1fr)]">
       <Detail label="CP" value={integer(row.cp)} />
       <Detail label="Atk / Def / HP" value={`${number(row.attack)} / ${number(row.defense)} / ${integer(row.hp)}`} />
       <Detail label="Bulk proxy" value={integer(row.bulk)} />
@@ -336,16 +334,16 @@ function ExpandedDetails({ row }: { row: ExplorerRow }) {
       <Detail label="Repeat charge" value={`${integer(row.repeatChargeTurns)} turns`} />
       <Detail label="Neutral output" value={`${number(row.neutralOutputPerTurn)} per turn`} />
       <Detail label="Confidence" value={row.confidence} />
-      <Detail label="Heuristic read" value={row.reason} />
+      <Detail label="Heuristic read" value={row.reason} className="col-span-2 sm:col-span-4 xl:col-span-1" />
     </div>
   )
 }
 
-function Detail({ label, value }: { label: string; value: string }) {
+function Detail({ label, value, className = '' }: { label: string; value: string; className?: string }) {
   return (
-    <div className="grid gap-1">
+    <div className={`grid min-w-0 content-start gap-0.5 ${className}`}>
       <span className="font-medium text-[rgb(var(--foreground))]">{label}</span>
-      <span>{value}</span>
+      <span className="min-w-0 leading-5">{value}</span>
     </div>
   )
 }
