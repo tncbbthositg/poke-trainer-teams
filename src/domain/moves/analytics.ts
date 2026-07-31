@@ -1,10 +1,12 @@
 import type { PokemonSpecies } from '../../data/schemas/pokemon'
 import type { ChargedMove, FastMove } from '../../data/schemas/moves'
-import { hasStab } from '../types/effectiveness'
+import type { PokemonType } from '../../data/schemas/pokemon'
+import { hasStab, stabMultiplier } from '../types/effectiveness'
 
 export type ChargeTiming = {
   chargedMoveId: string
   chargedMoveName: string
+  chargedMoveType: PokemonType
   firstFastMoveCount: number
   firstTurns: number
   firstSeconds: number
@@ -12,6 +14,29 @@ export type ChargeTiming = {
   repeatTurns: number
   repeatSeconds: number
   leftoverEnergyAfterFirst: number
+}
+
+export type NeutralOutput = {
+  chargedMoveId: string
+  chargedMoveName: string
+  chargedMoveType: PokemonType
+  chargedMoveHasStab: boolean
+  fastMoveHasStab: boolean
+  fastMoveUses: number
+  chargedMoveUses: number
+  totalPower: number
+  budgetTurns: number
+  includesStab: boolean
+}
+
+export type OutputTimelineEvent = {
+  turnStart: number
+  turnEnd: number
+  cumulativePower: number
+  addedPower: number
+  moveName: string
+  moveType: PokemonType
+  kind: 'fast' | 'charged'
 }
 
 export type FastMoveAnalytics = {
@@ -30,6 +55,8 @@ export type MoveSetAnalytics = {
   fast: FastMoveAnalytics
   charged: ChargedMoveAnalytics[]
   timings: ChargeTiming[]
+  neutralOutput: NeutralOutput[]
+  outputTimelines: OutputTimelineEvent[][]
   coverageTypes: string[]
   cheapChargedMoveCount: number
   decisionComplexity: 'low' | 'medium' | 'high'
@@ -39,8 +66,10 @@ export function analyzeFastMove(
   species: PokemonSpecies,
   fastMove: FastMove,
 ): FastMoveAnalytics {
+  const damageMultiplier = stabMultiplier(fastMove.type, species.types)
+
   return {
-    damagePerTurn: fastMove.power / fastMove.turns,
+    damagePerTurn: (fastMove.power * damageMultiplier) / fastMove.turns,
     energyPerTurn: fastMove.energyGain / fastMove.turns,
     durationSeconds: fastMove.turns * 0.5,
     stab: hasStab(fastMove.type, species.types),
@@ -51,8 +80,10 @@ export function analyzeChargedMove(
   species: PokemonSpecies,
   chargedMove: ChargedMove,
 ): ChargedMoveAnalytics {
+  const damageMultiplier = stabMultiplier(chargedMove.type, species.types)
+
   return {
-    damagePerEnergy: chargedMove.power / chargedMove.energyCost,
+    damagePerEnergy: (chargedMove.power * damageMultiplier) / chargedMove.energyCost,
     stab: hasStab(chargedMove.type, species.types),
   }
 }
@@ -72,6 +103,7 @@ export function chargeTiming(
   return {
     chargedMoveId: chargedMove.id,
     chargedMoveName: chargedMove.name,
+    chargedMoveType: chargedMove.type,
     firstFastMoveCount,
     firstTurns: firstFastMoveCount * fastMove.turns,
     firstSeconds: firstFastMoveCount * fastMove.turns * 0.5,
@@ -80,6 +112,77 @@ export function chargeTiming(
     repeatSeconds: repeatFastMoveCount * fastMove.turns * 0.5,
     leftoverEnergyAfterFirst,
   }
+}
+
+export function neutralOutputPerFastMoveTurns(
+  species: PokemonSpecies,
+  fastMove: FastMove,
+  chargedMove: ChargedMove,
+  budgetTurns = 100,
+): NeutralOutput {
+  const fastMoveUses = Math.floor(budgetTurns / fastMove.turns)
+  const generatedEnergy = fastMoveUses * fastMove.energyGain
+  const chargedMoveUses = Math.floor(generatedEnergy / chargedMove.energyCost)
+  const fastPower = fastMove.power * stabMultiplier(fastMove.type, species.types)
+  const chargedPower = chargedMove.power * stabMultiplier(chargedMove.type, species.types)
+  const fastMoveHasStab = hasStab(fastMove.type, species.types)
+  const chargedMoveHasStab = hasStab(chargedMove.type, species.types)
+
+  return {
+    chargedMoveId: chargedMove.id,
+    chargedMoveName: chargedMove.name,
+    chargedMoveType: chargedMove.type,
+    chargedMoveHasStab,
+    fastMoveHasStab,
+    fastMoveUses,
+    chargedMoveUses,
+    totalPower: fastMoveUses * fastPower + chargedMoveUses * chargedPower,
+    budgetTurns,
+    includesStab: true,
+  }
+}
+
+export function outputTimelinePerFastMoveTurns(
+  species: PokemonSpecies,
+  fastMove: FastMove,
+  chargedMove: ChargedMove,
+  budgetTurns = 100,
+): OutputTimelineEvent[] {
+  const events: OutputTimelineEvent[] = []
+  const fastPower = fastMove.power * stabMultiplier(fastMove.type, species.types)
+  const chargedPower = chargedMove.power * stabMultiplier(chargedMove.type, species.types)
+  let energy = 0
+  let cumulativePower = 0
+
+  for (let turn = 0; turn + fastMove.turns <= budgetTurns; turn += fastMove.turns) {
+    energy += fastMove.energyGain
+    cumulativePower += fastPower
+    events.push({
+      turnStart: turn,
+      turnEnd: turn + fastMove.turns,
+      cumulativePower,
+      addedPower: fastPower,
+      moveName: fastMove.name,
+      moveType: fastMove.type,
+      kind: 'fast',
+    })
+
+    while (energy >= chargedMove.energyCost) {
+      energy -= chargedMove.energyCost
+      cumulativePower += chargedPower
+      events.push({
+        turnStart: turn + fastMove.turns,
+        turnEnd: turn + fastMove.turns,
+        cumulativePower,
+        addedPower: chargedPower,
+        moveName: chargedMove.name,
+        moveType: chargedMove.type,
+        kind: 'charged',
+      })
+    }
+  }
+
+  return events
 }
 
 export function analyzeMoveset(
@@ -96,6 +199,12 @@ export function analyzeMoveset(
     fast: analyzeFastMove(species, fastMove),
     charged: chargedMoves.map((move) => analyzeChargedMove(species, move)),
     timings: chargedMoves.map((move) => chargeTiming(fastMove, move)),
+    neutralOutput: chargedMoves.map((move) =>
+      neutralOutputPerFastMoveTurns(species, fastMove, move),
+    ),
+    outputTimelines: chargedMoves.map((move) =>
+      outputTimelinePerFastMoveTurns(species, fastMove, move),
+    ),
     coverageTypes,
     cheapChargedMoveCount,
     decisionComplexity:
