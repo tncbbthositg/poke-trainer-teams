@@ -52,19 +52,45 @@ type ViewId =
 const views: Array<{
   id: ViewId
   label: string
+  path: string
   icon: typeof Activity
 }> = [
-  { id: 'overview', label: 'Overview', icon: BarChart3 },
-  { id: 'pokemon', label: 'Pokemon', icon: ListFilter },
-  { id: 'movesets', label: 'Movesets', icon: GitCompare },
-  { id: 'pairs', label: 'Pair Builder', icon: Users },
-  { id: 'lineups', label: 'Lineups', icon: Table2 },
-  { id: 'methodology', label: 'Methodology', icon: BookOpen },
+  { id: 'overview', label: 'Overview', path: '/', icon: BarChart3 },
+  { id: 'pokemon', label: 'Pokemon', path: '/pokemon', icon: ListFilter },
+  { id: 'movesets', label: 'Movesets', path: '/movesets', icon: GitCompare },
+  { id: 'pairs', label: 'Pair Builder', path: '/pairs', icon: Users },
+  { id: 'lineups', label: 'Lineups', path: '/lineups', icon: Table2 },
+  { id: 'methodology', label: 'Methodology', path: '/methodology', icon: BookOpen },
 ]
+
+const viewByPath = new Map(views.map((view) => [view.path, view]))
+
+function getHashPath() {
+  const hash = window.location.hash.replace(/^#/, '')
+  const path = hash.startsWith('/') ? hash : `/${hash}`
+  return path === '/' || path === '' ? '/' : path.replace(/\/+$/, '')
+}
+
+function getCurrentView() {
+  return viewByPath.get(getHashPath())?.id ?? 'overview'
+}
+
+function useHashView() {
+  const [activeView, setActiveView] = useState<ViewId>(() => getCurrentView())
+
+  useEffect(() => {
+    const updateView = () => setActiveView(getCurrentView())
+    window.addEventListener('hashchange', updateView)
+    updateView()
+    return () => window.removeEventListener('hashchange', updateView)
+  }, [])
+
+  return activeView
+}
 
 export default function App() {
   const data = useMemo(() => loadApplicationData(), [])
-  const [activeView, setActiveView] = useState<ViewId>('overview')
+  const activeView = useHashView()
   const [dark, setDark] = useState(() =>
     window.matchMedia('(prefers-color-scheme: dark)').matches,
   )
@@ -107,21 +133,22 @@ export default function App() {
           >
             {views.map((view) => {
               const Icon = view.icon
+              const isActive = activeView === view.id
               return (
-                <button
+                <a
                   key={view.id}
-                  type="button"
-                  onClick={() => setActiveView(view.id)}
+                  href={`#${view.path}`}
+                  aria-current={isActive ? 'page' : undefined}
                   className={cn(
                     'inline-flex h-9 shrink-0 items-center gap-2 rounded-md border px-3 text-sm',
-                    activeView === view.id
+                    isActive
                       ? 'border-[rgb(var(--primary))] bg-[rgb(var(--primary)/0.14)] text-[rgb(var(--foreground))]'
                       : 'border-[rgb(var(--border))] bg-[rgb(var(--panel))] text-[rgb(var(--muted-foreground))] hover:bg-[rgb(var(--muted)/0.6)]',
                   )}
                 >
                   <Icon className="h-4 w-4" aria-hidden />
                   {view.label}
-                </button>
+                </a>
               )
             })}
           </nav>

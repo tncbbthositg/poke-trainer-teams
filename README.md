@@ -112,3 +112,6 @@ unit, and note. Do not present assumptions as sourced facts.
 The Pages workflow builds `dist` after linting, type checking, tests, data
 validation, and production build. Vite uses `/poke_trainer_teams/` as the
 GitHub Actions base path.
+
+The app uses hash routes such as `#/pokemon` and `#/methodology` so shared links
+and browser refreshes work on GitHub Pages without server rewrite support.
