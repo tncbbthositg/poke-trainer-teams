@@ -82,7 +82,9 @@ Duck, Pokemon GO Hub, or PokeMiners.
 - Rocket lineups are a manually reviewable scaffold and need source
   reconciliation before ranking.
 - Rocket scaling, pauses, shield AI, and wall-clock timings are unresolved.
-- Morpeko uses PvPoke's Full Belly form in the initial candidate snapshot.
+- The candidate pool is curated for practical Rocket options, not complete
+  Pokedex coverage.
+- Morpeko uses PvPoke's Full Belly form in the candidate snapshot.
 
 ## Adding A Pokemon
 

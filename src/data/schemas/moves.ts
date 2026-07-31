@@ -3,7 +3,7 @@ import { pokemonTypeSchema } from './pokemon'
 import { dataProvenanceSchema } from './provenance'
 
 const buffSchema = z.object({
-  target: z.enum(['self', 'opponent']),
+  target: z.enum(['self', 'opponent', 'both']),
   stages: z.tuple([z.number().int(), z.number().int()]),
   chance: z.number().min(0).max(1),
 })

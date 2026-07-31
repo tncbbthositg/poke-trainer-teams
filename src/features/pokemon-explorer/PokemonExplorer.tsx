@@ -7,7 +7,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { ArrowUpDown, ChevronRight } from 'lucide-react'
+import { ArrowUpDown, ChevronRight, GitCompare } from 'lucide-react'
 import { Badge } from '../../components/atoms/Badge'
 import { TypeChipList } from '../../components/atoms/TypeChip'
 import { DataSelect } from '../../components/molecules/DataSelect'
@@ -36,12 +36,15 @@ type ExplorerRow = {
   defense: number
   hp: number
   bulk: number
+  fastMoveId: string
   fastMove: string
   fastMoveType: PokemonType
+  chargedOneId: string
   chargedOne: string
   chargedOneType: PokemonType
   chargedOneCost: number
   chargedOneDpe: number
+  chargedTwoId: string
   chargedTwo: string
   chargedTwoType: PokemonType
   chargedTwoCost: number
@@ -77,12 +80,15 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
           defense: stats.defense,
           hp: stats.hp,
           bulk: stats.rawBulkProxy,
+          fastMoveId: moveset.fastMove.id,
           fastMove: moveset.fastMove.name,
           fastMoveType: moveset.fastMove.type,
+          chargedOneId: moveset.chargedMoves[0].id,
           chargedOne: moveset.chargedMoves[0].name,
           chargedOneType: moveset.chargedMoves[0].type,
           chargedOneCost: moveset.chargedMoves[0].energyCost,
           chargedOneDpe: chargedDpe(species.types, moveset.chargedMoves[0]),
+          chargedTwoId: moveset.chargedMoves[1].id,
           chargedTwo: moveset.chargedMoves[1].name,
           chargedTwoType: moveset.chargedMoves[1].type,
           chargedTwoCost: moveset.chargedMoves[1].energyCost,
@@ -124,6 +130,20 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
           )
         },
       },
+      {
+        id: 'moveset-link',
+        header: '',
+        cell: (info) => (
+          <a
+            href={movesetHref(info.row.original, strategy)}
+            className="grid h-7 w-7 place-items-center rounded-md text-[rgb(var(--muted-foreground))] hover:bg-[rgb(var(--muted))] hover:text-[rgb(var(--foreground))]"
+            aria-label={`Compare ${info.row.original.name} moveset`}
+            title="Compare moveset"
+          >
+            <GitCompare className="h-4 w-4" aria-hidden />
+          </a>
+        ),
+      },
       { accessorKey: 'rank', header: sortableHeader('Rank'), cell: (info) => integer(info.getValue<number>()) },
       { accessorKey: 'name', header: 'Pokemon' },
       {
@@ -158,7 +178,7 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
         cell: (info) => <ChargedMoveCell row={info.row.original} slot="two" />,
       },
     ],
-    [expandedIds],
+    [expandedIds, strategy],
   )
 
   function toggleExpanded(id: string) {
@@ -337,6 +357,18 @@ function ExpandedDetails({ row }: { row: ExplorerRow }) {
       <Detail label="Heuristic read" value={row.reason} className="col-span-2 sm:col-span-4 xl:col-span-1" />
     </div>
   )
+}
+
+function movesetHref(row: ExplorerRow, strategy: PokemonFocusStrategy) {
+  const params = new URLSearchParams({
+    pokemon: row.id,
+    strategy,
+    fastA: row.fastMoveId,
+    chargedA1: row.chargedOneId,
+    chargedA2: row.chargedTwoId,
+  })
+
+  return `#/movesets?${params.toString()}`
 }
 
 function Detail({ label, value, className = '' }: { label: string; value: string; className?: string }) {

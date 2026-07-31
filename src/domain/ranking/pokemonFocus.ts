@@ -4,7 +4,10 @@ import { analyzeMoveset } from '../moves/analytics'
 import { calculateEffectiveStats } from '../stats/effectiveStats'
 import { stabMultiplier } from '../types/effectiveness'
 
-export type PokemonFocusStrategy = 'fastest-victory' | 'charged-pause-control'
+export type PokemonFocusStrategy =
+  | 'fastest-victory'
+  | 'charged-pause-control'
+  | 'practical-spam'
 
 export type FocusMoveset = {
   fastMove: FastMove
@@ -31,6 +34,7 @@ export type PokemonFocusRanking = {
 export const pokemonFocusStrategyLabels: Record<PokemonFocusStrategy, string> = {
   'fastest-victory': 'Fastest victory',
   'charged-pause-control': 'Charged pause control',
+  'practical-spam': 'Practical spam',
 }
 
 export const pokemonFocusStrategyNotes: Record<PokemonFocusStrategy, string> = {
@@ -38,6 +42,8 @@ export const pokemonFocusStrategyNotes: Record<PokemonFocusStrategy, string> = {
     'Prioritizes neutral damage output, effective attack, fast move pressure, and short time to the first charged attack.',
   'charged-pause-control':
     'Prioritizes cheap, repeatable charged attacks that can lean on Rocket post-charged-attack pause assumptions.',
+  'practical-spam':
+    'Prioritizes cheap, repeatable charged attacks while penalizing scarce candy and high-value raid attacker overlap.',
 }
 
 export function rankPokemonForFocus(
@@ -107,17 +113,22 @@ function scoreMoveset(
   const pauseFrequency = 100 / Math.max(1, repeatChargeTurns)
   const openingChargeSpeed = 100 / Math.max(1, firstChargeTurns)
 
+  const spamScore =
+    openingChargeSpeed * 30 +
+    pauseFrequency * 34 +
+    cheapChargedMoveCount * 32 +
+    coverageTypeCount * 10 +
+    stats.attack * neutralOutputPerTurn * 0.35
+
   const score =
     strategy === 'fastest-victory'
       ? stats.attack * neutralOutputPerTurn +
         analytics.fast.damagePerTurn * stats.attack * 0.5 +
         openingChargeSpeed * 16 +
         coverageTypeCount * 12
-      : openingChargeSpeed * 30 +
-        pauseFrequency * 34 +
-        cheapChargedMoveCount * 32 +
-        coverageTypeCount * 10 +
-        stats.attack * neutralOutputPerTurn * 0.35
+      : strategy === 'practical-spam'
+        ? spamScore * practicalAvailabilityMultiplier(species)
+        : spamScore
 
   return {
     fastMove,
@@ -158,6 +169,49 @@ function chargedMoveDpe(species: PokemonSpecies, chargedMove: ChargedMove) {
   return (chargedMove.power * stabMultiplier(chargedMove.type, species.types)) / chargedMove.energyCost
 }
 
+function practicalAvailabilityMultiplier(species: PokemonSpecies) {
+  let multiplier = 1
+
+  if (species.tags.includes('legendary') || species.tags.includes('mythical')) {
+    multiplier *= 0.72
+  }
+
+  if (species.tags.includes('ultrabeast')) {
+    multiplier *= 0.76
+  }
+
+  if (species.tags.includes('starter')) {
+    multiplier *= 1.08
+  }
+
+  if (raidCandyCompetitionSpecies.has(species.id)) {
+    multiplier *= 0.84
+  }
+
+  return multiplier
+}
+
+const raidCandyCompetitionSpecies = new Set([
+  'kartana',
+  'palkia',
+  'rayquaza',
+  'reshiram',
+  'dragonite',
+  'xurkitree',
+  'groudon',
+  'terrakion',
+  'landorus_therian',
+  'zekrom',
+  'dialga',
+  'garchomp',
+  'lucario',
+  'metagross',
+  'tyranitar',
+  'kyogre',
+  'rhyperior',
+  'excadrill',
+])
+
 function legalFastMoves(species: PokemonSpecies, moves: MovesSnapshot): FastMove[] {
   const byId = new Map(moves.fastMoves.map((move) => [move.id, move]))
   return species.fastMoves.map((id) => byId.get(id)).filter((move): move is FastMove => Boolean(move))
@@ -185,6 +239,10 @@ function legalChargedPairs(
 function strategyReason(strategy: PokemonFocusStrategy, moveset: FocusMoveset): string {
   if (strategy === 'fastest-victory') {
     return `${moveset.neutralOutputPerTurn.toFixed(1)} neutral power/turn with first charge in ${moveset.firstChargeTurns} turns`
+  }
+
+  if (strategy === 'practical-spam') {
+    return `${moveset.cheapChargedMoveCount} cheap charged moves, ${moveset.repeatChargeTurns}-turn repeat pressure, build-pressure weighted`
   }
 
   return `${moveset.cheapChargedMoveCount} cheap charged moves with ${moveset.repeatChargeTurns}-turn repeat pressure`

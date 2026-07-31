@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Badge } from '../../components/atoms/Badge'
 import { MetricBar } from '../../components/atoms/MetricBar'
 import { TypeChip } from '../../components/atoms/TypeChip'
@@ -8,25 +8,105 @@ import { DataSelect } from '../../components/molecules/DataSelect'
 import { Panel, PanelHeader } from '../../components/molecules/Panel'
 import type { ApplicationData } from '../../data/loaders'
 import type { ChargedMove, FastMove } from '../../data/schemas/moves'
+import type { PokemonSpecies } from '../../data/schemas/pokemon'
 import { analyzeMoveset, type OutputTimelineEvent } from '../../domain/moves/analytics'
+import {
+  bestMovesetForStrategy,
+  type PokemonFocusStrategy,
+} from '../../domain/ranking/pokemonFocus'
 import { typeColor } from '../../domain/types/typeColors'
 import { number } from '../../lib/format'
 import { moveMaps } from '../shared/dataHelpers'
 
+type MovesetParams = {
+  speciesId: string
+  strategy?: PokemonFocusStrategy
+  fastAId?: string
+  chargedA1Id?: string
+  chargedA2Id?: string
+}
+
+type MovesetIds = {
+  fastId: string
+  chargedOneId: string
+  chargedTwoId: string
+}
+
 export function MovesetComparator({ data }: { data: ApplicationData }) {
-  const [speciesId, setSpeciesId] = useState(data.pokemon.candidates[0].id)
-  const species = data.pokemon.candidates.find((candidate) => candidate.id === speciesId) ?? data.pokemon.candidates[0]
   const maps = useMemo(() => moveMaps(data), [data])
+  const initialParams = initialMovesetParams(data)
+  const initialSpecies =
+    data.pokemon.candidates.find((candidate) => candidate.id === initialParams.speciesId) ??
+    data.pokemon.candidates[0]
+  const initialBuilds = initialComparatorBuilds(data, initialSpecies, initialParams)
+  const [speciesId, setSpeciesId] = useState(initialSpecies.id)
+  const species = data.pokemon.candidates.find((candidate) => candidate.id === speciesId) ?? data.pokemon.candidates[0]
   const fastMoves = species.fastMoves.map((id) => maps.fast.get(id)).filter((move): move is FastMove => Boolean(move))
   const chargedMoves = species.chargedMoves
     .map((id) => maps.charged.get(id))
     .filter((move): move is ChargedMove => Boolean(move))
-  const [fastAId, setFastAId] = useState(fastMoves[0]?.id)
-  const [fastBId, setFastBId] = useState(fastMoves[1]?.id ?? fastMoves[0]?.id)
-  const [chargedA1, setChargedA1] = useState(chargedMoves[0]?.id)
-  const [chargedA2, setChargedA2] = useState(chargedMoves[1]?.id)
-  const [chargedB1, setChargedB1] = useState(chargedMoves[0]?.id)
-  const [chargedB2, setChargedB2] = useState(chargedMoves[1]?.id)
+  const [fastAId, setFastAId] = useState(initialBuilds.a.fastId)
+  const [fastBId, setFastBId] = useState(initialBuilds.b.fastId)
+  const [chargedA1, setChargedA1] = useState(initialBuilds.a.chargedOneId)
+  const [chargedA2, setChargedA2] = useState(initialBuilds.a.chargedTwoId)
+  const [chargedB1, setChargedB1] = useState(initialBuilds.b.chargedOneId)
+  const [chargedB2, setChargedB2] = useState(initialBuilds.b.chargedTwoId)
+
+  useEffect(() => {
+    function applyLinkedMoveset() {
+      const params = initialMovesetParams(data)
+      const linkedSpecies = data.pokemon.candidates.find(
+        (candidate) => candidate.id === params.speciesId,
+      )
+      if (!linkedSpecies) {
+        return
+      }
+      const linkedFastMoves = linkedSpecies.fastMoves
+      const linkedChargedMoves = linkedSpecies.chargedMoves
+      const linkedBuilds = initialComparatorBuilds(data, linkedSpecies, params)
+
+      setSpeciesId(linkedSpecies.id)
+      setFastAId(
+        params.fastAId && linkedFastMoves.includes(params.fastAId)
+          ? params.fastAId
+          : linkedBuilds.a.fastId,
+      )
+      setChargedA1(
+        params.chargedA1Id && linkedChargedMoves.includes(params.chargedA1Id)
+          ? params.chargedA1Id
+          : linkedBuilds.a.chargedOneId,
+      )
+      setChargedA2(
+        params.chargedA2Id && linkedChargedMoves.includes(params.chargedA2Id)
+          ? params.chargedA2Id
+          : linkedBuilds.a.chargedTwoId,
+      )
+      setFastBId(linkedBuilds.b.fastId)
+      setChargedB1(linkedBuilds.b.chargedOneId)
+      setChargedB2(linkedBuilds.b.chargedTwoId)
+    }
+
+    window.addEventListener('hashchange', applyLinkedMoveset)
+    applyLinkedMoveset()
+    return () => window.removeEventListener('hashchange', applyLinkedMoveset)
+  }, [data])
+
+  function setSpecies(nextSpeciesId: string) {
+    const nextSpecies =
+      data.pokemon.candidates.find((candidate) => candidate.id === nextSpeciesId) ??
+      data.pokemon.candidates[0]
+    const nextBuilds = initialComparatorBuilds(data, nextSpecies, {
+      speciesId: nextSpecies.id,
+      strategy: 'fastest-victory',
+    })
+    setSpeciesId(nextSpecies.id)
+    setFastAId(nextBuilds.a.fastId)
+    setFastBId(nextBuilds.b.fastId)
+    setChargedA1(nextBuilds.a.chargedOneId)
+    setChargedA2(nextBuilds.a.chargedTwoId)
+    setChargedB1(nextBuilds.b.chargedOneId)
+    setChargedB2(nextBuilds.b.chargedTwoId)
+  }
 
   function pickFast(id: string | undefined) {
     return fastMoves.find((move) => move.id === id) ?? fastMoves[0]
@@ -73,7 +153,7 @@ export function MovesetComparator({ data }: { data: ApplicationData }) {
       <Panel>
         <PanelHeader title="Moveset Comparator" subtitle="Compare legal fast moves and dual Charged Attack combinations." />
         <div className="grid gap-3 p-3 sm:grid-cols-2 lg:grid-cols-3">
-          <DataSelect label="Pokemon" value={species.id} onChange={setSpeciesId} options={data.pokemon.candidates.map((candidate) => ({ value: candidate.id, label: candidate.name }))} />
+          <DataSelect label="Pokemon" value={species.id} onChange={setSpecies} options={data.pokemon.candidates.map((candidate) => ({ value: candidate.id, label: candidate.name }))} />
           <DataSelect label="Build A fast" value={buildA.fast.id} selectedType={buildA.fast.type} onChange={setFastAId} options={fastMoves.map((move) => ({ value: move.id, label: fastMoveLabel(move), type: move.type }))} />
           <DataSelect label="Build B fast" value={buildB.fast.id} selectedType={buildB.fast.type} onChange={setFastBId} options={fastMoves.map((move) => ({ value: move.id, label: fastMoveLabel(move), type: move.type }))} />
         </div>
@@ -129,6 +209,149 @@ export function MovesetComparator({ data }: { data: ApplicationData }) {
       </div>
     </div>
   )
+}
+
+function initialMovesetParams(data: ApplicationData): MovesetParams {
+  const fallbackSpecies = data.pokemon.candidates[0]
+  const fallback = {
+    speciesId: fallbackSpecies.id,
+    strategy: 'fastest-victory' as PokemonFocusStrategy,
+    fastAId: undefined as string | undefined,
+    chargedA1Id: undefined as string | undefined,
+    chargedA2Id: undefined as string | undefined,
+  }
+
+  if (typeof window === 'undefined') {
+    return fallback
+  }
+
+  const [, query = ''] = window.location.hash.split('?')
+  const params = new URLSearchParams(query)
+  const species =
+    data.pokemon.candidates.find((candidate) => candidate.id === params.get('pokemon')) ??
+    fallbackSpecies
+  const strategy = parseFocusStrategy(params.get('strategy')) ?? fallback.strategy
+
+  const fastAId = params.get('fastA') ?? undefined
+  const chargedA1Id = params.get('chargedA1') ?? undefined
+  const chargedA2Id = params.get('chargedA2') ?? undefined
+
+  return {
+    speciesId: species.id,
+    strategy,
+    fastAId: fastAId && species.fastMoves.includes(fastAId) ? fastAId : undefined,
+    chargedA1Id:
+      chargedA1Id && species.chargedMoves.includes(chargedA1Id) ? chargedA1Id : undefined,
+    chargedA2Id:
+      chargedA2Id && species.chargedMoves.includes(chargedA2Id) ? chargedA2Id : undefined,
+  }
+}
+
+function initialComparatorBuilds(
+  data: ApplicationData,
+  species: PokemonSpecies,
+  params: MovesetParams,
+) {
+  const strategy = params.strategy ?? 'fastest-victory'
+  const recommendedA = movesetIdsForStrategy(data, species, strategy)
+  const a = {
+    fastId: params.fastAId ?? recommendedA.fastId,
+    chargedOneId: params.chargedA1Id ?? recommendedA.chargedOneId,
+    chargedTwoId: params.chargedA2Id ?? recommendedA.chargedTwoId,
+  }
+  const strategyB = alternateFocusStrategy(strategy)
+  const recommendedB = movesetIdsForStrategy(data, species, strategyB)
+
+  return {
+    a,
+    b: distinctMovesetIds(a, recommendedB, data, species, strategyB),
+  }
+}
+
+function movesetIdsForStrategy(
+  data: ApplicationData,
+  species: PokemonSpecies,
+  strategy: PokemonFocusStrategy,
+): MovesetIds {
+  const moveset = bestMovesetForStrategy(species, data.moves, strategy, 40)
+
+  return {
+    fastId: moveset.fastMove.id,
+    chargedOneId: moveset.chargedMoves[0].id,
+    chargedTwoId: moveset.chargedMoves[1].id,
+  }
+}
+
+function distinctMovesetIds(
+  a: MovesetIds,
+  candidate: MovesetIds,
+  data: ApplicationData,
+  species: PokemonSpecies,
+  strategy: PokemonFocusStrategy,
+): MovesetIds {
+  if (!sameMoveset(a, candidate)) {
+    return candidate
+  }
+
+  const maps = moveMaps(data)
+  const fastMoves = species.fastMoves
+    .map((id) => maps.fast.get(id))
+    .filter((move): move is FastMove => Boolean(move))
+  const chargedMoves = species.chargedMoves
+    .map((id) => maps.charged.get(id))
+    .filter((move): move is ChargedMove => Boolean(move))
+  const alternatives: Array<{ ids: MovesetIds; score: number }> = []
+
+  for (const fastMove of fastMoves) {
+    for (let first = 0; first < chargedMoves.length; first += 1) {
+      for (let second = first + 1; second < chargedMoves.length; second += 1) {
+        const chargedPair: [ChargedMove, ChargedMove] = [
+          chargedMoves[first],
+          chargedMoves[second],
+        ]
+        const ids: MovesetIds = {
+          fastId: fastMove.id,
+          chargedOneId: chargedPair[0].id,
+          chargedTwoId: chargedPair[1].id,
+        }
+        if (sameMoveset(a, ids)) {
+          continue
+        }
+        const analytics = analyzeMoveset(species, fastMove, chargedPair)
+        const firstChargeTurns = Math.min(...analytics.timings.map((timing) => timing.firstTurns))
+        const repeatChargeTurns = Math.min(...analytics.timings.map((timing) => timing.repeatTurns))
+        const neutralOutputPerTurn =
+          Math.max(...analytics.neutralOutput.map((output) => output.totalPower)) / 100
+        const score =
+          strategy === 'fastest-victory'
+            ? neutralOutputPerTurn * 100 + analytics.fast.damagePerTurn * 16 + 100 / firstChargeTurns
+            : 100 / firstChargeTurns + 100 / repeatChargeTurns + analytics.cheapChargedMoveCount * 20
+        alternatives.push({ ids, score })
+      }
+    }
+  }
+
+  return alternatives.sort((left, right) => right.score - left.score)[0]?.ids ?? candidate
+}
+
+function sameMoveset(a: MovesetIds, b: MovesetIds) {
+  return (
+    a.fastId === b.fastId &&
+    a.chargedOneId === b.chargedOneId &&
+    a.chargedTwoId === b.chargedTwoId
+  )
+}
+
+function parseFocusStrategy(value: string | null): PokemonFocusStrategy | undefined {
+  return value === 'fastest-victory' ||
+    value === 'charged-pause-control' ||
+    value === 'practical-spam'
+    ? value
+    : undefined
+}
+
+function alternateFocusStrategy(strategy: PokemonFocusStrategy): PokemonFocusStrategy {
+  return strategy === 'fastest-victory' ? 'charged-pause-control' : 'fastest-victory'
 }
 
 function CumulativeOutputGraph({
@@ -354,8 +577,8 @@ function BuildPanel({
       />
       <div className="grid gap-3 p-3">
         <div className="grid gap-2">
-          <DataSelect label="Charged 1" value={chargedMoves[0].id} selectedType={chargedMoves[0].type} onChange={setChargedOne} options={chargedOptions.map((move) => ({ value: move.id, label: chargedMoveLabel(move), type: move.type }))} />
-          <DataSelect label="Charged 2" value={chargedMoves[1].id} selectedType={chargedMoves[1].type} onChange={setChargedTwo} options={chargedOptions.map((move) => ({ value: move.id, label: chargedMoveLabel(move), type: move.type }))} />
+          <DataSelect label={`${label} Charged 1`} value={chargedMoves[0].id} selectedType={chargedMoves[0].type} onChange={setChargedOne} options={chargedOptions.map((move) => ({ value: move.id, label: chargedMoveLabel(move), type: move.type }))} />
+          <DataSelect label={`${label} Charged 2`} value={chargedMoves[1].id} selectedType={chargedMoves[1].type} onChange={setChargedTwo} options={chargedOptions.map((move) => ({ value: move.id, label: chargedMoveLabel(move), type: move.type }))} />
         </div>
         <div className="rounded bg-[rgb(var(--muted)/0.24)] px-3 py-2.5">
           <div className="flex items-center justify-between gap-3">

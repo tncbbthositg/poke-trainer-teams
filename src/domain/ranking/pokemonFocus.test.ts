@@ -11,6 +11,7 @@ describe('pokemon focus ranking', () => {
   const strategies: PokemonFocusStrategy[] = [
     'fastest-victory',
     'charged-pause-control',
+    'practical-spam',
   ]
 
   it.each(strategies)('ranks every candidate for %s', (strategy) => {
@@ -41,5 +42,15 @@ describe('pokemon focus ranking', () => {
 
     expect(moveset.chargedMoves[0].id).toBe('PSYSTRIKE')
     expect(moveset.chargedMoves[1].id).toBe('FLAMETHROWER')
+  })
+
+  it('weights practical spam away from scarce raid-candy candidates', () => {
+    const rankings = rankPokemonForFocus(data.pokemon.candidates, data.moves, 'practical-spam')
+    const rankById = new Map(rankings.map((ranking) => [ranking.species.id, ranking.rank]))
+
+    expect(rankById.get('greninja')).toBeLessThan(rankById.get('palkia') ?? Infinity)
+    expect(rankById.get('swampert')).toBeLessThan(rankById.get('groudon') ?? Infinity)
+    expect(rankById.get('swampert')).toBeLessThan(rankById.get('lucario') ?? Infinity)
+    expect(rankings[0].reason).toContain('build-pressure weighted')
   })
 })

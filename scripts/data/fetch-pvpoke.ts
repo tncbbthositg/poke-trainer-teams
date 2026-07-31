@@ -20,6 +20,29 @@ const candidates = [
     note: 'PvPoke models Morpeko as form-specific entries; Full Belly is the Milestone 1 display form.',
   },
   { sourceId: 'greninja', displayName: 'Greninja' },
+  { sourceId: 'dragonite', displayName: 'Dragonite' },
+  { sourceId: 'garchomp', displayName: 'Garchomp' },
+  { sourceId: 'togekiss', displayName: 'Togekiss' },
+  { sourceId: 'metagross', displayName: 'Metagross' },
+  { sourceId: 'excadrill', displayName: 'Excadrill' },
+  { sourceId: 'tyranitar', displayName: 'Tyranitar' },
+  { sourceId: 'machamp', displayName: 'Machamp' },
+  { sourceId: 'rhyperior', displayName: 'Rhyperior' },
+  { sourceId: 'kartana', displayName: 'Kartana' },
+  { sourceId: 'xurkitree', displayName: 'Xurkitree' },
+  { sourceId: 'reshiram', displayName: 'Reshiram' },
+  { sourceId: 'zekrom', displayName: 'Zekrom' },
+  { sourceId: 'kyogre', displayName: 'Kyogre' },
+  { sourceId: 'rayquaza', displayName: 'Rayquaza' },
+  { sourceId: 'dialga', displayName: 'Dialga' },
+  { sourceId: 'palkia', displayName: 'Palkia' },
+  { sourceId: 'landorus_therian', displayName: 'Landorus' },
+  { sourceId: 'poliwrath', displayName: 'Poliwrath' },
+  { sourceId: 'obstagoon', displayName: 'Obstagoon' },
+  { sourceId: 'charizard', displayName: 'Charizard' },
+  { sourceId: 'venusaur', displayName: 'Venusaur' },
+  { sourceId: 'gyarados', displayName: 'Gyarados' },
+  { sourceId: 'primarina', displayName: 'Primarina' },
 ]
 
 type PvPokeMove = {
@@ -32,7 +55,7 @@ type PvPokeMove = {
   cooldown?: number
   turns?: number
   buffs?: [number, number]
-  buffTarget?: 'self' | 'opponent'
+  buffTarget?: 'self' | 'opponent' | 'both'
   buffApplyChance?: string | number
 }
 

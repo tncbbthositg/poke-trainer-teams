@@ -67,7 +67,8 @@ const viewByPath = new Map(views.map((view) => [view.path, view]))
 
 function getHashPath() {
   const hash = window.location.hash.replace(/^#/, '')
-  const path = hash.startsWith('/') ? hash : `/${hash}`
+  const [hashPath] = hash.split('?')
+  const path = hashPath.startsWith('/') ? hashPath : `/${hashPath}`
   return path === '/' || path === '' ? '/' : path.replace(/\/+$/, '')
 }
 

@@ -199,7 +199,7 @@ docs/
    Lucide, Zod, Recharts, TanStack Table, Vitest, React Testing Library,
    Playwright smoke tests, ESLint, and Prettier with Yarn Classic.
 2. Add source registry, provenance types, and Zod schemas.
-3. Add PvPoke fetch and normalization scripts for the ten initial candidates.
+3. Add PvPoke fetch and normalization scripts for the curated candidate pool.
 4. Add checked-in `public/data` snapshots for candidates, moves, Rocket
    lineups, mechanics assumptions, and source metadata.
 5. Implement level-40 15/15/15 stat, CP, type, STAB, bulk, and move analytics,
@@ -225,7 +225,7 @@ docs/
 
 ### Milestone 4: Complete Ranking Engine
 
-- Expand beyond the initial ten candidates and compute ordered pair and moveset
+- Expand beyond the curated candidate pool and compute ordered pair and moveset
   rankings across supported lineups with sensitivity analysis.
 
 ## Risks
@@ -242,7 +242,7 @@ docs/
 
 ## Milestone 1 Definition of Done
 
-- All ten initial Pokemon load from sourced, validated snapshots.
+- The curated candidate pool loads from sourced, validated snapshots.
 - Legal Trainer Battle movesets can be compared interactively.
 - Level-40 calculations and move analytics are covered by tests.
 - Current Rocket lineups are represented with provenance and disagreement flags.

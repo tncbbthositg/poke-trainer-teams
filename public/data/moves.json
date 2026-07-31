@@ -1,8 +1,27 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-07-31T16:45:38.322Z",
+  "generatedAt": "2026-07-31T19:55:21.989Z",
   "sourceHash": "29f084cdc69c1886724a92f99785ddfe5a799431a7297fe834b7759a6d406070",
   "fastMoves": [
+    {
+      "id": "AIR_SLASH",
+      "name": "Air Slash",
+      "type": "flying",
+      "power": 9,
+      "energyGain": 9,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
     {
       "id": "BITE",
       "name": "Bite",
@@ -14,7 +33,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -33,7 +52,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -52,7 +71,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -71,7 +90,26 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "CHARM",
+      "name": "Charm",
+      "type": "fairy",
+      "power": 12,
+      "energyGain": 8,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -90,7 +128,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -109,7 +147,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -128,7 +166,26 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "DRAGON_BREATH",
+      "name": "Dragon Breath",
+      "type": "dragon",
+      "power": 3,
+      "energyGain": 4,
+      "turns": 1,
+      "cooldownMs": 500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -147,7 +204,45 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "EMBER",
+      "name": "Ember",
+      "type": "fire",
+      "power": 4,
+      "energyGain": 9,
+      "turns": 2,
+      "cooldownMs": 1000,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "EXTRASENSORY",
+      "name": "Extrasensory",
+      "type": "psychic",
+      "power": 8,
+      "energyGain": 10,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -166,7 +261,45 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "FIRE_FANG",
+      "name": "Fire Fang",
+      "type": "fire",
+      "power": 8,
+      "energyGain": 6,
+      "turns": 2,
+      "cooldownMs": 1000,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "FIRE_SPIN",
+      "name": "Fire Spin",
+      "type": "fire",
+      "power": 11,
+      "energyGain": 10,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -185,7 +318,387 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "FURY_CUTTER",
+      "name": "Fury Cutter",
+      "type": "bug",
+      "power": 3,
+      "energyGain": 4,
+      "turns": 1,
+      "cooldownMs": 500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "HIDDEN_POWER_BUG",
+      "name": "Hidden Power (Bug)",
+      "type": "bug",
+      "power": 9,
+      "energyGain": 8,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "HIDDEN_POWER_DARK",
+      "name": "Hidden Power (Dark)",
+      "type": "dark",
+      "power": 9,
+      "energyGain": 8,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "HIDDEN_POWER_DRAGON",
+      "name": "Hidden Power (Dragon)",
+      "type": "dragon",
+      "power": 9,
+      "energyGain": 8,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "HIDDEN_POWER_ELECTRIC",
+      "name": "Hidden Power (Electric)",
+      "type": "electric",
+      "power": 9,
+      "energyGain": 8,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "HIDDEN_POWER_FIGHTING",
+      "name": "Hidden Power (Fighting)",
+      "type": "fighting",
+      "power": 9,
+      "energyGain": 8,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "HIDDEN_POWER_FIRE",
+      "name": "Hidden Power (Fire)",
+      "type": "fire",
+      "power": 9,
+      "energyGain": 8,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "HIDDEN_POWER_FLYING",
+      "name": "Hidden Power (Flying)",
+      "type": "flying",
+      "power": 9,
+      "energyGain": 8,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "HIDDEN_POWER_GHOST",
+      "name": "Hidden Power (Ghost)",
+      "type": "ghost",
+      "power": 9,
+      "energyGain": 8,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "HIDDEN_POWER_GRASS",
+      "name": "Hidden Power (Grass)",
+      "type": "grass",
+      "power": 9,
+      "energyGain": 8,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "HIDDEN_POWER_GROUND",
+      "name": "Hidden Power (Ground)",
+      "type": "ground",
+      "power": 9,
+      "energyGain": 8,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "HIDDEN_POWER_ICE",
+      "name": "Hidden Power (Ice)",
+      "type": "ice",
+      "power": 9,
+      "energyGain": 8,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "HIDDEN_POWER_POISON",
+      "name": "Hidden Power (Poison)",
+      "type": "poison",
+      "power": 9,
+      "energyGain": 8,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "HIDDEN_POWER_PSYCHIC",
+      "name": "Hidden Power (Psychic)",
+      "type": "psychic",
+      "power": 9,
+      "energyGain": 8,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "HIDDEN_POWER_ROCK",
+      "name": "Hidden Power (Rock)",
+      "type": "rock",
+      "power": 9,
+      "energyGain": 8,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "HIDDEN_POWER_STEEL",
+      "name": "Hidden Power (Steel)",
+      "type": "steel",
+      "power": 9,
+      "energyGain": 8,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "HIDDEN_POWER_WATER",
+      "name": "Hidden Power (Water)",
+      "type": "water",
+      "power": 9,
+      "energyGain": 8,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "IRON_TAIL",
+      "name": "Iron Tail",
+      "type": "steel",
+      "power": 10,
+      "energyGain": 7,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "KARATE_CHOP",
+      "name": "Karate Chop",
+      "type": "fighting",
+      "power": 5,
+      "energyGain": 9,
+      "turns": 2,
+      "cooldownMs": 1000,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "LICK",
+      "name": "Lick",
+      "type": "ghost",
+      "power": 3,
+      "energyGain": 3,
+      "turns": 1,
+      "cooldownMs": 500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -204,7 +717,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -223,7 +736,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -242,7 +755,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -261,7 +774,45 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "MUD_SLAP",
+      "name": "Mud Slap",
+      "type": "ground",
+      "power": 11,
+      "energyGain": 10,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "PECK",
+      "name": "Peck",
+      "type": "flying",
+      "power": 6,
+      "energyGain": 8,
+      "turns": 2,
+      "cooldownMs": 1000,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -280,7 +831,64 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "RAZOR_LEAF",
+      "name": "Razor Leaf",
+      "type": "grass",
+      "power": 9,
+      "energyGain": 4,
+      "turns": 2,
+      "cooldownMs": 1000,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "ROCK_SMASH",
+      "name": "Rock Smash",
+      "type": "fighting",
+      "power": 9,
+      "energyGain": 7,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "SHADOW_CLAW",
+      "name": "Shadow Claw",
+      "type": "ghost",
+      "power": 6,
+      "energyGain": 8,
+      "turns": 2,
+      "cooldownMs": 1000,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -299,7 +907,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -318,7 +926,45 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "SPARK",
+      "name": "Spark",
+      "type": "electric",
+      "power": 5,
+      "energyGain": 7,
+      "turns": 2,
+      "cooldownMs": 1000,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "STEEL_WING",
+      "name": "Steel Wing",
+      "type": "steel",
+      "power": 7,
+      "energyGain": 5,
+      "turns": 2,
+      "cooldownMs": 1000,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -337,7 +983,26 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "VINE_WHIP",
+      "name": "Vine Whip",
+      "type": "grass",
+      "power": 5,
+      "energyGain": 8,
+      "turns": 2,
+      "cooldownMs": 1000,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -356,7 +1021,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -375,7 +1040,45 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "WATERFALL",
+      "name": "Waterfall",
+      "type": "water",
+      "power": 11,
+      "energyGain": 10,
+      "turns": 3,
+      "cooldownMs": 1500,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "WING_ATTACK",
+      "name": "Wing Attack",
+      "type": "flying",
+      "power": 5,
+      "energyGain": 8,
+      "turns": 2,
+      "cooldownMs": 1000,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -394,7 +1097,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -413,7 +1116,74 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "AIR_CUTTER",
+      "name": "Air Cutter",
+      "type": "flying",
+      "power": 45,
+      "energyCost": 35,
+      "buffs": {
+        "target": "self",
+        "stages": [
+          1,
+          0
+        ],
+        "chance": 0.3
+      },
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "ANCIENT_POWER",
+      "name": "Ancient Power",
+      "type": "rock",
+      "power": 60,
+      "energyCost": 45,
+      "buffs": {
+        "target": "self",
+        "stages": [
+          1,
+          1
+        ],
+        "chance": 0.1
+      },
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "AQUA_TAIL",
+      "name": "Aqua Tail",
+      "type": "water",
+      "power": 55,
+      "energyCost": 35,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -430,7 +1200,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -455,7 +1225,41 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "AVALANCHE",
+      "name": "Avalanche",
+      "type": "ice",
+      "power": 90,
+      "energyCost": 45,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "BLAST_BURN",
+      "name": "Blast Burn",
+      "type": "fire",
+      "power": 110,
+      "energyCost": 50,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -472,7 +1276,91 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "BLIZZARD",
+      "name": "Blizzard",
+      "type": "ice",
+      "power": 140,
+      "energyCost": 75,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "BREAKING_SWIPE",
+      "name": "Breaking Swipe",
+      "type": "dragon",
+      "power": 50,
+      "energyCost": 50,
+      "buffs": {
+        "target": "opponent",
+        "stages": [
+          -1,
+          0
+        ],
+        "chance": 1
+      },
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "BRUTAL_SWING",
+      "name": "Brutal Swing",
+      "type": "dark",
+      "power": 55,
+      "energyCost": 35,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "BULLDOZE",
+      "name": "Bulldoze",
+      "type": "ground",
+      "power": 45,
+      "energyCost": 45,
+      "buffs": {
+        "target": "opponent",
+        "stages": [
+          0,
+          -1
+        ],
+        "chance": 0.5
+      },
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -497,7 +1385,49 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "CROSS_CHOP",
+      "name": "Cross Chop",
+      "type": "fighting",
+      "power": 55,
+      "energyCost": 35,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "CRUNCH",
+      "name": "Crunch",
+      "type": "dark",
+      "power": 70,
+      "energyCost": 45,
+      "buffs": {
+        "target": "opponent",
+        "stages": [
+          0,
+          -1
+        ],
+        "chance": 0.2
+      },
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -514,7 +1444,58 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "DAZZLING_GLEAM",
+      "name": "Dazzling Gleam",
+      "type": "fairy",
+      "power": 90,
+      "energyCost": 55,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "DISARMING_VOICE",
+      "name": "Disarming Voice",
+      "type": "fairy",
+      "power": 70,
+      "energyCost": 45,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "DISCHARGE",
+      "name": "Discharge",
+      "type": "electric",
+      "power": 55,
+      "energyCost": 40,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -531,7 +1512,108 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "DRACO_METEOR",
+      "name": "Draco Meteor",
+      "type": "dragon",
+      "power": 150,
+      "energyCost": 65,
+      "buffs": {
+        "target": "self",
+        "stages": [
+          -2,
+          0
+        ],
+        "chance": 1
+      },
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "DRAGON_ASCENT",
+      "name": "Dragon Ascent",
+      "type": "flying",
+      "power": 110,
+      "energyCost": 45,
+      "buffs": {
+        "target": "self",
+        "stages": [
+          0,
+          -1
+        ],
+        "chance": 1
+      },
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "DRAGON_CLAW",
+      "name": "Dragon Claw",
+      "type": "dragon",
+      "power": 80,
+      "energyCost": 50,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "DRAGON_PULSE",
+      "name": "Dragon Pulse",
+      "type": "dragon",
+      "power": 90,
+      "energyCost": 55,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "DRILL_RUN",
+      "name": "Drill Run",
+      "type": "ground",
+      "power": 70,
+      "energyCost": 40,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -548,7 +1630,32 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "EARTH_POWER",
+      "name": "Earth Power",
+      "type": "ground",
+      "power": 90,
+      "energyCost": 50,
+      "buffs": {
+        "target": "opponent",
+        "stages": [
+          0,
+          -1
+        ],
+        "chance": 0.1
+      },
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -565,7 +1672,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -582,7 +1689,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -599,7 +1706,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -616,7 +1723,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -633,7 +1740,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -650,7 +1757,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -667,7 +1774,109 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "FRENZY_PLANT",
+      "name": "Frenzy Plant",
+      "type": "grass",
+      "power": 100,
+      "energyCost": 45,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "FUSION_BOLT",
+      "name": "Fusion Bolt",
+      "type": "electric",
+      "power": 90,
+      "energyCost": 45,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "FUSION_FLARE",
+      "name": "Fusion Flare",
+      "type": "fire",
+      "power": 90,
+      "energyCost": 45,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "GUNK_SHOT",
+      "name": "Gunk Shot",
+      "type": "poison",
+      "power": 130,
+      "energyCost": 75,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "HEAVY_SLAM",
+      "name": "Heavy Slam",
+      "type": "steel",
+      "power": 70,
+      "energyCost": 50,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "HURRICANE",
+      "name": "Hurricane",
+      "type": "flying",
+      "power": 110,
+      "energyCost": 60,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -684,7 +1893,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -701,7 +1910,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -718,7 +1927,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -735,7 +1944,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -752,7 +1961,32 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "ICY_WIND",
+      "name": "Icy Wind",
+      "type": "ice",
+      "power": 60,
+      "energyCost": 45,
+      "buffs": {
+        "target": "opponent",
+        "stages": [
+          -1,
+          0
+        ],
+        "chance": 1
+      },
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -769,7 +2003,24 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "LEAF_BLADE",
+      "name": "Leaf Blade",
+      "type": "grass",
+      "power": 70,
+      "energyCost": 35,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -786,7 +2037,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -803,7 +2054,32 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "MOONBLAST",
+      "name": "Moonblast",
+      "type": "fairy",
+      "power": 110,
+      "energyCost": 60,
+      "buffs": {
+        "target": "opponent",
+        "stages": [
+          -1,
+          0
+        ],
+        "chance": 0.1
+      },
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -828,7 +2104,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -853,7 +2129,49 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "OBSTRUCT",
+      "name": "Obstruct",
+      "type": "dark",
+      "power": 15,
+      "energyCost": 40,
+      "buffs": {
+        "target": "both",
+        "stages": [
+          0,
+          1
+        ],
+        "chance": 1
+      },
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "ORIGIN_PULSE",
+      "name": "Origin Pulse",
+      "type": "water",
+      "power": 130,
+      "energyCost": 60,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -870,7 +2188,83 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "OVERHEAT",
+      "name": "Overheat",
+      "type": "fire",
+      "power": 130,
+      "energyCost": 55,
+      "buffs": {
+        "target": "self",
+        "stages": [
+          -2,
+          0
+        ],
+        "chance": 1
+      },
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "PAYBACK",
+      "name": "Payback",
+      "type": "dark",
+      "power": 110,
+      "energyCost": 60,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "PETAL_BLIZZARD",
+      "name": "Petal Blizzard",
+      "type": "grass",
+      "power": 110,
+      "energyCost": 65,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "POWER_WHIP",
+      "name": "Power Whip",
+      "type": "grass",
+      "power": 90,
+      "energyCost": 50,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -895,7 +2289,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -912,7 +2306,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -937,7 +2331,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -962,7 +2356,24 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "PSYSHOCK",
+      "name": "Psyshock",
+      "type": "psychic",
+      "power": 70,
+      "energyCost": 40,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -979,7 +2390,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1004,7 +2415,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1021,7 +2432,24 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "ROCK_WRECKER",
+      "name": "Rock Wrecker",
+      "type": "rock",
+      "power": 110,
+      "energyCost": 50,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1038,7 +2466,107 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "SAND_TOMB",
+      "name": "Sand Tomb",
+      "type": "ground",
+      "power": 40,
+      "energyCost": 40,
+      "buffs": {
+        "target": "opponent",
+        "stages": [
+          0,
+          -1
+        ],
+        "chance": 1
+      },
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "SANDSEAR_STORM",
+      "name": "Sandsear Storm",
+      "type": "ground",
+      "power": 60,
+      "energyCost": 45,
+      "buffs": {
+        "target": "opponent",
+        "stages": [
+          -1,
+          0
+        ],
+        "chance": 1
+      },
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "SCALD",
+      "name": "Scald",
+      "type": "water",
+      "power": 85,
+      "energyCost": 50,
+      "buffs": {
+        "target": "opponent",
+        "stages": [
+          -1,
+          0
+        ],
+        "chance": 0.3
+      },
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "SCORCHING_SANDS",
+      "name": "Scorching Sands",
+      "type": "ground",
+      "power": 80,
+      "energyCost": 50,
+      "buffs": {
+        "target": "opponent",
+        "stages": [
+          -1,
+          0
+        ],
+        "chance": 0.1
+      },
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1055,7 +2583,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1072,7 +2600,32 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "SKULL_BASH",
+      "name": "Skull Bash",
+      "type": "normal",
+      "power": 130,
+      "energyCost": 75,
+      "buffs": {
+        "target": "self",
+        "stages": [
+          0,
+          1
+        ],
+        "chance": 1
+      },
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1089,7 +2642,24 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "SLUDGE_BOMB",
+      "name": "Sludge Bomb",
+      "type": "poison",
+      "power": 80,
+      "energyCost": 50,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1106,7 +2676,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1123,7 +2693,58 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "SPARKLING_ARIA",
+      "name": "Sparkling Aria",
+      "type": "water",
+      "power": 80,
+      "energyCost": 45,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "STONE_EDGE",
+      "name": "Stone Edge",
+      "type": "rock",
+      "power": 100,
+      "energyCost": 55,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "SUBMISSION",
+      "name": "Submission",
+      "type": "fighting",
+      "power": 60,
+      "energyCost": 50,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1148,7 +2769,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1165,7 +2786,24 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "THUNDER",
+      "name": "Thunder",
+      "type": "electric",
+      "power": 100,
+      "energyCost": 60,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1182,7 +2820,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1199,7 +2837,49 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "TWISTER",
+      "name": "Twister",
+      "type": "dragon",
+      "power": 70,
+      "energyCost": 40,
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "WILD_CHARGE",
+      "name": "Wild Charge",
+      "type": "electric",
+      "power": 100,
+      "energyCost": 45,
+      "buffs": {
+        "target": "self",
+        "stages": [
+          0,
+          -2
+        ],
+        "chance": 1
+      },
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1216,7 +2896,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "retrievedAt": "2026-07-31T19:55:21.989Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",

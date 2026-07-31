@@ -7,7 +7,7 @@ describe('checked-in data snapshots', () => {
     const fastIds = new Set(data.moves.fastMoves.map((move) => move.id))
     const chargedIds = new Set(data.moves.chargedMoves.map((move) => move.id))
 
-    expect(data.pokemon.candidates).toHaveLength(10)
+    expect(data.pokemon.candidates).toHaveLength(33)
     for (const species of data.pokemon.candidates) {
       expect(species.provenance.sourceName).toBeTruthy()
       species.fastMoves.forEach((move) => expect(fastIds.has(move)).toBe(true))

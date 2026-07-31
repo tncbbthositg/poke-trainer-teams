@@ -30,3 +30,14 @@ test('supports picking a battle team', async ({ page }) => {
   await expect(page.getByLabel('Charged 1').first()).toBeVisible()
   await expect(page.getByLabel('Charged 2').first()).toBeVisible()
 })
+
+test('links explorer rows to moveset option A', async ({ page }) => {
+  await page.goto('/#/pokemon')
+  await page.getByRole('link', { name: 'Compare Mewtwo moveset' }).click()
+  await expect(page).toHaveURL(/#\/movesets\?/)
+  await expect(page.getByRole('heading', { name: 'Moveset Comparator' })).toBeVisible()
+  await expect(page.getByLabel('Pokemon')).toHaveValue('mewtwo')
+  await expect(page.getByLabel('Build A fast')).toHaveValue('CONFUSION')
+  await expect(page.getByLabel('Build A Charged 1')).toHaveValue('PSYSTRIKE')
+  await expect(page.getByLabel('Build A Charged 2')).toHaveValue('FLAMETHROWER')
+})
