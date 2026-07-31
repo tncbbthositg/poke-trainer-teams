@@ -1,6 +1,7 @@
-import type { ChargeTiming } from '../../domain/moves/analytics'
-import { typeColor } from '../../domain/types/typeColors'
-import { number } from '../../features/shared/format'
+import { TypeChip } from '../../atoms/TypeChip'
+import type { ChargeTiming } from '../../../domain/moves/analytics'
+import { typeColor } from '../../../domain/types/typeColors'
+import { number } from '../../../features/shared/format'
 
 export function ChargeTimeline({
   timing,
@@ -21,12 +22,7 @@ export function ChargeTimeline({
     <div className="min-w-36">
       <div className="mb-1 flex items-center justify-between text-[11px] text-[rgb(var(--muted-foreground))]">
         <span className="inline-flex items-center gap-1">
-          <span
-            className="rounded px-1.5 py-0.5 font-medium"
-            style={{ backgroundColor: color.bg, color: color.text }}
-          >
-            {timing.chargedMoveType}
-          </span>
+          <TypeChip type={timing.chargedMoveType} compact />
           {timing.chargedMoveName}
         </span>
         <span>

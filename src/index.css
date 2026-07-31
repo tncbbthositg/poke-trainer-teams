@@ -52,9 +52,3 @@ select {
 table {
   border-collapse: collapse;
 }
-
-.type-badge {
-  border: 1px solid rgb(var(--border));
-  background: rgb(var(--muted) / 0.72);
-  color: rgb(var(--foreground));
-}

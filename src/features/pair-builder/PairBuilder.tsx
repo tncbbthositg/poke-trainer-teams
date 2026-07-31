@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
-import { Badge } from '../../components/ui/Badge'
-import { Panel, PanelHeader } from '../../components/ui/Panel'
+import { Badge } from '../../components/atoms/Badge'
+import { Panel, PanelHeader } from '../../components/molecules/Panel'
 import type { ApplicationData } from '../../data/loaders'
 import { createNotSimulatedResult } from '../../domain/battle/engine'
 import { analyzeMoveset } from '../../domain/moves/analytics'

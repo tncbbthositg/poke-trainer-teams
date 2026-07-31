@@ -1,7 +1,9 @@
 import { useMemo, useState } from 'react'
-import { ChargeTimeline } from '../../components/charts/ChargeTimeline'
-import { Badge } from '../../components/ui/Badge'
-import { Panel, PanelHeader } from '../../components/ui/Panel'
+import { Badge } from '../../components/atoms/Badge'
+import { TypeChip } from '../../components/atoms/TypeChip'
+import { typeAbbreviation } from '../../components/atoms/typeLabels'
+import { ChargeTimeline } from '../../components/molecules/charts/ChargeTimeline'
+import { Panel, PanelHeader } from '../../components/molecules/Panel'
 import type { ApplicationData } from '../../data/loaders'
 import type { ChargedMove, FastMove } from '../../data/schemas/moves'
 import type { PokemonType } from '../../data/schemas/pokemon'
@@ -75,17 +77,11 @@ export function MovesetComparator({ data }: { data: ApplicationData }) {
           <Select label="Build B fast" value={buildB.fast.id} selectedType={buildB.fast.type} onChange={setFastBId} options={fastMoves.map((move) => ({ value: move.id, label: fastMoveLabel(move), type: move.type }))} />
         </div>
       </Panel>
-      <Panel className="p-3">
-        <h3 className="text-sm font-semibold">How to read this</h3>
-        <p className="mt-1 text-sm text-[rgb(var(--muted-foreground))]">
-          Shorter timeline bars mean the Charged Attack becomes available sooner on the shared fast-move turn scale. Damage-side metrics include STAB, but not opponent type effectiveness. Charged attacks are shown as turn-model events; their real wall-clock minigame and animation duration is not included yet.
-        </p>
-      </Panel>
       <div className="grid gap-4 lg:grid-cols-3">
         <BuildPanel label="Build A" speciesTypes={species.types} fastMove={buildA.fast} chargedMoves={buildA.charged} analytics={analyticsA} chargedOptions={chargedMoves} maxTimelineTurns={maxTimelineTurns} setChargedOne={setChargedA1} setChargedTwo={setChargedA2} />
         <Panel className="p-3">
           <h3 className="text-sm font-semibold">Build comparison</h3>
-          <div className="mt-3 grid gap-2 text-xs">
+          <div className="mt-2 divide-y divide-[rgb(var(--border)/0.65)] text-xs">
             <ComparisonLine
               label="Fastest first charge"
               a={`${number(fastestChargeA)}s`}
@@ -111,7 +107,7 @@ export function MovesetComparator({ data }: { data: ApplicationData }) {
             STAB-adjusted output
           </h4>
           <p className="mt-1 text-xs text-[rgb(var(--muted-foreground))]">
-            100T combines fast-move power and charged-move power funded by energy generated over 100 fast-move turns. Charged attacks appear as vertical jumps because this graph does not include wall-clock charged-attack duration.
+            100 fast-move turns, STAB-adjusted, before opponent type effects.
           </p>
           <CumulativeOutputGraph
             series={[
@@ -203,7 +199,7 @@ function CumulativeOutputGraph({
   }
 
   return (
-    <div className="mt-3 rounded border border-[rgb(var(--border))] bg-[rgb(var(--muted)/0.18)] p-2">
+    <div className="mt-3">
       <svg
         viewBox={`0 0 ${width} ${height}`}
         className="h-auto w-full"
@@ -322,12 +318,10 @@ function CumulativeOutputGraph({
           )
         })}
       </svg>
-      <div className="mt-2 flex flex-wrap gap-2 text-[10px] text-[rgb(var(--muted-foreground))]">
+      <div className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-[10px] text-[rgb(var(--muted-foreground))]">
         <span>Area: cumulative output</span>
         <span>Bars: fast moves</span>
         <span>Dots: charged events</span>
-        <span>x-axis: fast-move turns only</span>
-        <span>charged wall-clock duration omitted</span>
       </div>
     </div>
   )
@@ -345,7 +339,7 @@ function ComparisonLine({
   winner: 'A' | 'B' | 'tie'
 }) {
   return (
-    <div className="rounded border border-[rgb(var(--border))] p-2">
+    <div className="py-2 first:pt-0 last:pb-0">
       <div className="mb-1 flex items-center justify-between gap-2">
         <span className="font-medium">{label}</span>
         <Badge tone={winner === 'tie' ? 'neutral' : 'ok'}>
@@ -385,50 +379,47 @@ function BuildPanel({
     .sort((a, b) => b.totalPower - a.totalPower)[0]
   return (
     <Panel>
-      <PanelHeader title={label} subtitle={`${fastMove.name}: ${number(analytics.fast.damagePerTurn)} DPT / ${number(analytics.fast.energyPerTurn)} EPT`} />
+      <PanelHeader
+        title={label}
+        subtitle={`${fastMove.name}: ${number(analytics.fast.damagePerTurn)} DPT / ${number(analytics.fast.energyPerTurn)} EPT`}
+        right={<FastMoveMeta fastMove={fastMove} />}
+      />
       <div className="grid gap-3 p-3">
-        <div className="flex flex-wrap gap-2 text-xs">
-          <TypePill type={fastMove.type} />
-          <span className="rounded border border-[rgb(var(--border))] px-2 py-1">
-            {fastMove.power} power
-          </span>
-          <span className="rounded border border-[rgb(var(--border))] px-2 py-1">
-            +{fastMove.energyGain} energy
-          </span>
-          <span className="rounded border border-[rgb(var(--border))] px-2 py-1">
-            {fastMove.turns} turns / {number(fastMove.turns * 0.5)}s
-          </span>
-        </div>
         <div className="grid gap-2">
           <Select label="Charged 1" value={chargedMoves[0].id} selectedType={chargedMoves[0].type} onChange={setChargedOne} options={chargedOptions.map((move) => ({ value: move.id, label: chargedMoveLabel(move), type: move.type }))} />
           <Select label="Charged 2" value={chargedMoves[1].id} selectedType={chargedMoves[1].type} onChange={setChargedTwo} options={chargedOptions.map((move) => ({ value: move.id, label: chargedMoveLabel(move), type: move.type }))} />
         </div>
-        <div className="rounded border border-[rgb(var(--border))] bg-[rgb(var(--muted)/0.28)] p-3">
+        <div className="rounded bg-[rgb(var(--muted)/0.24)] px-3 py-2.5">
           <div className="flex items-center justify-between gap-3">
-            <p className="text-xs font-semibold uppercase text-[rgb(var(--muted-foreground))]">
+            <p className="text-[11px] font-semibold uppercase text-[rgb(var(--muted-foreground))]">
               Best STAB-adjusted 100T output
             </p>
-            <TypeMovePill type={bestOutput.chargedMoveType} label={bestOutput.chargedMoveName} />
+            <TypeChip type={bestOutput.chargedMoveType} label={bestOutput.chargedMoveName} compact />
           </div>
-          <p className="mt-1 text-2xl font-semibold">{number(bestOutput.totalPower, 0)}</p>
+          <p className="mt-1 text-xl font-semibold">{number(bestOutput.totalPower, 0)}</p>
           <p className="mt-1 text-xs text-[rgb(var(--muted-foreground))]">
             {bestOutput.fastMoveUses} fast moves plus {bestOutput.chargedMoveUses} charged moves over {bestOutput.budgetTurns} fast-move turns.
           </p>
         </div>
-        {analytics.timings.map((timing) => (
-          <div key={timing.chargedMoveId} className="rounded border border-[rgb(var(--border))] p-3">
-            <ChargeTimeline timing={timing} maxTurns={maxTimelineTurns} />
-            <RepeatPattern timing={timing} />
-          </div>
-        ))}
-        <div className="grid gap-2">
+        <div className="grid gap-3 rounded bg-[rgb(var(--muted)/0.18)] px-3 py-2.5">
+          {analytics.timings.map((timing, index) => (
+            <div
+              key={timing.chargedMoveId}
+              className={index > 0 ? 'border-t border-[rgb(var(--border)/0.65)] pt-3' : undefined}
+            >
+              <ChargeTimeline timing={timing} maxTurns={maxTimelineTurns} />
+              <RepeatPattern timing={timing} />
+            </div>
+          ))}
+        </div>
+        <div className="divide-y divide-[rgb(var(--border)/0.65)] rounded bg-[rgb(var(--muted)/0.16)]">
           {analytics.neutralOutput.map((output) => (
             <div
               key={output.chargedMoveId}
-              className="flex items-center justify-between gap-3 rounded border border-[rgb(var(--border))] px-3 py-2 text-xs"
+              className="flex items-center justify-between gap-3 px-3 py-2 text-xs"
             >
               <span className="inline-flex items-center gap-2">
-                <TypeMovePill type={output.chargedMoveType} label={output.chargedMoveName} />
+                <TypeChip type={output.chargedMoveType} label={output.chargedMoveName} compact />
                 adjusted 100T output
               </span>
               <span className="text-[rgb(var(--muted-foreground))]">
@@ -440,6 +431,23 @@ function BuildPanel({
         </div>
       </div>
     </Panel>
+  )
+}
+
+function FastMoveMeta({ fastMove }: { fastMove: FastMove }) {
+  return (
+    <div className="flex flex-wrap justify-end gap-1.5 text-[11px]">
+      <TypeChip type={fastMove.type} compact />
+      <span className="rounded bg-[rgb(var(--muted)/0.42)] px-1.5 py-0.5 text-[rgb(var(--muted-foreground))]">
+        {fastMove.power} power
+      </span>
+      <span className="rounded bg-[rgb(var(--muted)/0.42)] px-1.5 py-0.5 text-[rgb(var(--muted-foreground))]">
+        +{fastMove.energyGain} energy
+      </span>
+      <span className="rounded bg-[rgb(var(--muted)/0.42)] px-1.5 py-0.5 text-[rgb(var(--muted-foreground))]">
+        {fastMove.turns}T / {number(fastMove.turns * 0.5)}s
+      </span>
+    </div>
   )
 }
 
@@ -456,7 +464,7 @@ function RepeatPattern({
   ]
 
   return (
-    <div className="mt-2 rounded border border-[rgb(var(--border))] bg-[rgb(var(--muted)/0.22)] px-2 py-1.5">
+    <div className="mt-2">
       <div className="flex items-center justify-between gap-3">
         <p className="text-[10px] font-semibold uppercase text-[rgb(var(--muted-foreground))]">
           Repeat pattern
@@ -465,9 +473,9 @@ function RepeatPattern({
           fast moves
         </p>
       </div>
-      <div className="mt-1 flex items-center gap-2 text-lg font-semibold tracking-normal">
+      <div className="mt-1 flex items-center gap-1.5 text-base font-semibold tracking-normal">
         {pattern.map((count, index) => (
-          <span key={index} className="inline-flex items-center gap-2">
+          <span key={index} className="inline-flex items-center gap-1.5">
             <span>{count}</span>
             {index < pattern.length - 1 && (
               <span className="text-[rgb(var(--muted-foreground))]">.</span>
@@ -482,60 +490,12 @@ function RepeatPattern({
   )
 }
 
-function TypePill({ type }: { type: PokemonType }) {
-  const color = typeColor(type)
-  return (
-    <span
-      className="rounded px-2 py-1 text-xs font-semibold uppercase"
-      style={{ backgroundColor: color.bg, color: color.text }}
-    >
-      {type}
-    </span>
-  )
-}
-
-function TypeMovePill({ type, label }: { type: PokemonType; label: string }) {
-  const color = typeColor(type)
-  return (
-    <span
-      className="rounded px-2 py-0.5 text-xs font-semibold"
-      style={{ backgroundColor: color.bg, color: color.text }}
-    >
-      {label}
-    </span>
-  )
-}
-
 function fastMoveLabel(move: FastMove) {
   return `${move.name} · ${typeAbbreviation(move.type)} · P${move.power} · +E${move.energyGain} · ${move.turns}T`
 }
 
 function chargedMoveLabel(move: ChargedMove) {
   return `${move.name} · ${typeAbbreviation(move.type)} · P${move.power} · E${move.energyCost}`
-}
-
-function typeAbbreviation(type: PokemonType) {
-  const abbreviations: Record<PokemonType, string> = {
-    bug: 'Bug',
-    dark: 'Dark',
-    dragon: 'Drg',
-    electric: 'Elec',
-    fairy: 'Fairy',
-    fighting: 'Fight',
-    fire: 'Fire',
-    flying: 'Fly',
-    ghost: 'Ghost',
-    grass: 'Grass',
-    ground: 'Gnd',
-    ice: 'Ice',
-    normal: 'Norm',
-    poison: 'Pois',
-    psychic: 'Psych',
-    rock: 'Rock',
-    steel: 'Steel',
-    water: 'Water',
-  }
-  return abbreviations[type]
 }
 
 function Select({

@@ -8,9 +8,11 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
-import { Badge } from '../../components/ui/Badge'
-import { Panel, PanelHeader } from '../../components/ui/Panel'
+import { Badge } from '../../components/atoms/Badge'
+import { TypeChip, TypeChipList } from '../../components/atoms/TypeChip'
+import { Panel, PanelHeader } from '../../components/molecules/Panel'
 import type { ApplicationData } from '../../data/loaders'
+import type { PokemonType } from '../../data/schemas/pokemon'
 import { analyzeMoveset } from '../../domain/moves/analytics'
 import { calculateEffectiveStats } from '../../domain/stats/effectiveStats'
 import { firstLegalMoves } from '../shared/dataHelpers'
@@ -19,16 +21,18 @@ import { integer, number } from '../shared/format'
 type ExplorerRow = {
   id: string
   name: string
-  types: string
+  types: PokemonType[]
   cp: number
   attack: number
   defense: number
   hp: number
   bulk: number
   fastMove: string
+  fastMoveType: PokemonType
   dpt: number
   ept: number
   cheapestCharged: string
+  cheapestChargedType: PokemonType
   cheapestCost: number
   firstChargeTurns: number
   confidence: string
@@ -49,16 +53,18 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
         return {
           id: species.id,
           name: species.name,
-          types: species.types.join(' / '),
+          types: species.types,
           cp: stats.cp,
           attack: stats.attack,
           defense: stats.defense,
           hp: stats.hp,
           bulk: stats.rawBulkProxy,
           fastMove: moves.fastMove.name,
+          fastMoveType: moves.fastMove.type,
           dpt: analytics.fast.damagePerTurn,
           ept: analytics.fast.energyPerTurn,
           cheapestCharged: charged.name,
+          cheapestChargedType: charged.type,
           cheapestCost: charged.energyCost,
           firstChargeTurns: timing?.firstTurns ?? 0,
           confidence: species.provenance.category,
@@ -70,16 +76,42 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
   const columns = useMemo<ColumnDef<ExplorerRow>[]>(
     () => [
       { accessorKey: 'name', header: 'Pokemon' },
-      { accessorKey: 'types', header: 'Types' },
+      {
+        accessorKey: 'types',
+        header: 'Types',
+        cell: (info) => <TypeChipList types={info.getValue<PokemonType[]>()} compact />,
+        filterFn: (row, columnId, filterValue) =>
+          row.getValue<PokemonType[]>(columnId).some((type) =>
+            type.toLowerCase().includes(String(filterValue).toLowerCase()),
+          ),
+      },
       { accessorKey: 'cp', header: sortableHeader('CP'), cell: (info) => integer(info.getValue<number>()) },
       { accessorKey: 'attack', header: sortableHeader('Atk'), cell: (info) => number(info.getValue<number>()) },
       { accessorKey: 'defense', header: sortableHeader('Def'), cell: (info) => number(info.getValue<number>()) },
       { accessorKey: 'hp', header: sortableHeader('HP'), cell: (info) => integer(info.getValue<number>()) },
       { accessorKey: 'bulk', header: sortableHeader('Bulk proxy'), cell: (info) => integer(info.getValue<number>()) },
-      { accessorKey: 'fastMove', header: 'Fast move' },
+      {
+        accessorKey: 'fastMove',
+        header: 'Fast move',
+        cell: (info) => (
+          <span className="inline-flex items-center gap-2">
+            <TypeChip type={info.row.original.fastMoveType} compact />
+            {info.getValue<string>()}
+          </span>
+        ),
+      },
       { accessorKey: 'dpt', header: sortableHeader('DPT'), cell: (info) => number(info.getValue<number>()) },
       { accessorKey: 'ept', header: sortableHeader('EPT'), cell: (info) => number(info.getValue<number>()) },
-      { accessorKey: 'cheapestCharged', header: 'Cheapest charged' },
+      {
+        accessorKey: 'cheapestCharged',
+        header: 'Cheapest charged',
+        cell: (info) => (
+          <span className="inline-flex items-center gap-2">
+            <TypeChip type={info.row.original.cheapestChargedType} compact />
+            {info.getValue<string>()}
+          </span>
+        ),
+      },
       { accessorKey: 'cheapestCost', header: sortableHeader('Cost') },
       { accessorKey: 'firstChargeTurns', header: sortableHeader('First charge') },
       { accessorKey: 'confidence', header: 'Confidence', cell: (info) => <Badge tone="info">{info.getValue<string>()}</Badge> },

@@ -1,5 +1,5 @@
-import { Badge } from '../../components/ui/Badge'
-import { Panel, PanelHeader } from '../../components/ui/Panel'
+import { Badge } from '../../components/atoms/Badge'
+import { Panel, PanelHeader } from '../../components/molecules/Panel'
 import type { ApplicationData } from '../../data/loaders'
 
 export function Methodology({ data }: { data: ApplicationData }) {

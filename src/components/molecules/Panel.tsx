@@ -29,12 +29,12 @@ export function PanelHeader({
   right?: React.ReactNode
 }) {
   return (
-    <div className="flex items-start justify-between gap-3 border-b border-[rgb(var(--border))] p-3">
-      <div>
+    <div className="flex flex-wrap items-start justify-between gap-3 border-b border-[rgb(var(--border))] p-3">
+      <div className="min-w-0">
         <h2 className="text-sm font-semibold">{title}</h2>
         {subtitle && <p className="mt-1 text-xs text-[rgb(var(--muted-foreground))]">{subtitle}</p>}
       </div>
-      {right}
+      {right && <div className="shrink-0">{right}</div>}
     </div>
   )
 }
