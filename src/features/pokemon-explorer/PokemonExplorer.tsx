@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { Fragment, useMemo, useState } from 'react'
 import type { ColumnDef } from '@tanstack/react-table'
 import {
   flexRender,
@@ -7,21 +7,30 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { ArrowUpDown } from 'lucide-react'
+import { ArrowUpDown, ChevronRight } from 'lucide-react'
 import { Badge } from '../../components/atoms/Badge'
-import { TypeChip, TypeChipList } from '../../components/atoms/TypeChip'
+import { TypeChipList } from '../../components/atoms/TypeChip'
+import { DataSelect } from '../../components/molecules/DataSelect'
 import { Panel, PanelHeader } from '../../components/molecules/Panel'
 import type { ApplicationData } from '../../data/loaders'
 import type { PokemonType } from '../../data/schemas/pokemon'
-import { analyzeMoveset } from '../../domain/moves/analytics'
+import {
+  pokemonFocusStrategyLabels,
+  pokemonFocusStrategyNotes,
+  rankPokemonForFocus,
+  type PokemonFocusStrategy,
+} from '../../domain/ranking/pokemonFocus'
 import { calculateEffectiveStats } from '../../domain/stats/effectiveStats'
+import { stabMultiplier } from '../../domain/types/effectiveness'
+import { typeColor } from '../../domain/types/typeColors'
 import { integer, number } from '../../lib/format'
-import { firstLegalMoves } from '../shared/dataHelpers'
 
 type ExplorerRow = {
   id: string
+  rank: number
   name: string
   types: PokemonType[]
+  score: number
   cp: number
   attack: number
   defense: number
@@ -29,95 +38,146 @@ type ExplorerRow = {
   bulk: number
   fastMove: string
   fastMoveType: PokemonType
+  chargedOne: string
+  chargedOneType: PokemonType
+  chargedOneCost: number
+  chargedOneDpe: number
+  chargedTwo: string
+  chargedTwoType: PokemonType
+  chargedTwoCost: number
+  chargedTwoDpe: number
   dpt: number
   ept: number
-  cheapestCharged: string
-  cheapestChargedType: PokemonType
-  cheapestCost: number
   firstChargeTurns: number
+  repeatChargeTurns: number
+  neutralOutputPerTurn: number
+  reason: string
   confidence: string
 }
 
 export function PokemonExplorer({ data }: { data: ApplicationData }) {
   const [filter, setFilter] = useState('')
+  const [strategy, setStrategy] = useState<PokemonFocusStrategy>('fastest-victory')
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(() => new Set())
   const rows = useMemo<ExplorerRow[]>(
-    () =>
-      data.pokemon.candidates.map((species) => {
+    () => {
+      const rankings = rankPokemonForFocus(data.pokemon.candidates, data.moves, strategy, 40)
+
+      return rankings.map((ranking) => {
+        const { species, moveset } = ranking
         const stats = calculateEffectiveStats(species, 40)
-        const moves = firstLegalMoves(species, data)
-        const analytics = analyzeMoveset(species, moves.fastMove, moves.chargedMoves)
-        const charged = moves.chargedMoves
-          .slice()
-          .sort((a, b) => a.energyCost - b.energyCost)[0]
-        const timing = analytics.timings.find((item) => item.chargedMoveId === charged.id)
         return {
           id: species.id,
+          rank: ranking.rank,
           name: species.name,
           types: species.types,
+          score: ranking.score,
           cp: stats.cp,
           attack: stats.attack,
           defense: stats.defense,
           hp: stats.hp,
           bulk: stats.rawBulkProxy,
-          fastMove: moves.fastMove.name,
-          fastMoveType: moves.fastMove.type,
-          dpt: analytics.fast.damagePerTurn,
-          ept: analytics.fast.energyPerTurn,
-          cheapestCharged: charged.name,
-          cheapestChargedType: charged.type,
-          cheapestCost: charged.energyCost,
-          firstChargeTurns: timing?.firstTurns ?? 0,
+          fastMove: moveset.fastMove.name,
+          fastMoveType: moveset.fastMove.type,
+          chargedOne: moveset.chargedMoves[0].name,
+          chargedOneType: moveset.chargedMoves[0].type,
+          chargedOneCost: moveset.chargedMoves[0].energyCost,
+          chargedOneDpe: chargedDpe(species.types, moveset.chargedMoves[0]),
+          chargedTwo: moveset.chargedMoves[1].name,
+          chargedTwoType: moveset.chargedMoves[1].type,
+          chargedTwoCost: moveset.chargedMoves[1].energyCost,
+          chargedTwoDpe: chargedDpe(species.types, moveset.chargedMoves[1]),
+          dpt: moveset.fastDamagePerTurn,
+          ept: moveset.fastEnergyPerTurn,
+          firstChargeTurns: moveset.firstChargeTurns,
+          repeatChargeTurns: moveset.repeatChargeTurns,
+          neutralOutputPerTurn: moveset.neutralOutputPerTurn,
+          reason: ranking.reason,
           confidence: species.provenance.category,
         }
-      }),
-    [data],
+      })
+    },
+    [data, strategy],
   )
 
   const columns = useMemo<ColumnDef<ExplorerRow>[]>(
     () => [
+      {
+        id: 'expand',
+        header: '',
+        cell: (info) => {
+          const isExpanded = expandedIds.has(info.row.original.id)
+
+          return (
+            <button
+              type="button"
+              onClick={() => toggleExpanded(info.row.original.id)}
+              className="grid h-7 w-7 place-items-center rounded-md text-[rgb(var(--muted-foreground))] hover:bg-[rgb(var(--muted))] hover:text-[rgb(var(--foreground))]"
+              aria-label={`${isExpanded ? 'Collapse' : 'Expand'} ${info.row.original.name}`}
+              aria-expanded={isExpanded}
+            >
+              <ChevronRight
+                className={`h-4 w-4 transition-transform ${isExpanded ? 'rotate-90' : ''}`}
+                aria-hidden
+              />
+            </button>
+          )
+        },
+      },
+      { accessorKey: 'rank', header: sortableHeader('Rank'), cell: (info) => integer(info.getValue<number>()) },
       { accessorKey: 'name', header: 'Pokemon' },
       {
         accessorKey: 'types',
         header: 'Types',
-        cell: (info) => <TypeChipList types={info.getValue<PokemonType[]>()} compact />,
+        cell: (info) => <TypeChipList types={info.getValue<PokemonType[]>()} compact abbreviated />,
         filterFn: (row, columnId, filterValue) =>
           row.getValue<PokemonType[]>(columnId).some((type) =>
             type.toLowerCase().includes(String(filterValue).toLowerCase()),
           ),
       },
-      { accessorKey: 'cp', header: sortableHeader('CP'), cell: (info) => integer(info.getValue<number>()) },
-      { accessorKey: 'attack', header: sortableHeader('Atk'), cell: (info) => number(info.getValue<number>()) },
-      { accessorKey: 'defense', header: sortableHeader('Def'), cell: (info) => number(info.getValue<number>()) },
-      { accessorKey: 'hp', header: sortableHeader('HP'), cell: (info) => integer(info.getValue<number>()) },
-      { accessorKey: 'bulk', header: sortableHeader('Bulk proxy'), cell: (info) => integer(info.getValue<number>()) },
+      { accessorKey: 'score', header: sortableHeader('Focus score'), cell: (info) => number(info.getValue<number>()) },
       {
         accessorKey: 'fastMove',
         header: 'Fast move',
         cell: (info) => (
-          <span className="inline-flex items-center gap-2">
-            <TypeChip type={info.row.original.fastMoveType} compact />
-            {info.getValue<string>()}
-          </span>
+          <MoveChip type={info.row.original.fastMoveType} name={info.getValue<string>()} />
         ),
       },
-      { accessorKey: 'dpt', header: sortableHeader('DPT'), cell: (info) => number(info.getValue<number>()) },
-      { accessorKey: 'ept', header: sortableHeader('EPT'), cell: (info) => number(info.getValue<number>()) },
       {
-        accessorKey: 'cheapestCharged',
-        header: 'Cheapest charged',
-        cell: (info) => (
-          <span className="inline-flex items-center gap-2">
-            <TypeChip type={info.row.original.cheapestChargedType} compact />
-            {info.getValue<string>()}
-          </span>
-        ),
+        accessorKey: 'dpt',
+        header: sortableHeader('DPT'),
+        cell: (info) => <NumericCell value={number(info.getValue<number>())} />,
       },
-      { accessorKey: 'cheapestCost', header: sortableHeader('Cost') },
-      { accessorKey: 'firstChargeTurns', header: sortableHeader('First charge') },
-      { accessorKey: 'confidence', header: 'Confidence', cell: (info) => <Badge tone="info">{info.getValue<string>()}</Badge> },
+      {
+        accessorKey: 'ept',
+        header: sortableHeader('EPT'),
+        cell: (info) => <NumericCell value={number(info.getValue<number>())} />,
+      },
+      {
+        accessorKey: 'chargedOne',
+        header: () => <ChargedHeader label="Charged 1" />,
+        cell: (info) => <ChargedMoveCell row={info.row.original} slot="one" />,
+      },
+      {
+        accessorKey: 'chargedTwo',
+        header: () => <ChargedHeader label="Charged 2" />,
+        cell: (info) => <ChargedMoveCell row={info.row.original} slot="two" />,
+      },
     ],
-    [],
+    [expandedIds],
   )
+
+  function toggleExpanded(id: string) {
+    setExpandedIds((current) => {
+      const next = new Set(current)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
+      return next
+    })
+  }
 
   const table = useReactTable({
     data: rows,
@@ -133,19 +193,40 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
     <Panel>
       <PanelHeader
         title="Pokemon Explorer"
-        subtitle="Level 40, 15/15/15 attacker calculations using legal Trainer Battle moves."
+        subtitle={`Level 40, 15/15/15 heuristic focus ranking. ${pokemonFocusStrategyNotes[strategy]}`}
         right={
-          <input
-            value={filter}
-            onChange={(event) => setFilter(event.target.value)}
-            placeholder="Filter"
-            className="h-9 w-40 rounded-md border border-[rgb(var(--border))] bg-[rgb(var(--panel))] px-3 text-sm"
-            aria-label="Filter Pokemon table"
-          />
+          <div className="grid gap-2 sm:grid-cols-[190px_160px]">
+            <DataSelect
+              label="Strategy"
+              value={strategy}
+              onChange={(value) => setStrategy(value as PokemonFocusStrategy)}
+              options={Object.entries(pokemonFocusStrategyLabels).map(([value, label]) => ({
+                value,
+                label,
+              }))}
+            />
+            <label className="grid gap-1 text-xs font-medium text-[rgb(var(--muted-foreground))]">
+              Filter
+              <input
+                value={filter}
+                onChange={(event) => setFilter(event.target.value)}
+                placeholder="Pokemon or type"
+                className="h-9 w-full rounded-md border border-[rgb(var(--border))] bg-[rgb(var(--panel))] px-3 text-sm"
+                aria-label="Filter Pokemon table"
+              />
+            </label>
+          </div>
         }
       />
+      <div className="border-t border-[rgb(var(--border))] px-3 py-2 text-xs text-[rgb(var(--muted-foreground))]">
+        <Badge tone="warning">Heuristic</Badge>
+        <span className="ml-2">
+          This ranking recommends which Pokemon and movesets to focus on before Rocket win/loss
+          simulation is available.
+        </span>
+      </div>
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[1120px] text-left text-sm">
+        <table className="w-full min-w-[1280px] text-left text-sm">
           <thead className="bg-[rgb(var(--muted)/0.55)] text-xs text-[rgb(var(--muted-foreground))]">
             {table.getHeaderGroups().map((group) => (
               <tr key={group.id}>
@@ -158,20 +239,122 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
             ))}
           </thead>
           <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="border-t border-[rgb(var(--border))]">
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="px-3 py-2 align-top">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
+            {table.getRowModel().rows.map((row) => {
+              const isExpanded = expandedIds.has(row.original.id)
+
+              return (
+                <Fragment key={row.id}>
+                  <tr key={row.id} className="border-t border-[rgb(var(--border))]">
+                    {row.getVisibleCells().map((cell) => (
+                      <td key={cell.id} className="px-3 py-2 align-top">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </td>
+                    ))}
+                  </tr>
+                  {isExpanded ? (
+                    <tr key={`${row.id}-details`} className="border-t border-[rgb(var(--border))] bg-[rgb(var(--muted)/0.35)]">
+                      <td colSpan={columns.length} className="px-3 py-3">
+                        <ExpandedDetails row={row.original} />
+                      </td>
+                    </tr>
+                  ) : null}
+                </Fragment>
+              )
+            })}
           </tbody>
         </table>
       </div>
     </Panel>
   )
+}
+
+function ChargedMoveCell({ row, slot }: { row: ExplorerRow; slot: 'one' | 'two' }) {
+  const move =
+    slot === 'one'
+      ? {
+          name: row.chargedOne,
+          type: row.chargedOneType,
+          cost: row.chargedOneCost,
+          dpe: row.chargedOneDpe,
+        }
+      : {
+          name: row.chargedTwo,
+          type: row.chargedTwoType,
+          cost: row.chargedTwoCost,
+          dpe: row.chargedTwoDpe,
+        }
+
+  return (
+    <MoveChip
+      type={move.type}
+      name={move.name}
+      metric={`${integer(move.cost)}/${number(move.dpe)}`}
+    />
+  )
+}
+
+function MoveChip({ type, name, metric }: { type: PokemonType; name: string; metric?: string }) {
+  const color = typeColor(type)
+
+  return (
+    <span className="inline-flex max-w-full items-center gap-1.5">
+      <span
+        className="inline-flex shrink-0 items-center truncate rounded px-2.5 py-0.5 text-[11px] font-semibold"
+        style={{ backgroundColor: color.bg, color: color.text }}
+        title={type}
+      >
+        <span className="truncate">{name}</span>
+      </span>
+      {metric ? (
+        <span className="shrink-0 text-xs font-semibold text-[rgb(var(--muted-foreground))]">
+          {metric}
+        </span>
+      ) : null}
+    </span>
+  )
+}
+
+function NumericCell({ value }: { value: string }) {
+  return <span className="tabular-nums text-[rgb(var(--foreground))]">{value}</span>
+}
+
+function ChargedHeader({ label }: { label: string }) {
+  return (
+    <span>
+      {label} <span className="font-normal text-[rgb(var(--muted-foreground))]">(cost/dpe)</span>
+    </span>
+  )
+}
+
+function ExpandedDetails({ row }: { row: ExplorerRow }) {
+  return (
+    <div className="grid gap-3 text-xs text-[rgb(var(--muted-foreground))] md:grid-cols-4">
+      <Detail label="CP" value={integer(row.cp)} />
+      <Detail label="Atk / Def / HP" value={`${number(row.attack)} / ${number(row.defense)} / ${integer(row.hp)}`} />
+      <Detail label="Bulk proxy" value={integer(row.bulk)} />
+      <Detail label="First charge" value={`${integer(row.firstChargeTurns)} turns`} />
+      <Detail label="Repeat charge" value={`${integer(row.repeatChargeTurns)} turns`} />
+      <Detail label="Neutral output" value={`${number(row.neutralOutputPerTurn)} per turn`} />
+      <Detail label="Confidence" value={row.confidence} />
+      <Detail label="Heuristic read" value={row.reason} />
+    </div>
+  )
+}
+
+function Detail({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="grid gap-1">
+      <span className="font-medium text-[rgb(var(--foreground))]">{label}</span>
+      <span>{value}</span>
+    </div>
+  )
+}
+
+function chargedDpe(
+  speciesTypes: PokemonType[],
+  chargedMove: { type: PokemonType; power: number; energyCost: number },
+) {
+  return (chargedMove.power * stabMultiplier(chargedMove.type, speciesTypes)) / chargedMove.energyCost
 }
 
 function sortableHeader(label: string) {
