@@ -1,0 +1,187 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-07-31T17:15:00.000Z",
+  "effectiveDate": "2026-07-31",
+  "sourceHash": "manual-leekduck-gohub-lineup-reconciliation-2026-07-31",
+  "lineups": [
+    {
+      "id": "giovanni-2026-07-31",
+      "trainerName": "Giovanni",
+      "trainerClass": "giovanni",
+      "effectiveDate": "2026-07-31",
+      "sourceAgreement": "verified-agreement",
+      "slots": [
+        { "slot": 1, "pokemonIds": ["persian"] },
+        { "slot": 2, "pokemonIds": ["kangaskhan", "rhyperior", "machamp"] },
+        { "slot": 3, "pokemonIds": ["reshiram"] }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-07-31T17:15:00.000Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-lineup-snapshot-0.2.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Leek Duck lists Persian, Kangaskhan/Rhyperior/Machamp, and Reshiram."
+        },
+        {
+          "sourceName": "Pokemon GO Hub Giovanni Counters",
+          "sourceUrl": "https://pokemongohub.net/post/guide/rocket-boss-giovanni-counters/",
+          "retrievedAt": "2026-07-31T17:15:00.000Z",
+          "sourceVersion": "July 1, 2026",
+          "parserVersion": "manual-lineup-snapshot-0.2.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Slot tables list Persian, Rhyperior/Machamp/Kangaskhan, and Reshiram. The page summary mentions Nidoking, so the slot table is treated as authoritative for this record."
+        }
+      ],
+      "notes": "Sources agree on slot tables. Battle stats, moves, scaling, and shield behavior remain unresolved for simulation."
+    },
+    {
+      "id": "leader-arlo-2026-07-31",
+      "trainerName": "Arlo",
+      "trainerClass": "leader",
+      "quote": "It's time to learn your place in the world.",
+      "effectiveDate": "2026-07-31",
+      "sourceAgreement": "verified-agreement",
+      "slots": [
+        { "slot": 1, "pokemonIds": ["tyrunt"] },
+        { "slot": 2, "pokemonIds": ["steelix", "golurk", "slowbro"] },
+        { "slot": 3, "pokemonIds": ["alakazam", "charizard", "scizor"] }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-07-31T17:15:00.000Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-lineup-snapshot-0.2.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Leek Duck lists Tyrunt, Steelix/Golurk/Slowbro, and Alakazam/Charizard/Scizor."
+        },
+        {
+          "sourceName": "Pokemon GO Hub Arlo Counters",
+          "sourceUrl": "https://pokemongohub.net/post/guide/rocket-leader-arlo-counters/",
+          "retrievedAt": "2026-07-31T17:15:00.000Z",
+          "sourceVersion": "July 1, 2026",
+          "parserVersion": "manual-lineup-snapshot-0.2.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "GO Hub lists Tyrunt, Slowbro/Golurk/Steelix, and Scizor/Alakazam/Charizard."
+        }
+      ],
+      "notes": "Sources agree on the listed Pokemon, with different display order in shared slots."
+    },
+    {
+      "id": "leader-cliff-2026-07-31",
+      "trainerName": "Cliff",
+      "trainerClass": "leader",
+      "quote": "My strength comes from my loyalty to Team GO Rocket.",
+      "effectiveDate": "2026-07-31",
+      "sourceAgreement": "disputed",
+      "slots": [
+        { "slot": 1, "pokemonIds": ["axew"] },
+        { "slot": 2, "pokemonIds": ["snorlax", "golurk", "galarian-weezing"] },
+        { "slot": 3, "pokemonIds": ["tyranitar", "camerupt", "gallade"] }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-07-31T17:15:00.000Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-lineup-snapshot-0.2.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Leek Duck lists Axew, Snorlax/Golurk/Galarian Weezing, and Tyranitar/Camerupt/Gallade."
+        },
+        {
+          "sourceName": "Pokemon GO Hub Cliff Counters",
+          "sourceUrl": "https://pokemongohub.net/post/guide/rocket-leader-cliff-counters/",
+          "retrievedAt": "2026-07-31T17:15:00.000Z",
+          "sourceVersion": "July 1, 2026",
+          "parserVersion": "manual-lineup-snapshot-0.2.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "GO Hub lists Axew, Snorlax/Weezing, and Tyranitar/Gallade/Camerupt; Golurk is absent from GO Hub slot 2."
+        }
+      ],
+      "notes": "Disputed slot 2: Leek Duck includes Golurk, while GO Hub does not. Retain the broader Leek Duck set and flag the lineup as disputed."
+    },
+    {
+      "id": "leader-sierra-2026-07-31",
+      "trainerName": "Sierra",
+      "trainerClass": "leader",
+      "quote": "I envy you—you get to battle me!",
+      "effectiveDate": "2026-07-31",
+      "sourceAgreement": "verified-agreement",
+      "slots": [
+        { "slot": 1, "pokemonIds": ["amaura"] },
+        { "slot": 2, "pokemonIds": ["blastoise", "flygon", "ferrothorn"] },
+        { "slot": 3, "pokemonIds": ["milotic", "houndoom", "steelix"] }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-07-31T17:15:00.000Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-lineup-snapshot-0.2.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Leek Duck lists Amaura, Blastoise/Flygon/Ferrothorn, and Milotic/Houndoom/Steelix."
+        },
+        {
+          "sourceName": "Pokemon GO Hub Sierra Counters",
+          "sourceUrl": "https://pokemongohub.net/post/guide/rocket-leader-sierra-counters/",
+          "retrievedAt": "2026-07-31T17:15:00.000Z",
+          "sourceVersion": "July 1, 2026",
+          "parserVersion": "manual-lineup-snapshot-0.2.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "GO Hub lists Amaura, Flygon/Ferrothorn/Blastoise, and Steelix/Houndoom/Milotic."
+        }
+      ],
+      "notes": "Sources agree on the listed Pokemon, with different display order in shared slots."
+    },
+    {
+      "id": "grunt-normal-2026-07-31",
+      "trainerName": "Normal-type Grunt",
+      "trainerClass": "grunt",
+      "quote": "Normal does not mean weak.",
+      "effectiveDate": "2026-07-31",
+      "sourceAgreement": "verified-agreement",
+      "slots": [
+        { "slot": 1, "pokemonIds": ["teddiursa", "hoothoot", "porygon"] },
+        { "slot": 2, "pokemonIds": ["loudred", "stufful", "starly"] },
+        { "slot": 3, "pokemonIds": ["ursaring", "swellow", "kangaskhan"] }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-07-31T17:15:00.000Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-lineup-snapshot-0.2.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Leek Duck lists Teddiursa/Hoothoot/Porygon, Loudred/Stufful/Starly, and Ursaring/Swellow/Kangaskhan."
+        },
+        {
+          "sourceName": "Pokemon GO Hub Grunt Guide",
+          "sourceUrl": "https://pokemongohub.net/post/guide/team-go-rocket-battle-guide/",
+          "retrievedAt": "2026-07-31T17:15:00.000Z",
+          "sourceVersion": "July 1, 2026",
+          "parserVersion": "manual-lineup-snapshot-0.2.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "GO Hub lists Teddiursa/Hoothoot/Porygon, Stufful/Starly/Loudred, and Ursaring/Swellow/Kangaskhan."
+        }
+      ],
+      "notes": "Representative verified Grunt lineup. Remaining Grunt classes still need import before universal pair evaluation."
+    }
+  ]
+}

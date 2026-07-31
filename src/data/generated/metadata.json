@@ -1,0 +1,59 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-07-31T17:15:00.000Z",
+  "applicationName": "Rocket Pair Lab",
+  "dataSummary": {
+    "pokemonCount": 10,
+    "fastMoveCount": 21,
+    "chargedMoveCount": 44,
+    "rocketLineupCount": 5
+  },
+  "sources": [
+    {
+      "sourceName": "PvPoke GameMaster",
+      "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+      "retrievedAt": "2026-07-31T17:15:00.000Z",
+      "sourceVersion": "2026-07-30 21:39:36",
+      "parserVersion": "pvpoke-normalizer-0.1.0",
+      "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+      "category": "sourced",
+      "notes": "Primary normalized source for Trainer Battle stats and legal moves."
+    },
+    {
+      "sourceName": "PvPoke Moves",
+      "sourceUrl": "https://pvpoke.com/moves/",
+      "retrievedAt": "2026-07-31T17:15:00.000Z",
+      "sourceVersion": "retrieved-2026-07-31",
+      "parserVersion": "manual-reference-0.1.0",
+      "license": "PvPoke MIT project attribution applies to source data; page used as a human-readable reference.",
+      "category": "sourced",
+      "notes": "Used as a UI and metric-label cross-check, not scraped at runtime."
+    },
+    {
+      "sourceName": "Leek Duck Rocket Lineups",
+      "sourceUrl": "https://leekduck.com/rocket-lineups/",
+      "retrievedAt": "2026-07-31T17:15:00.000Z",
+      "sourceVersion": "Updated on June 25, 2026",
+      "parserVersion": "manual-lineup-snapshot-0.1.0",
+      "license": "Attribution status not established; manually reviewed factual lineup snapshot.",
+      "category": "sourced",
+      "notes": "Primary practical lineup snapshot for Milestone 1, cross-checked for the included leaders and Normal Grunt."
+    },
+    {
+      "sourceName": "Pokemon GO Hub Rocket Guide",
+      "sourceUrl": "https://pokemongohub.net/post/guide/team-go-rocket-battle-guide/",
+      "retrievedAt": "2026-07-31T17:15:00.000Z",
+      "sourceVersion": "July 2026 guide, retrieved 2026-07-31",
+      "parserVersion": "manual-reference-0.1.0",
+      "license": "Attribution status not established; used for independent manual cross-check planning.",
+      "category": "unverified",
+      "notes": "Secondary lineup cross-check source; Cliff slot 2 currently disagrees with Leek Duck."
+    }
+  ],
+  "limitations": [
+    "Milestone 1 does not simulate Rocket battles or rank universal pairs.",
+    "Rocket scaling, pauses, shield AI, and wall-clock timings remain unresolved or configurable.",
+    "Rocket lineups include a reconciled subset; Cliff slot 2 is explicitly disputed and most Grunt classes are not yet imported.",
+    "Morpeko is represented by PvPoke's Full Belly form for Milestone 1 display."
+  ]
+}

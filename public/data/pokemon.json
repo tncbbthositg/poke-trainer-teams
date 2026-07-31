@@ -1,0 +1,397 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-07-31T16:45:38.322Z",
+  "sourceHash": "29f084cdc69c1886724a92f99785ddfe5a799431a7297fe834b7759a6d406070",
+  "candidates": [
+    {
+      "id": "kingambit",
+      "dex": 983,
+      "name": "Kingambit",
+      "types": [
+        "dark",
+        "steel"
+      ],
+      "baseStats": {
+        "attack": 238,
+        "defense": 203,
+        "stamina": 225
+      },
+      "fastMoves": [
+        "SNARL",
+        "METAL_CLAW",
+        "METAL_SOUND"
+      ],
+      "chargedMoves": [
+        "DARK_PULSE",
+        "IRON_HEAD",
+        "X_SCISSOR",
+        "FOCUS_BLAST",
+        "FOUL_PLAY"
+      ],
+      "tags": [],
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "annihilape",
+      "dex": 979,
+      "name": "Annihilape",
+      "types": [
+        "fighting",
+        "ghost"
+      ],
+      "baseStats": {
+        "attack": 220,
+        "defense": 178,
+        "stamina": 242
+      },
+      "fastMoves": [
+        "LOW_KICK",
+        "COUNTER"
+      ],
+      "chargedMoves": [
+        "CLOSE_COMBAT",
+        "LOW_SWEEP",
+        "NIGHT_SLASH",
+        "ICE_PUNCH",
+        "SHADOW_BALL",
+        "RAGE_FIST"
+      ],
+      "tags": [
+        "shadoweligible"
+      ],
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "lucario",
+      "dex": 448,
+      "name": "Lucario",
+      "types": [
+        "fighting",
+        "steel"
+      ],
+      "baseStats": {
+        "attack": 236,
+        "defense": 144,
+        "stamina": 172
+      },
+      "fastMoves": [
+        "BULLET_PUNCH",
+        "COUNTER",
+        "FORCE_PALM"
+      ],
+      "chargedMoves": [
+        "CLOSE_COMBAT",
+        "FLASH_CANNON",
+        "SHADOW_BALL",
+        "POWER_UP_PUNCH",
+        "AURA_SPHERE",
+        "BLAZE_KICK",
+        "THUNDER_PUNCH",
+        "METEOR_MASH"
+      ],
+      "tags": [],
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "terrakion",
+      "dex": 639,
+      "name": "Terrakion",
+      "types": [
+        "rock",
+        "fighting"
+      ],
+      "baseStats": {
+        "attack": 260,
+        "defense": 192,
+        "stamina": 209
+      },
+      "fastMoves": [
+        "SMACK_DOWN",
+        "ZEN_HEADBUTT",
+        "DOUBLE_KICK"
+      ],
+      "chargedMoves": [
+        "CLOSE_COMBAT",
+        "EARTHQUAKE",
+        "ROCK_SLIDE",
+        "SACRED_SWORD"
+      ],
+      "tags": [
+        "legendary"
+      ],
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "swampert",
+      "dex": 260,
+      "name": "Swampert",
+      "types": [
+        "water",
+        "ground"
+      ],
+      "baseStats": {
+        "attack": 208,
+        "defense": 175,
+        "stamina": 225
+      },
+      "fastMoves": [
+        "MUD_SHOT",
+        "WATER_GUN"
+      ],
+      "chargedMoves": [
+        "EARTHQUAKE",
+        "SLUDGE_WAVE",
+        "SURF",
+        "HYDRO_CANNON",
+        "MUDDY_WATER",
+        "SLUDGE"
+      ],
+      "tags": [
+        "starter",
+        "shadoweligible"
+      ],
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "groudon",
+      "dex": 383,
+      "name": "Groudon",
+      "types": [
+        "ground"
+      ],
+      "baseStats": {
+        "attack": 270,
+        "defense": 228,
+        "stamina": 205
+      },
+      "fastMoves": [
+        "DRAGON_TAIL",
+        "MUD_SHOT"
+      ],
+      "chargedMoves": [
+        "EARTHQUAKE",
+        "FIRE_BLAST",
+        "SOLAR_BEAM",
+        "FIRE_PUNCH",
+        "PRECIPICE_BLADES"
+      ],
+      "tags": [
+        "legendary",
+        "shadoweligible"
+      ],
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "mewtwo",
+      "dex": 150,
+      "name": "Mewtwo",
+      "types": [
+        "psychic"
+      ],
+      "baseStats": {
+        "attack": 300,
+        "defense": 182,
+        "stamina": 214
+      },
+      "fastMoves": [
+        "CONFUSION",
+        "PSYCHO_CUT",
+        "COUNTER"
+      ],
+      "chargedMoves": [
+        "FLAMETHROWER",
+        "FOCUS_BLAST",
+        "HYPER_BEAM",
+        "ICE_BEAM",
+        "PSYCHIC",
+        "SHADOW_BALL",
+        "THUNDERBOLT",
+        "PSYSTRIKE"
+      ],
+      "tags": [
+        "legendary",
+        "shadoweligible"
+      ],
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "melmetal",
+      "dex": 809,
+      "name": "Melmetal",
+      "types": [
+        "steel"
+      ],
+      "baseStats": {
+        "attack": 226,
+        "defense": 190,
+        "stamina": 264
+      },
+      "fastMoves": [
+        "THUNDER_SHOCK"
+      ],
+      "chargedMoves": [
+        "FLASH_CANNON",
+        "HYPER_BEAM",
+        "ROCK_SLIDE",
+        "THUNDERBOLT",
+        "SUPER_POWER",
+        "DOUBLE_IRON_BASH",
+        "DYNAMIC_PUNCH"
+      ],
+      "tags": [
+        "mythical"
+      ],
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "morpeko_full_belly",
+      "dex": 877,
+      "name": "Morpeko",
+      "types": [
+        "electric",
+        "dark"
+      ],
+      "baseStats": {
+        "attack": 192,
+        "defense": 121,
+        "stamina": 151
+      },
+      "fastMoves": [
+        "CHARGE_BEAM",
+        "BITE",
+        "THUNDER_SHOCK"
+      ],
+      "chargedMoves": [
+        "SEED_BOMB",
+        "OUTRAGE",
+        "PSYCHIC_FANGS",
+        "AURA_WHEEL_ELECTRIC"
+      ],
+      "tags": [
+        "include2500"
+      ],
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported. PvPoke models Morpeko as form-specific entries; Full Belly is the Milestone 1 display form."
+      }
+    },
+    {
+      "id": "greninja",
+      "dex": 658,
+      "name": "Greninja",
+      "types": [
+        "water",
+        "dark"
+      ],
+      "baseStats": {
+        "attack": 223,
+        "defense": 152,
+        "stamina": 176
+      },
+      "fastMoves": [
+        "FEINT_ATTACK",
+        "BUBBLE",
+        "WATER_SHURIKEN"
+      ],
+      "chargedMoves": [
+        "NIGHT_SLASH",
+        "AERIAL_ACE",
+        "SURF",
+        "HYDRO_PUMP",
+        "HYDRO_CANNON"
+      ],
+      "tags": [
+        "starter",
+        "shadoweligible"
+      ],
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-07-31T16:45:38.322Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    }
+  ]
+}

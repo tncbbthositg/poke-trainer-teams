@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light;
+  --background: 248 250 252;
+  --foreground: 15 23 42;
+  --muted: 226 232 240;
+  --muted-foreground: 71 85 105;
+  --panel: 255 255 255;
+  --border: 203 213 225;
+  --primary: 14 116 144;
+  --primary-foreground: 240 253 250;
+  --danger: 185 28 28;
+  --warning: 180 83 9;
+  --ok: 21 128 61;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: 2 6 23;
+  --foreground: 226 232 240;
+  --muted: 30 41 59;
+  --muted-foreground: 148 163 184;
+  --panel: 15 23 42;
+  --border: 51 65 85;
+  --primary: 34 211 238;
+  --primary-foreground: 8 47 73;
+  --danger: 248 113 113;
+  --warning: 251 191 36;
+  --ok: 74 222 128;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background: rgb(var(--background));
+  color: rgb(var(--foreground));
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+.type-badge {
+  border: 1px solid rgb(var(--border));
+  background: rgb(var(--muted) / 0.72);
+  color: rgb(var(--foreground));
+}

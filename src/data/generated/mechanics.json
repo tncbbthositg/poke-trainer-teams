@@ -1,0 +1,39 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-07-31T16:00:00.000Z",
+  "simulationVersion": "m1-interface-only",
+  "values": [
+    {
+      "key": "trainer_level_demo_default",
+      "label": "Trainer Level demo default",
+      "value": 50,
+      "unit": "level",
+      "category": "configurable-assumption",
+      "note": "Trainer Level is exposed because Rocket scaling may depend on it. Level 50 is a demo default only."
+    },
+    {
+      "key": "battle_turn_seconds",
+      "label": "Pokemon GO battle turn length",
+      "value": 0.5,
+      "unit": "seconds",
+      "category": "sourced",
+      "note": "Used for Trainer Battle move duration displays from PvPoke turn counts."
+    },
+    {
+      "key": "rocket_pause_after_charged_attack",
+      "label": "Rocket pause after player Charged Attack",
+      "value": 0,
+      "unit": "seconds",
+      "category": "unverified",
+      "note": "Scaffolded for Milestone 2. No verified default is applied to rankings in Milestone 1."
+    },
+    {
+      "key": "charged_attack_wall_clock",
+      "label": "Charged Attack wall-clock overhead",
+      "value": 0,
+      "unit": "seconds",
+      "category": "unverified",
+      "note": "Device and animation timing are unresolved. Milestone 1 displays turn timing only."
+    }
+  ]
+}
