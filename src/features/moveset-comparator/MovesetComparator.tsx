@@ -1,16 +1,17 @@
 import { useMemo, useState } from 'react'
 import { Badge } from '../../components/atoms/Badge'
+import { MetricBar } from '../../components/atoms/MetricBar'
 import { TypeChip } from '../../components/atoms/TypeChip'
 import { typeAbbreviation } from '../../components/atoms/typeLabels'
 import { ChargeTimeline } from '../../components/molecules/charts/ChargeTimeline'
+import { DataSelect } from '../../components/molecules/DataSelect'
 import { Panel, PanelHeader } from '../../components/molecules/Panel'
 import type { ApplicationData } from '../../data/loaders'
 import type { ChargedMove, FastMove } from '../../data/schemas/moves'
-import type { PokemonType } from '../../data/schemas/pokemon'
 import { analyzeMoveset, type OutputTimelineEvent } from '../../domain/moves/analytics'
 import { typeColor } from '../../domain/types/typeColors'
+import { number } from '../../lib/format'
 import { moveMaps } from '../shared/dataHelpers'
-import { number } from '../shared/format'
 
 export function MovesetComparator({ data }: { data: ApplicationData }) {
   const [speciesId, setSpeciesId] = useState(data.pokemon.candidates[0].id)
@@ -72,9 +73,9 @@ export function MovesetComparator({ data }: { data: ApplicationData }) {
       <Panel>
         <PanelHeader title="Moveset Comparator" subtitle="Compare legal fast moves and dual Charged Attack combinations." />
         <div className="grid gap-3 p-3 sm:grid-cols-2 lg:grid-cols-3">
-          <Select label="Pokemon" value={species.id} onChange={setSpeciesId} options={data.pokemon.candidates.map((candidate) => ({ value: candidate.id, label: candidate.name }))} />
-          <Select label="Build A fast" value={buildA.fast.id} selectedType={buildA.fast.type} onChange={setFastAId} options={fastMoves.map((move) => ({ value: move.id, label: fastMoveLabel(move), type: move.type }))} />
-          <Select label="Build B fast" value={buildB.fast.id} selectedType={buildB.fast.type} onChange={setFastBId} options={fastMoves.map((move) => ({ value: move.id, label: fastMoveLabel(move), type: move.type }))} />
+          <DataSelect label="Pokemon" value={species.id} onChange={setSpeciesId} options={data.pokemon.candidates.map((candidate) => ({ value: candidate.id, label: candidate.name }))} />
+          <DataSelect label="Build A fast" value={buildA.fast.id} selectedType={buildA.fast.type} onChange={setFastAId} options={fastMoves.map((move) => ({ value: move.id, label: fastMoveLabel(move), type: move.type }))} />
+          <DataSelect label="Build B fast" value={buildB.fast.id} selectedType={buildB.fast.type} onChange={setFastBId} options={fastMoves.map((move) => ({ value: move.id, label: fastMoveLabel(move), type: move.type }))} />
         </div>
       </Panel>
       <div className="grid gap-4 lg:grid-cols-3">
@@ -125,39 +126,6 @@ export function MovesetComparator({ data }: { data: ApplicationData }) {
           />
         </Panel>
         <BuildPanel label="Build B" speciesTypes={species.types} fastMove={buildB.fast} chargedMoves={buildB.charged} analytics={analyticsB} chargedOptions={chargedMoves} maxTimelineTurns={maxTimelineTurns} setChargedOne={setChargedB1} setChargedTwo={setChargedB2} />
-      </div>
-    </div>
-  )
-}
-
-function MetricBar({
-  label,
-  value,
-  max,
-  color,
-  digits = 1,
-}: {
-  label: string
-  value: number
-  max: number
-  color: string
-  digits?: number
-}) {
-  const width = `${Math.max(4, (value / max) * 100)}%`
-
-  return (
-    <div>
-      <div className="mb-1 flex items-center justify-between gap-2 text-xs">
-        <span>{label}</span>
-        <span className="font-semibold">{number(value, digits)}</span>
-      </div>
-      <div className="h-3 rounded-sm bg-[rgb(var(--muted)/0.72)]">
-        <div
-          className="h-3 rounded-sm bg-[#0891b2]"
-          style={{ width, backgroundColor: color }}
-          role="img"
-          aria-label={`${label}: ${number(value, digits)}`}
-        />
       </div>
     </div>
   )
@@ -386,8 +354,8 @@ function BuildPanel({
       />
       <div className="grid gap-3 p-3">
         <div className="grid gap-2">
-          <Select label="Charged 1" value={chargedMoves[0].id} selectedType={chargedMoves[0].type} onChange={setChargedOne} options={chargedOptions.map((move) => ({ value: move.id, label: chargedMoveLabel(move), type: move.type }))} />
-          <Select label="Charged 2" value={chargedMoves[1].id} selectedType={chargedMoves[1].type} onChange={setChargedTwo} options={chargedOptions.map((move) => ({ value: move.id, label: chargedMoveLabel(move), type: move.type }))} />
+          <DataSelect label="Charged 1" value={chargedMoves[0].id} selectedType={chargedMoves[0].type} onChange={setChargedOne} options={chargedOptions.map((move) => ({ value: move.id, label: chargedMoveLabel(move), type: move.type }))} />
+          <DataSelect label="Charged 2" value={chargedMoves[1].id} selectedType={chargedMoves[1].type} onChange={setChargedTwo} options={chargedOptions.map((move) => ({ value: move.id, label: chargedMoveLabel(move), type: move.type }))} />
         </div>
         <div className="rounded bg-[rgb(var(--muted)/0.24)] px-3 py-2.5">
           <div className="flex items-center justify-between gap-3">
@@ -496,59 +464,4 @@ function fastMoveLabel(move: FastMove) {
 
 function chargedMoveLabel(move: ChargedMove) {
   return `${move.name} · ${typeAbbreviation(move.type)} · P${move.power} · E${move.energyCost}`
-}
-
-function Select({
-  label,
-  value,
-  selectedType,
-  onChange,
-  options,
-}: {
-  label: string
-  value: string
-  selectedType?: PokemonType
-  onChange: (value: string) => void
-  options: Array<{ value: string; label: string; type?: PokemonType }>
-}) {
-  const selectedColor = selectedType ? typeColor(selectedType) : undefined
-
-  return (
-    <label className="grid min-w-0 gap-1 text-xs font-medium text-[rgb(var(--muted-foreground))]">
-      {label}
-      <select
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="h-9 min-w-0 truncate rounded-md border border-[rgb(var(--border))] bg-[rgb(var(--panel))] px-2 text-xs text-[rgb(var(--foreground))]"
-        style={
-          selectedColor
-            ? {
-                borderLeftColor: selectedColor.bg,
-                borderLeftWidth: 6,
-              }
-            : undefined
-        }
-      >
-        {options.map((option) => {
-          const color = option.type ? typeColor(option.type) : undefined
-          return (
-          <option
-            key={option.value}
-            value={option.value}
-            style={
-              color
-                ? {
-                    backgroundColor: color.bg,
-                    color: color.text,
-                  }
-                : undefined
-            }
-          >
-            {option.label}
-          </option>
-          )
-        })}
-      </select>
-    </label>
-  )
 }

@@ -15,8 +15,8 @@ import type { ApplicationData } from '../../data/loaders'
 import type { PokemonType } from '../../data/schemas/pokemon'
 import { analyzeMoveset } from '../../domain/moves/analytics'
 import { calculateEffectiveStats } from '../../domain/stats/effectiveStats'
+import { integer, number } from '../../lib/format'
 import { firstLegalMoves } from '../shared/dataHelpers'
-import { integer, number } from '../shared/format'
 
 type ExplorerRow = {
   id: string

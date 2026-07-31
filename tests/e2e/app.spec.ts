@@ -19,3 +19,14 @@ test('loads shared deep links', async ({ page }) => {
     'page',
   )
 })
+
+test('supports picking a battle team', async ({ page }) => {
+  await page.goto('/#/pairs')
+  await expect(page.getByRole('heading', { name: 'Battle Team Builder' })).toBeVisible()
+  await expect(page.getByLabel('Lead Pokemon')).toHaveValue('kingambit')
+  await page.getByLabel('Backup Pokemon').selectOption('lucario')
+  await expect(page.getByText('Lucario backup')).toBeVisible()
+  await expect(page.getByLabel('Fast move').first()).toBeVisible()
+  await expect(page.getByLabel('Charged 1').first()).toBeVisible()
+  await expect(page.getByLabel('Charged 2').first()).toBeVisible()
+})

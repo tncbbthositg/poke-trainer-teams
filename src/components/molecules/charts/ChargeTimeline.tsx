@@ -1,7 +1,7 @@
 import { TypeChip } from '../../atoms/TypeChip'
 import type { ChargeTiming } from '../../../domain/moves/analytics'
 import { typeColor } from '../../../domain/types/typeColors'
-import { number } from '../../../features/shared/format'
+import { number } from '../../../lib/format'
 
 export function ChargeTimeline({
   timing,
