@@ -1,58 +1,53 @@
-import { useMemo, useState } from 'react'
-import {
-  Activity,
-  Flag,
-  Pause,
-  RotateCcw,
-  Shield,
-  Skull,
-  Swords,
-  Zap,
-  type LucideIcon,
-} from 'lucide-react'
-import { Badge } from '../../components/atoms/Badge'
-import { MetricBar } from '../../components/atoms/MetricBar'
-import { TypeChip, TypeChipList } from '../../components/atoms/TypeChip'
-import { typeAbbreviation } from '../../components/atoms/typeLabels'
-import { DataSelect } from '../../components/molecules/DataSelect'
-import { Panel, PanelHeader } from '../../components/molecules/Panel'
-import type { ApplicationData } from '../../data/loaders'
-import type { ChargedMove, FastMove } from '../../data/schemas/moves'
-import type { PokemonSpecies } from '../../data/schemas/pokemon'
-import { simulateRocketLineupExperimental } from '../../domain/battle/engine'
-import type { BattleEvent, BattleStrategy } from '../../domain/battle/types'
-import { analyzeMoveset } from '../../domain/moves/analytics'
-import type { PokemonBuild } from '../../domain/pokemon/types'
-import { calculateEffectiveStats } from '../../domain/stats/effectiveStats'
-import { typeColor } from '../../domain/types/typeColors'
-import { integer, number } from '../../lib/format'
-import { moveMaps } from '../shared/dataHelpers'
+import { useMemo, useState } from "react";
+import { Shield } from "lucide-react";
+import { Badge } from "../../components/atoms/Badge";
+import { MetricBar } from "../../components/atoms/MetricBar";
+import { TypeChip, TypeChipList } from "../../components/atoms/TypeChip";
+import { typeAbbreviation } from "../../components/atoms/typeLabels";
+import { DataSelect } from "../../components/molecules/DataSelect";
+import { Panel, PanelHeader } from "../../components/molecules/Panel";
+import type { ApplicationData } from "../../data/loaders";
+import type { ChargedMove, FastMove } from "../../data/schemas/moves";
+import type { PokemonSpecies, PokemonType } from "../../data/schemas/pokemon";
+import { simulateRocketLineupExperimental } from "../../domain/battle/engine";
+import type { BattleEvent, BattleStrategy } from "../../domain/battle/types";
+import { analyzeMoveset } from "../../domain/moves/analytics";
+import type { PokemonBuild } from "../../domain/pokemon/types";
+import { calculateEffectiveStats } from "../../domain/stats/effectiveStats";
+import { typeColor } from "../../domain/types/typeColors";
+import { integer, number } from "../../lib/format";
+import { moveMaps } from "../shared/dataHelpers";
 
 type SlotState = {
-  speciesId: string
-  fastMoveId: string
-  chargedOneId: string
-  chargedTwoId: string
-}
+  speciesId: string;
+  fastMoveId: string;
+  chargedOneId: string;
+  chargedTwoId: string;
+};
 
 type SlotBuild = {
-  species: PokemonSpecies
-  fastMove: FastMove
-  chargedMoves: [ChargedMove, ChargedMove]
-}
+  species: PokemonSpecies;
+  fastMove: FastMove;
+  chargedMoves: [ChargedMove, ChargedMove];
+};
 
 export function PairBuilder({ data }: { data: ApplicationData }) {
-  const maps = useMemo(() => moveMaps(data), [data])
-  const [trainerLevel, setTrainerLevel] = useState(50)
-  const [strategy, setStrategy] = useState<BattleStrategy>('charge-asap')
-  const [lineupId, setLineupId] = useState(data.rocket.lineups[0]?.id ?? '')
-  const [leadSlot, setLeadSlot] = useState(() => initialSlot(data.pokemon.candidates[0], data))
-  const [backupSlot, setBackupSlot] = useState(() => initialSlot(data.pokemon.candidates[1], data))
-  const lead = resolveSlot(leadSlot, data, maps)
-  const backup = resolveSlot(backupSlot, data, maps)
+  const maps = useMemo(() => moveMaps(data), [data]);
+  const [trainerLevel, setTrainerLevel] = useState(50);
+  const [strategy, setStrategy] = useState<BattleStrategy>("charge-asap");
+  const [lineupId, setLineupId] = useState(data.rocket.lineups[0]?.id ?? "");
+  const [leadSlot, setLeadSlot] = useState(() =>
+    initialSlot(data.pokemon.candidates[0], data),
+  );
+  const [backupSlot, setBackupSlot] = useState(() =>
+    initialSlot(data.pokemon.candidates[1], data),
+  );
+  const lead = resolveSlot(leadSlot, data, maps);
+  const backup = resolveSlot(backupSlot, data, maps);
   const lineup =
-    data.rocket.lineups.find((candidate) => candidate.id === lineupId) ?? data.rocket.lineups[0]
-  const boundedTrainerLevel = Math.min(50, Math.max(1, trainerLevel))
+    data.rocket.lineups.find((candidate) => candidate.id === lineupId) ??
+    data.rocket.lineups[0];
+  const boundedTrainerLevel = Math.min(50, Math.max(1, trainerLevel));
   const result = useMemo(
     () =>
       simulateRocketLineupExperimental({
@@ -60,18 +55,29 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
         backup: toPokemonBuild(backup, boundedTrainerLevel),
         lineup,
         mechanics: data.mechanics,
+        rocketOpponents: data.pokemon.rocketOpponents,
+        moves: data.moves,
         strategy,
       }),
-    [backup, boundedTrainerLevel, data.mechanics, lead, lineup, strategy],
-  )
+    [
+      backup,
+      boundedTrainerLevel,
+      data.mechanics,
+      data.moves,
+      data.pokemon.rocketOpponents,
+      lead,
+      lineup,
+      strategy,
+    ],
+  );
 
   return (
     <div className="grid gap-4">
       <Panel>
         <PanelHeader
           title="Battle Simulation"
-          subtitle="Experimental Rocket proxy simulation for a two-Pokemon team. Third slot remains outside calculations."
-          right={<Badge tone="warning">Experimental proxy</Badge>}
+          subtitle="Experimental Rocket simulation for a two-Pokemon team. Third slot remains outside calculations."
+          right={<Badge tone="warning">Experimental</Badge>}
         />
         <div className="grid gap-3 p-3 md:grid-cols-3">
           <label className="grid gap-1 text-xs font-medium text-[rgb(var(--muted-foreground))]">
@@ -90,11 +96,14 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
             value={strategy}
             onChange={(value) => setStrategy(value as BattleStrategy)}
             options={[
-              { value: 'charge-asap', label: 'Charge ASAP' },
-              { value: 'fastest-expected-knockout', label: 'Fastest expected knockout' },
-              { value: 'shield-breaker', label: 'Shield breaker' },
-              { value: 'preserve-lead', label: 'Preserve lead' },
-              { value: 'minimal-interaction', label: 'Minimal interaction' },
+              { value: "charge-asap", label: "Charge ASAP" },
+              {
+                value: "fastest-expected-knockout",
+                label: "Fastest expected knockout",
+              },
+              { value: "shield-breaker", label: "Shield breaker" },
+              { value: "preserve-lead", label: "Preserve lead" },
+              { value: "minimal-interaction", label: "Minimal interaction" },
             ]}
           />
           <div className="flex flex-wrap items-end gap-2">
@@ -140,18 +149,22 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
             <div className="flex flex-wrap items-center gap-2 text-xs">
               <Badge tone="info">{lineup.trainerName}</Badge>
               <span className="font-semibold text-[rgb(var(--foreground))]">
-                {lineup.slots.map((slot) => formatLineupBranch(slot.pokemonIds[0])).join(' -> ')}
+                {lineup.slots
+                  .map((slot) => formatLineupBranch(slot.pokemonIds[0]))
+                  .join(" -> ")}
               </span>
-              <Badge tone="warning">Proxy assumptions</Badge>
+              <Badge tone="warning">Assumptions</Badge>
             </div>
           </div>
         </div>
         <div className="mt-4 border-t border-[rgb(var(--border))] pt-3">
-          <h3 className="mb-3 text-sm font-semibold">Battle Simulation Result</h3>
+          <h3 className="mb-3 text-sm font-semibold">
+            Battle Simulation Result
+          </h3>
           <div className="flex flex-wrap items-center gap-2">
-            <Badge tone="warning">Experimental proxy simulation</Badge>
-            <Badge tone={result.outcome === 'win' ? 'ok' : 'danger'}>
-              {result.outcome === 'win' ? 'Proxy win' : 'Proxy loss'}
+            <Badge tone="warning">Experimental simulation</Badge>
+            <Badge tone={result.outcome === "win" ? "ok" : "danger"}>
+              {result.outcome === "win" ? "Win" : "Loss"}
             </Badge>
             <Badge tone="info">{lead.species.name} lead</Badge>
             <Badge tone="info">{backup.species.name} backup</Badge>
@@ -159,14 +172,23 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
         </div>
         <div className="mt-3 grid gap-3 sm:grid-cols-4">
           <PreviewMetric label="Turns" value={integer(result.totalTurns)} />
-          <PreviewMetric label="Clock" value={`${number(result.wallClockSeconds)}s`} />
-          <PreviewMetric label="Fast attacks" value={integer(result.fastAttacksUsed)} />
-          <PreviewMetric label="Charged attacks" value={integer(result.chargedAttacksUsed)} />
+          <PreviewMetric
+            label="Clock"
+            value={`${number(result.wallClockSeconds)}s`}
+          />
+          <PreviewMetric
+            label="Fast attacks"
+            value={integer(result.fastAttacksUsed)}
+          />
+          <PreviewMetric
+            label="Charged attacks"
+            value={integer(result.chargedAttacksUsed)}
+          />
         </div>
         <BattleTimeline events={result.events} totalTurns={result.totalTurns} />
       </Panel>
     </div>
-  )
+  );
 }
 
 function PreviewMetric({ label, value }: { label: string; value: string }) {
@@ -175,23 +197,55 @@ function PreviewMetric({ label, value }: { label: string; value: string }) {
       <div className="text-[10px] font-semibold uppercase text-[rgb(var(--muted-foreground))]">
         {label}
       </div>
-      <div className="mt-1 text-lg font-semibold text-[rgb(var(--foreground))]">{value}</div>
+      <div className="mt-1 text-lg font-semibold text-[rgb(var(--foreground))]">
+        {value}
+      </div>
     </div>
-  )
+  );
 }
 
-function BattleTimeline({ events, totalTurns }: { events: BattleEvent[]; totalTurns: number }) {
-  const visibleEvents = events.filter((event) => event.kind !== 'fast-start')
-  const maxTurn = Math.max(totalTurns, ...visibleEvents.map((event) => event.turn), 1)
-  const width = Math.max(920, maxTurn * 12)
-  const playerEvents = visibleEvents.filter((event) => event.actor === 'player')
-  const rocketEvents = visibleEvents.filter((event) => event.actor === 'rocket')
-  const systemEvents = visibleEvents.filter((event) => event.actor === 'system')
-  const tickInterval = maxTurn <= 60 ? 10 : 20
+function BattleTimeline({
+  events,
+  totalTurns,
+}: {
+  events: BattleEvent[];
+  totalTurns: number;
+}) {
+  const maxTurn = Math.max(totalTurns, 1);
+  const playerFastAttacks = playerFastAttackSpans(events);
+  const opponentFastAttacks = opponentFastAttackSpans(events);
+  const playerChargedAttacks = events.filter(
+    (event) => event.actor === "player" && event.kind === "charged-attack",
+  );
+  const opponentChargedAttacks = events.filter(
+    (event) => event.actor === "rocket" && event.kind === "charged-attack",
+  );
+  const playerShields = events.filter(
+    (event) => event.actor === "player" && event.kind === "shield",
+  );
+  const opponentShields = events.filter(
+    (event) => event.actor === "rocket" && event.kind === "shield",
+  );
+  const hpSegments = battleHpSegments(events, maxTurn);
+  const playerPokemonSegments = pokemonTransitionSegments(
+    events,
+    maxTurn,
+    "player",
+  );
+  const opponentPokemonSegments = pokemonTransitionSegments(
+    events,
+    maxTurn,
+    "opponent",
+  );
+  const tickInterval = maxTurn <= 60 ? 10 : 20;
+  const turnTicks = Array.from(
+    { length: Math.floor(maxTurn) + 1 },
+    (_, index) => index,
+  );
   const ticks = Array.from(
     { length: Math.floor(maxTurn / tickInterval) + 1 },
     (_, index) => index * tickInterval,
-  )
+  );
 
   return (
     <div className="mt-4">
@@ -199,279 +253,789 @@ function BattleTimeline({ events, totalTurns }: { events: BattleEvent[]; totalTu
         <h4 className="text-xs font-semibold uppercase text-[rgb(var(--muted-foreground))]">
           Timeline
         </h4>
-        <div className="flex items-center gap-3 text-[11px] text-[rgb(var(--muted-foreground))]">
-          <TimelineLegend tone="player" label="Player" />
-          <TimelineLegend tone="rocket" label="Rocket" />
-          <TimelineLegend tone="system" label="System" />
-        </div>
       </div>
-      <div className="overflow-x-auto rounded border border-[rgb(var(--border))] bg-[rgb(var(--muted)/0.12)]">
-        <div className="p-3" style={{ width }}>
-          <TimelineTrack
-            label="Player"
-            events={playerEvents}
-            maxTurn={maxTurn}
-            lane="player"
-          />
-          <div className="relative my-2 h-10">
-            <div className="absolute left-0 right-0 top-4 h-px bg-[rgb(var(--border))]" />
-            {ticks.map((tick) => (
-              <div
-                key={tick}
-                className="absolute top-0 grid -translate-x-1/2 justify-items-center gap-1 text-[10px] font-semibold text-[rgb(var(--muted-foreground))]"
-                style={{ left: `${(tick / maxTurn) * 100}%` }}
-              >
-                <span className="h-3 w-px bg-[rgb(var(--border))]" />
-                <span>{number(tick * 0.5)}s</span>
-              </div>
-            ))}
-            {systemEvents.map((event, index) => (
-              <TimelineChip
-                key={`${event.turn}-${event.actor}-${event.kind}-${index}`}
-                event={event}
-                maxTurn={maxTurn}
-                lane="system"
-              />
-            ))}
-          </div>
-          <TimelineTrack label="Rocket" events={rocketEvents} maxTurn={maxTurn} lane="rocket" />
+      <div
+        className="relative min-h-28 rounded border border-[rgb(var(--border))] bg-[rgb(var(--muted)/0.12)] px-5 py-4"
+        aria-label={`Battle timeline from 0.0 seconds to ${number(maxTurn * 0.5)} seconds`}
+      >
+        <div className="text-[11px] font-semibold uppercase text-[rgb(var(--muted-foreground))]">
+          Player
+        </div>
+        <PokemonTransitionTrack
+          ariaLabel="Player active Pokemon"
+          segments={playerPokemonSegments}
+          maxTurn={maxTurn}
+        />
+        <FastAttackTrack
+          ariaLabel="Player fast attack triggers"
+          spans={playerFastAttacks}
+          chargedAttacks={playerChargedAttacks}
+          chargedAttackAriaLabel="Player charged attack spans"
+          shields={playerShields}
+          shieldAriaLabel="Player shield uses"
+          maxTurn={maxTurn}
+          labelForEvent={playerNameFromFastAttack}
+        />
+        <TimelineAxis
+          turnTicks={turnTicks}
+          labeledTicks={ticks}
+          hpSegments={hpSegments}
+          playerPokemonSegments={playerPokemonSegments}
+          opponentPokemonSegments={opponentPokemonSegments}
+          maxTurn={maxTurn}
+        />
+        <FastAttackTrack
+          ariaLabel="Opponent fast attack triggers"
+          spans={opponentFastAttacks}
+          chargedAttacks={opponentChargedAttacks}
+          chargedAttackAriaLabel="Opponent charged attack spans"
+          shields={opponentShields}
+          shieldAriaLabel="Opponent shield uses"
+          maxTurn={maxTurn}
+          labelForEvent={opponentNameFromFastAttack}
+        />
+        <PokemonTransitionTrack
+          ariaLabel="Opponent active Pokemon"
+          segments={opponentPokemonSegments}
+          maxTurn={maxTurn}
+        />
+        <div className="text-[11px] font-semibold uppercase text-[rgb(var(--muted-foreground))]">
+          Opponent
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-function TimelineTrack({
-  label,
-  events,
+function TimelineAxis({
+  turnTicks,
+  labeledTicks,
+  hpSegments,
+  playerPokemonSegments,
+  opponentPokemonSegments,
   maxTurn,
-  lane,
 }: {
-  label: string
-  events: BattleEvent[]
-  maxTurn: number
-  lane: 'player' | 'rocket'
+  turnTicks: number[];
+  labeledTicks: number[];
+  hpSegments: BattleHpSegment[];
+  playerPokemonSegments: PokemonTransitionSegment[];
+  opponentPokemonSegments: PokemonTransitionSegment[];
+  maxTurn: number;
 }) {
-  const hpPoints = hpSeries(events, lane)
-
   return (
-    <div className="grid gap-1">
-      <div className="text-[11px] font-semibold uppercase text-[rgb(var(--muted-foreground))]">
-        {label}
-      </div>
-      <div className="relative h-20 rounded bg-[rgb(var(--panel)/0.54)]">
-        <div className="absolute left-0 right-0 top-1/2 h-px bg-[rgb(var(--border)/0.75)]" />
-        {hpPoints.length > 0 ? (
-          <svg
-            className="absolute inset-x-0 top-1 h-16 overflow-visible"
-            viewBox={`0 0 ${maxTurn} 100`}
-            preserveAspectRatio="none"
-            aria-hidden
+    <div className="relative h-40">
+      <TimelineHpAreas
+        segments={hpSegments}
+        playerPokemonSegments={playerPokemonSegments}
+        opponentPokemonSegments={opponentPokemonSegments}
+        maxTurn={maxTurn}
+      />
+      <div className="absolute left-0 right-0 top-1/2 h-px bg-[rgb(var(--muted-foreground)/0.72)]" />
+      {turnTicks.map((tick) => (
+        <span
+          key={tick}
+          className={`absolute top-1/2 w-px -translate-x-1/2 -translate-y-1/2 bg-[rgb(var(--muted-foreground)/0.72)] ${
+            tick % 2 === 0 ? "h-4" : "h-2.5"
+          }`}
+          style={{ left: `${(tick / maxTurn) * 100}%` }}
+          aria-hidden="true"
+        />
+      ))}
+      {labeledTicks.map((tick) => (
+        <div
+          key={tick}
+          className="absolute top-[calc(50%+14px)] -translate-x-1/2 text-[11px] font-semibold text-[rgb(var(--muted-foreground))]"
+          style={{ left: `${(tick / maxTurn) * 100}%` }}
+        >
+          <span>{number(tick * 0.5)}s</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function PokemonTransitionTrack({
+  ariaLabel,
+  segments,
+  maxTurn,
+}: {
+  ariaLabel: string;
+  segments: PokemonTransitionSegment[];
+  maxTurn: number;
+}) {
+  return (
+    <div className="relative h-7" aria-label={ariaLabel}>
+      {segments.map((segment, index) => {
+        const left = (segment.startTurn / maxTurn) * 100;
+        const width = ((segment.endTurn - segment.startTurn) / maxTurn) * 100;
+        const color = typeColor(segment.types[0] ?? "normal");
+
+        return (
+          <span
+            key={`${segment.name}-${segment.startTurn}-${index}`}
+            className="absolute top-1/2 flex h-5 -translate-y-1/2 items-center overflow-hidden rounded-full px-2 text-[11px] font-semibold shadow-sm"
+            style={{
+              backgroundColor: color.bg,
+              color: color.text,
+              left: `${left}%`,
+              width: `max(42px, calc(${width}% - 1px))`,
+            }}
+            aria-label={`${segment.name} active from ${number(segment.startTurn * 0.5)} to ${number(segment.endTurn * 0.5)} seconds`}
           >
-            <polyline
-              points={hpPolyline(hpPoints, maxTurn)}
-              fill="none"
-              stroke={lane === 'player' ? 'rgb(var(--primary))' : 'rgb(var(--danger))'}
-              strokeOpacity="0.7"
-              strokeWidth="2"
-              vectorEffect="non-scaling-stroke"
-            />
-          </svg>
-        ) : null}
-        {events.map((event, index) => (
-          <TimelineChip
-            key={`${event.turn}-${event.actor}-${event.kind}-${index}`}
-            event={event}
-            maxTurn={maxTurn}
-            lane={lane}
-          />
-        ))}
-      </div>
+            <span className="truncate">{segment.name}</span>
+          </span>
+        );
+      })}
     </div>
-  )
+  );
 }
 
-function TimelineLegend({
-  tone,
-  label,
-}: {
-  tone: 'player' | 'rocket' | 'system'
-  label: string
-}) {
-  return (
-    <span className="inline-flex items-center gap-1">
-      <span className={`h-2 w-2 rounded-full ${timelineTone(tone).dot}`} />
-      {label}
-    </span>
-  )
-}
-
-function TimelineChip({
-  event,
+function TimelineHpAreas({
+  segments,
+  playerPokemonSegments,
+  opponentPokemonSegments,
   maxTurn,
-  lane,
 }: {
-  event: BattleEvent
-  maxTurn: number
-  lane: 'player' | 'rocket' | 'system'
+  segments: BattleHpSegment[];
+  playerPokemonSegments: PokemonTransitionSegment[];
+  opponentPokemonSegments: PokemonTransitionSegment[];
+  maxTurn: number;
 }) {
-  const Icon = timelineIcons[event.kind]
-  const tone = timelineTone(event.actor)
-  const label = compactEventLabel(event)
-  const left = `${(event.turn / maxTurn) * 100}%`
-  const pauseTurns = event.kind === 'pause' ? parseTurns(event.message) : 0
-  const spanWidth = pauseTurns ? `${Math.max(16, (pauseTurns / maxTurn) * 100)}%` : undefined
-  const verticalClass =
-    lane === 'system'
-      ? 'top-1'
-      : event.kind === 'pokemon-enter' || event.kind === 'switch' || event.kind === 'faint'
-        ? 'top-2'
-        : event.kind === 'shield' || event.kind === 'pause' || event.kind === 'charged-attack'
-          ? 'top-6'
-          : 'top-9'
-  const compact = event.kind === 'fast-resolve'
+  const playerAreas = hpAreasForPokemonSegments(
+    segments,
+    playerPokemonSegments,
+    maxTurn,
+    "player",
+  );
+  const opponentAreas = hpAreasForPokemonSegments(
+    segments,
+    opponentPokemonSegments,
+    maxTurn,
+    "opponent",
+  );
 
   return (
-    <span
-      className={`absolute ${verticalClass} inline-flex items-center justify-center gap-1 border font-semibold shadow-sm ${compact ? 'h-4 w-4 -translate-x-1/2 rounded-sm p-0' : 'h-7 max-w-28 -translate-x-1/2 rounded-full px-2 text-[11px]'} ${tone.chip}`}
-      style={{ left, width: spanWidth }}
-      title={`${number(event.wallClockSeconds)}s · ${timelineLabel(event.kind)} · ${event.message}`}
-      aria-label={`${number(event.wallClockSeconds)} seconds ${timelineLabel(event.kind)} ${label}`}
+    <svg
+      className="absolute inset-0 h-full w-full overflow-visible"
+      viewBox="0 0 1000 160"
+      preserveAspectRatio="none"
+      aria-hidden="true"
     >
-      <Icon className={`${compact ? 'h-2.5 w-2.5' : 'h-3.5 w-3.5'} shrink-0 ${tone.icon}`} aria-hidden />
-      {compact ? null : <span className="truncate">{label}</span>}
-    </span>
-  )
+      {playerAreas.map((area) => (
+        <path key={area.key} d={area.path} fill={area.color} />
+      ))}
+      {opponentAreas.map((area) => (
+        <path key={area.key} d={area.path} fill={area.color} />
+      ))}
+    </svg>
+  );
 }
 
-function timelineTone(actor: BattleEvent['actor']) {
-  if (actor === 'player') {
-    return {
-      card: 'bg-[rgb(var(--primary)/0.1)]',
-      chip:
-        'border-[rgb(var(--primary)/0.38)] bg-[rgb(var(--primary)/0.12)] text-[rgb(var(--foreground))]',
-      dot: 'bg-[rgb(var(--primary))]',
-      icon: 'text-[rgb(var(--primary))]',
+function FastAttackTrack({
+  ariaLabel,
+  spans,
+  chargedAttacks,
+  chargedAttackAriaLabel,
+  shields,
+  shieldAriaLabel,
+  maxTurn,
+  labelForEvent,
+}: {
+  ariaLabel: string;
+  spans: FastAttackSpan[];
+  chargedAttacks: BattleEvent[];
+  chargedAttackAriaLabel: string;
+  shields: BattleEvent[];
+  shieldAriaLabel: string;
+  maxTurn: number;
+  labelForEvent: (event: BattleEvent) => string;
+}) {
+  return (
+    <div className="relative h-8" aria-label={ariaLabel}>
+      <div className="absolute left-0 right-0 top-1/2 h-px bg-[rgb(var(--border)/0.72)]" />
+      {spans.map((span, index) => {
+        const actor = labelForEvent(span.event);
+        const left = (span.startTurn / maxTurn) * 100;
+        const width = Math.max(
+          0.75,
+          ((span.endTurn - span.startTurn) / maxTurn) * 100,
+        );
+        const color = span.event.moveType
+          ? typeColor(span.event.moveType).bar
+          : "rgb(var(--danger))";
+
+        return (
+          <span
+            key={`${span.startTurn}-${span.endTurn}-${index}`}
+            className="absolute top-1/2 h-3 -translate-y-1/2 rounded-full opacity-82"
+            style={{
+              backgroundColor: color,
+              left: `${left}%`,
+              width: `max(1px, calc(${width}% - 1px))`,
+            }}
+            aria-label={`${actor} fast attack from ${number(span.startTurn * 0.5)} to ${number(span.endTurn * 0.5)} seconds`}
+          />
+        );
+      })}
+      {chargedAttacks.length > 0 ? (
+        <div className="absolute inset-0" aria-label={chargedAttackAriaLabel}>
+          {chargedAttacks.map((event, index) => {
+            const left = (event.turn / maxTurn) * 100;
+            const durationTurns = Math.max(0.5, event.durationTurns ?? 0.5);
+            const width = (durationTurns / maxTurn) * 100;
+            const color = event.moveType
+              ? typeColor(event.moveType).bg
+              : "rgb(var(--primary))";
+
+            return (
+              <span
+                key={`${event.turn}-${event.kind}-${index}`}
+                className="absolute top-1/2 z-10 h-5 -translate-y-1/2 rounded-full shadow-sm"
+                style={{
+                  backgroundColor: color,
+                  left: `${left}%`,
+                  width: `max(1px, calc(${width}% - 1px))`,
+                }}
+                aria-label={`${chargedAttackName(event)} charged attack from ${number(event.turn * 0.5)} to ${number((event.turn + durationTurns) * 0.5)} seconds`}
+              />
+            );
+          })}
+        </div>
+      ) : null}
+      {shields.length > 0 ? (
+        <div className="absolute inset-0" aria-label={shieldAriaLabel}>
+          {shields.map((event, index) => {
+            const durationTurns = Math.max(0, event.durationTurns ?? 0);
+            const left = ((event.turn + durationTurns / 2) / maxTurn) * 100;
+
+            return (
+              <span
+                key={`${event.turn}-${event.kind}-${index}`}
+                className="absolute top-1/2 z-20 grid h-6 w-6 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--panel)/0.92)] text-[rgb(var(--foreground))] shadow-sm"
+                style={{ left: `${left}%` }}
+                aria-label={`Shield used at ${number((event.turn + durationTurns / 2) * 0.5)} seconds`}
+              >
+                <Shield className="h-3.5 w-3.5" aria-hidden="true" />
+              </span>
+            );
+          })}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+type FastAttackSpan = {
+  startTurn: number;
+  endTurn: number;
+  event: BattleEvent;
+};
+
+type BattleHpSegment = {
+  startTurn: number;
+  endTurn: number;
+  playerRatio: number;
+  playerEndRatio: number;
+  playerTypes: PokemonType[];
+  opponentRatio: number;
+  opponentEndRatio: number;
+  opponentTypes: PokemonType[];
+  interpolation: "step" | "attack";
+};
+
+type BattleHpSample = {
+  turn: number;
+  playerHp: number;
+  playerMaxHp: number;
+  playerTypes: PokemonType[];
+  opponentHp: number;
+  opponentMaxHp: number;
+  opponentTypes: PokemonType[];
+  interpolationFromPrevious: "step" | "attack";
+};
+
+type PokemonTransitionSegment = {
+  name: string;
+  startTurn: number;
+  endTurn: number;
+  types: PokemonType[];
+};
+
+function pokemonTransitionSegments(
+  events: BattleEvent[],
+  maxTurn: number,
+  side: "player" | "opponent",
+): PokemonTransitionSegment[] {
+  const entries = events
+    .map((event) => pokemonTransitionEntry(event, side))
+    .filter((entry): entry is Omit<PokemonTransitionSegment, "endTurn"> =>
+      Boolean(entry),
+    )
+    .sort((a, b) => a.startTurn - b.startTurn);
+
+  return entries.flatMap((entry, index) => {
+    const endTurn = entries[index + 1]?.startTurn ?? maxTurn;
+    if (endTurn <= entry.startTurn) {
+      return [];
     }
+    return [{ ...entry, endTurn }];
+  });
+}
+
+function pokemonTransitionEntry(
+  event: BattleEvent,
+  side: "player" | "opponent",
+): Omit<PokemonTransitionSegment, "endTurn"> | undefined {
+  if (side === "player") {
+    if (
+      event.actor !== "player" ||
+      !["pokemon-enter", "switch"].includes(event.kind)
+    ) {
+      return undefined;
+    }
+    const name = event.message.match(/^(.+?) enters/)?.[1];
+    return name
+      ? {
+          name,
+          startTurn: event.turn,
+          types: event.playerTypes ?? ["normal"],
+        }
+      : undefined;
   }
 
-  if (actor === 'rocket') {
-    return {
-      card: 'bg-[rgb(var(--danger)/0.08)]',
-      chip:
-        'border-[rgb(var(--danger)/0.34)] bg-[rgb(var(--danger)/0.1)] text-[rgb(var(--foreground))]',
-      dot: 'bg-[rgb(var(--danger))]',
-      icon: 'text-[rgb(var(--danger))]',
+  if (event.kind === "pokemon-enter" && event.actor === "player") {
+    const name = event.message.match(/against .+?'s (.+?)\./)?.[1];
+    return name
+      ? {
+          name,
+          startTurn: event.turn,
+          types: event.opponentTypes ?? ["normal"],
+        }
+      : undefined;
+  }
+
+  if (event.kind === "pokemon-enter" && event.actor === "rocket") {
+    const name = event.message.match(/sends in (.+?)\./)?.[1];
+    return name
+      ? {
+          name,
+          startTurn: event.turn,
+          types: event.opponentTypes ?? ["normal"],
+        }
+      : undefined;
+  }
+
+  return undefined;
+}
+
+function battleHpSegments(
+  events: BattleEvent[],
+  maxTurn: number,
+): BattleHpSegment[] {
+  const samples: BattleHpSample[] = [];
+  let currentSample: BattleHpSample | undefined;
+  const pendingFastStarts = new Map<BattleEvent["actor"], BattleHpSample>();
+
+  for (const event of events) {
+    const eventSample = hpSampleFromEvent(event);
+    if (!eventSample) {
+      continue;
     }
+
+    if (event.kind === "fast-start") {
+      pendingFastStarts.set(event.actor, eventSample);
+      samples.push(eventSample);
+      currentSample = eventSample;
+      continue;
+    }
+
+    if (event.kind === "fast-resolve" && currentSample) {
+      const fastStartSample = pendingFastStarts.get(event.actor);
+      const startSample = fastStartSample
+        ? {
+            ...currentSample,
+            turn: fastStartSample.turn,
+            interpolationFromPrevious: "step" as const,
+          }
+        : undefined;
+      if (startSample && hpChanged(startSample, eventSample)) {
+        const endSample = {
+          ...eventSample,
+          interpolationFromPrevious: "attack" as const,
+        };
+        samples.push(startSample, endSample);
+        currentSample = endSample;
+        pendingFastStarts.delete(event.actor);
+        continue;
+      }
+      pendingFastStarts.delete(event.actor);
+    }
+
+    const durationTurns = event.durationTurns ?? 0;
+    if (
+      event.kind === "charged-attack" &&
+      durationTurns > 0 &&
+      currentSample &&
+      hpChanged(currentSample, eventSample)
+    ) {
+      const startSample = {
+        ...currentSample,
+        turn: event.turn,
+        interpolationFromPrevious: "step" as const,
+      };
+      const endSample = {
+        ...eventSample,
+        turn: event.turn + durationTurns,
+        interpolationFromPrevious: "attack" as const,
+      };
+      samples.push(startSample, endSample);
+      currentSample = endSample;
+      continue;
+    }
+
+    samples.push(eventSample);
+    currentSample = eventSample;
+  }
+
+  const mergedSamples = coalesceHpSamples(samples);
+
+  return mergedSamples.flatMap((sample, index) => {
+    const nextSample = mergedSamples[index + 1];
+    const nextTurn = nextSample?.turn ?? maxTurn;
+    if (nextTurn <= sample.turn) {
+      return [];
+    }
+
+    return [
+      {
+        startTurn: sample.turn,
+        endTurn: nextTurn,
+        playerRatio: hpRatio(sample.playerHp, sample.playerMaxHp),
+        playerEndRatio: hpRatio(
+          nextSample?.playerHp ?? sample.playerHp,
+          nextSample?.playerMaxHp ?? sample.playerMaxHp,
+        ),
+        playerTypes: sample.playerTypes,
+        opponentRatio: hpRatio(sample.opponentHp, sample.opponentMaxHp),
+        opponentEndRatio: hpRatio(
+          nextSample?.opponentHp ?? sample.opponentHp,
+          nextSample?.opponentMaxHp ?? sample.opponentMaxHp,
+        ),
+        opponentTypes: sample.opponentTypes,
+        interpolation: nextSample?.interpolationFromPrevious ?? "step",
+      },
+    ];
+  });
+}
+
+function hpSampleFromEvent(event: BattleEvent): BattleHpSample | undefined {
+  const {
+    playerHp,
+    playerMaxHp,
+    playerTypes,
+    opponentHp,
+    opponentMaxHp,
+    opponentTypes,
+  } = event;
+  if (
+    playerHp === undefined ||
+    playerMaxHp === undefined ||
+    opponentHp === undefined ||
+    opponentMaxHp === undefined
+  ) {
+    return undefined;
   }
 
   return {
-    card: 'bg-[rgb(var(--muted)/0.42)]',
-    chip:
-      'border-[rgb(var(--border))] bg-[rgb(var(--panel))] text-[rgb(var(--foreground))]',
-    dot: 'bg-[rgb(var(--muted-foreground))]',
-    icon: 'text-[rgb(var(--muted-foreground))]',
-  }
+    turn: event.turn,
+    playerHp,
+    playerMaxHp,
+    playerTypes: playerTypes ?? ["normal"],
+    opponentHp,
+    opponentMaxHp,
+    opponentTypes: opponentTypes ?? ["normal"],
+    interpolationFromPrevious: "step",
+  };
 }
 
-const timelineIcons: Record<BattleEvent['kind'], LucideIcon> = {
-  'pokemon-enter': Activity,
-  'fast-start': Zap,
-  'fast-resolve': Zap,
-  'charged-attack': Swords,
-  shield: Shield,
-  buff: Activity,
-  faint: Skull,
-  switch: RotateCcw,
-  pause: Pause,
-  'battle-end': Flag,
+function hpChanged(previous: BattleHpSample, next: BattleHpSample) {
+  return (
+    previous.playerHp !== next.playerHp ||
+    previous.opponentHp !== next.opponentHp
+  );
 }
 
-function timelineLabel(kind: BattleEvent['kind']) {
-  const labels: Record<BattleEvent['kind'], string> = {
-    'pokemon-enter': 'Enter',
-    'fast-start': 'Fast start',
-    'fast-resolve': 'Fast attack',
-    'charged-attack': 'Charged attack',
-    shield: 'Shield',
-    buff: 'Buff',
-    faint: 'Faint',
-    switch: 'Switch',
-    pause: 'Pause',
-    'battle-end': 'Battle end',
+function coalesceHpSamples(samples: BattleHpSample[]) {
+  const sortedSamples = samples
+    .map((sample, order) => ({ sample, order }))
+    .sort((a, b) => a.sample.turn - b.sample.turn || a.order - b.order)
+    .map((item) => item.sample);
+  const coalesced: BattleHpSample[] = [];
+  for (const sample of sortedSamples) {
+    const previous = coalesced[coalesced.length - 1];
+    if (previous && sameHpSampleState(previous, sample)) {
+      coalesced[coalesced.length - 1] = {
+        ...sample,
+        interpolationFromPrevious:
+          previous.interpolationFromPrevious === "attack" ||
+          sample.interpolationFromPrevious === "attack"
+            ? "attack"
+            : "step",
+      };
+    } else {
+      coalesced.push(sample);
+    }
   }
 
-  return labels[kind]
+  return coalesced;
 }
 
-function compactEventLabel(event: BattleEvent) {
-  const message = event.message
-
-  if (event.kind === 'pokemon-enter') {
-    return message.match(/^([^ ]+)/)?.[1] ?? 'Enter'
-  }
-
-  if (event.kind === 'fast-resolve') {
-    const fastMove = message.match(/^([^;]+)/)?.[1]
-    const hp = message.match(/HP is (\d+)/)?.[1]
-    return hp ? `${fastMove ?? 'Fast'} HP ${hp}` : (fastMove ?? 'Fast')
-  }
-
-  if (event.kind === 'charged-attack') {
-    return message.match(/uses ([^;]+)/)?.[1] ?? 'Charged'
-  }
-
-  if (event.kind === 'shield') {
-    const shields = message.match(/(\d+) shield/)?.[1]
-    return shields ? `Shield ${shields}` : 'Shield'
-  }
-
-  if (event.kind === 'pause') {
-    const turns = message.match(/(\d+) turn/)?.[1]
-    return turns ? `Pause ${turns}T` : 'Pause'
-  }
-
-  if (event.kind === 'faint') {
-    return message.match(/^([^ ]+)/)?.[1] ?? 'Faint'
-  }
-
-  if (event.kind === 'switch') {
-    return message.match(/^([^ ]+)/)?.[1] ?? 'Switch'
-  }
-
-  if (event.kind === 'battle-end') {
-    return 'End'
-  }
-
-  return timelineLabel(event.kind)
+function sameHpSampleState(a: BattleHpSample, b: BattleHpSample) {
+  return (
+    a.turn === b.turn &&
+    a.playerHp === b.playerHp &&
+    a.playerMaxHp === b.playerMaxHp &&
+    a.opponentHp === b.opponentHp &&
+    a.opponentMaxHp === b.opponentMaxHp &&
+    sameTypes(a.playerTypes, b.playerTypes) &&
+    sameTypes(a.opponentTypes, b.opponentTypes)
+  );
 }
 
-function hpSeries(events: BattleEvent[], lane: 'player' | 'rocket') {
-  const points = events
-    .map((event) => {
-      const hp = Number(event.message.match(/HP is (\d+)/)?.[1])
-      return Number.isFinite(hp) ? { turn: event.turn, hp } : undefined
-    })
-    .filter((point): point is { turn: number; hp: number } => Boolean(point))
-  const maxHp = Math.max(...points.map((point) => point.hp), 1)
-  const normalized = points.map((point) => ({
-    turn: point.turn,
-    hp: lane === 'player' ? (point.hp / maxHp) * 100 : (point.hp / maxHp) * 100,
-  }))
-
-  return normalized
+function sameTypes(a: PokemonType[], b: PokemonType[]) {
+  return a.length === b.length && a.every((type, index) => type === b[index]);
 }
 
-function hpPolyline(points: Array<{ turn: number; hp: number }>, maxTurn: number) {
-  const first = points[0]
-  const seeded = first && first.turn > 0 ? [{ turn: 0, hp: 100 }, ...points] : points
-  const extended = seeded.at(-1)?.turn === maxTurn ? seeded : [...seeded, { turn: maxTurn, hp: seeded.at(-1)?.hp ?? 100 }]
-
-  return extended.map((point) => `${point.turn},${100 - point.hp}`).join(' ')
+function hpRatio(hp: number, maxHp: number) {
+  return Math.max(0, Math.min(1, hp / Math.max(1, maxHp)));
 }
 
-function parseTurns(message: string) {
-  return Number(message.match(/(\d+) turn/)?.[1] ?? 0)
+function hpAreasForPokemonSegments(
+  hpSegments: BattleHpSegment[],
+  pokemonSegments: PokemonTransitionSegment[],
+  maxTurn: number,
+  side: "player" | "opponent",
+) {
+  return pokemonSegments.flatMap((pokemonSegment, index) => {
+    const clipped = clipHpSegmentsToPokemon(
+      hpSegments,
+      pokemonSegment,
+      side,
+      maxTurn,
+    );
+    const path = hpAreaPath(clipped, maxTurn, side);
+    if (!path) {
+      return [];
+    }
+    return [
+      {
+        key: `${side}-${pokemonSegment.name}-${pokemonSegment.startTurn}-${index}`,
+        path,
+        color: typeColor(pokemonSegment.types[0] ?? "normal").bar,
+      },
+    ];
+  });
+}
+
+function clipHpSegmentsToPokemon(
+  hpSegments: BattleHpSegment[],
+  pokemonSegment: PokemonTransitionSegment,
+  side: "player" | "opponent",
+  maxTurn: number,
+) {
+  return hpSegments.flatMap((segment) => {
+    if (
+      segment.startTurn < pokemonSegment.startTurn ||
+      segment.startTurn >= pokemonSegment.endTurn
+    ) {
+      return [];
+    }
+
+    const startTurn = Math.max(segment.startTurn, pokemonSegment.startTurn);
+    const endTurn = Math.min(segment.endTurn, pokemonSegment.endTurn);
+    if (endTurn <= startTurn) {
+      return [];
+    }
+    const reachesPokemonBoundary =
+      pokemonSegment.endTurn < maxTurn && endTurn === pokemonSegment.endTurn;
+    return [
+      {
+        ...segment,
+        startTurn,
+        endTurn,
+        playerEndRatio:
+          side === "player" && reachesPokemonBoundary
+            ? 0
+            : segment.playerEndRatio,
+        playerTypes: pokemonSegment.types,
+        opponentEndRatio:
+          side === "opponent" && reachesPokemonBoundary
+            ? 0
+            : segment.opponentEndRatio,
+        opponentTypes: pokemonSegment.types,
+      },
+    ];
+  });
+}
+
+function hpAreaPath(
+  segments: BattleHpSegment[],
+  maxTurn: number,
+  side: "player" | "opponent",
+) {
+  if (segments.length === 0) {
+    return "";
+  }
+
+  const centerY = 80;
+  const height = 76;
+  const minY = side === "player" ? centerY - height : centerY;
+  const maxY = side === "player" ? centerY : centerY + height;
+  const samples = hpSamplePoints(
+    segments,
+    maxTurn,
+    side,
+    centerY,
+    height,
+    minY,
+    maxY,
+  );
+  const first = samples[0];
+  const last = samples[samples.length - 1];
+  const commands = [`M ${first.x} ${centerY}`, `L ${first.x} ${first.y}`];
+
+  if (samples.length === 1) {
+    commands.push(`L ${last.x} ${last.y}`);
+  } else {
+    for (const segment of segments) {
+      const startRatio =
+        side === "player" ? segment.playerRatio : segment.opponentRatio;
+      const endRatio =
+        side === "player" ? segment.playerEndRatio : segment.opponentEndRatio;
+      const startY = yForHpRatio(startRatio, side, centerY, height, minY, maxY);
+      const endY = yForHpRatio(endRatio, side, centerY, height, minY, maxY);
+      const startX = xForTurn(segment.startTurn, maxTurn);
+      const endX = xForTurn(segment.endTurn, maxTurn);
+
+      if (segment.interpolation === "attack") {
+        const deltaX = endX - startX;
+        commands.push(
+          `C ${startX + deltaX * 0.38} ${startY}, ${startX + deltaX * 0.62} ${endY}, ${endX} ${endY}`,
+        );
+      } else {
+        commands.push(`L ${endX} ${startY}`, `L ${endX} ${endY}`);
+      }
+    }
+  }
+
+  commands.push(`L ${last.x} ${centerY}`, "Z");
+  return commands.join(" ");
+}
+
+type HpSamplePoint = {
+  x: number;
+  y: number;
+};
+
+function hpSamplePoints(
+  segments: BattleHpSegment[],
+  maxTurn: number,
+  side: "player" | "opponent",
+  centerY: number,
+  height: number,
+  minY: number,
+  maxY: number,
+): HpSamplePoint[] {
+  const points = segments.map((segment) => {
+    const x = xForTurn(segment.startTurn, maxTurn);
+    const ratio =
+      side === "player" ? segment.playerRatio : segment.opponentRatio;
+    const y = yForHpRatio(ratio, side, centerY, height, minY, maxY);
+
+    return { x, y };
+  });
+  const last = segments[segments.length - 1];
+  const ratio = side === "player" ? last.playerEndRatio : last.opponentEndRatio;
+  const y = yForHpRatio(ratio, side, centerY, height, minY, maxY);
+
+  return [...points, { x: xForTurn(last.endTurn, maxTurn), y }];
+}
+
+function yForHpRatio(
+  ratio: number,
+  side: "player" | "opponent",
+  centerY: number,
+  height: number,
+  minY: number,
+  maxY: number,
+) {
+  return clampNumber(
+    side === "player" ? centerY - ratio * height : centerY + ratio * height,
+    minY,
+    maxY,
+  );
+}
+
+function xForTurn(turn: number, maxTurn: number) {
+  return (turn / maxTurn) * 1000;
+}
+
+function clampNumber(value: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function playerFastAttackSpans(events: BattleEvent[]): FastAttackSpan[] {
+  const starts = events.filter(
+    (event) => event.actor === "player" && event.kind === "fast-start",
+  );
+  const resolves = events.filter(
+    (event) => event.actor === "player" && event.kind === "fast-resolve",
+  );
+
+  return resolves.map((event, index) => ({
+    startTurn:
+      starts[index]?.turn ??
+      Math.max(0, event.turn - inferredPlayerFastTurns(resolves)),
+    endTurn: event.turn,
+    event,
+  }));
+}
+
+function opponentFastAttackSpans(events: BattleEvent[]): FastAttackSpan[] {
+  const starts = events.filter(
+    (event) => event.actor === "rocket" && event.kind === "fast-start",
+  );
+  const resolves = events.filter(
+    (event) => event.actor === "rocket" && event.kind === "fast-resolve",
+  );
+
+  return resolves.map((event, index) => ({
+    startTurn: starts[index]?.turn ?? Math.max(0, event.turn - 1),
+    endTurn: event.turn,
+    event,
+  }));
+}
+
+function inferredPlayerFastTurns(events: BattleEvent[]) {
+  const first = events[0];
+  const second = events[1];
+  return first && second ? Math.max(1, second.turn - first.turn) : 1;
+}
+
+function playerNameFromFastAttack(event: BattleEvent) {
+  return event.message.match(/^([^ ]+)/)?.[1] ?? "Player";
+}
+
+function opponentNameFromFastAttack(event: BattleEvent) {
+  return (
+    event.message.match(/^([^;]+?) uses/)?.[1] ??
+    event.message.match(/^([^;]+?) attacks/)?.[1] ??
+    "Opponent"
+  );
+}
+
+function chargedAttackName(event: BattleEvent) {
+  return event.message.match(/uses ([^;]+?)(?:;|$)/)?.[1] ?? "Charged";
 }
 
 function TeamSlot({
@@ -483,34 +1047,47 @@ function TeamSlot({
   trainerLevel,
   onChange,
 }: {
-  role: string
-  slot: SlotState
-  build: SlotBuild
-  data: ApplicationData
-  maps: ReturnType<typeof moveMaps>
-  trainerLevel: number
-  onChange: (slot: SlotState) => void
+  role: string;
+  slot: SlotState;
+  build: SlotBuild;
+  data: ApplicationData;
+  maps: ReturnType<typeof moveMaps>;
+  trainerLevel: number;
+  onChange: (slot: SlotState) => void;
 }) {
-  const analytics = analyzeMoveset(build.species, build.fastMove, build.chargedMoves)
-  const stats = calculateEffectiveStats(build.species, Math.min(50, Math.max(1, trainerLevel)))
-  const fastMoves = legalFastMoves(build.species, maps)
-  const chargedMoves = legalChargedMoves(build.species, maps)
-  const maxFastMetric = Math.max(analytics.fast.damagePerTurn, analytics.fast.energyPerTurn, 1)
+  const analytics = analyzeMoveset(
+    build.species,
+    build.fastMove,
+    build.chargedMoves,
+  );
+  const stats = calculateEffectiveStats(
+    build.species,
+    Math.min(50, Math.max(1, trainerLevel)),
+  );
+  const fastMoves = legalFastMoves(build.species, maps);
+  const chargedMoves = legalChargedMoves(build.species, maps);
+  const maxFastMetric = Math.max(
+    analytics.fast.damagePerTurn,
+    analytics.fast.energyPerTurn,
+    1,
+  );
 
   function setSpecies(speciesId: string) {
-    const species = data.pokemon.candidates.find((candidate) => candidate.id === speciesId)
+    const species = data.pokemon.candidates.find(
+      (candidate) => candidate.id === speciesId,
+    );
     if (!species) {
-      return
+      return;
     }
-    onChange(initialSlot(species, data))
+    onChange(initialSlot(species, data));
   }
 
   function setChargedOne(chargedOneId: string) {
-    onChange(normalizeChargedPair({ ...slot, chargedOneId }, chargedMoves))
+    onChange(normalizeChargedPair({ ...slot, chargedOneId }, chargedMoves));
   }
 
   function setChargedTwo(chargedTwoId: string) {
-    onChange(normalizeChargedPair({ ...slot, chargedTwoId }, chargedMoves))
+    onChange(normalizeChargedPair({ ...slot, chargedTwoId }, chargedMoves));
   }
 
   return (
@@ -530,18 +1107,20 @@ function TeamSlot({
             label: candidate.name,
           }))}
         />
-        <div className="grid gap-2 sm:grid-cols-3">
-          <DataSelect
-            label="Fast move"
-            value={build.fastMove.id}
-            selectedType={build.fastMove.type}
-            onChange={(fastMoveId) => onChange({ ...slot, fastMoveId })}
-            options={fastMoves.map((move) => ({
-              value: move.id,
-              label: fastMoveLabel(move),
-              type: move.type,
-            }))}
-          />
+        <div className="grid gap-2 sm:grid-cols-2">
+          <div className="sm:col-span-2">
+            <DataSelect
+              label="Fast move"
+              value={build.fastMove.id}
+              selectedType={build.fastMove.type}
+              onChange={(fastMoveId) => onChange({ ...slot, fastMoveId })}
+              options={fastMoves.map((move) => ({
+                value: move.id,
+                label: fastMoveLabel(move),
+                type: move.type,
+              }))}
+            />
+          </div>
           <DataSelect
             label="Charged 1"
             value={build.chargedMoves[0].id}
@@ -573,7 +1152,7 @@ function TeamSlot({
         />
       </div>
     </Panel>
-  )
+  );
 }
 
 function TeamSlotSummary({
@@ -582,15 +1161,17 @@ function TeamSlotSummary({
   chargedMoves,
   maxFastMetric,
 }: {
-  analytics: ReturnType<typeof analyzeMoveset>
-  fastMove: FastMove
-  chargedMoves: [ChargedMove, ChargedMove]
-  maxFastMetric: number
+  analytics: ReturnType<typeof analyzeMoveset>;
+  fastMove: FastMove;
+  chargedMoves: [ChargedMove, ChargedMove];
+  maxFastMetric: number;
 }) {
   const timings = chargedMoves.map((chargedMove) => ({
     chargedMove,
-    timing: analytics.timings.find((item) => item.chargedMoveId === chargedMove.id),
-  }))
+    timing: analytics.timings.find(
+      (item) => item.chargedMoveId === chargedMove.id,
+    ),
+  }));
 
   return (
     <div className="grid gap-3 rounded bg-[rgb(var(--muted)/0.18)] px-3 py-2.5">
@@ -623,30 +1204,37 @@ function TeamSlotSummary({
               key={chargedMove.id}
               className="flex min-w-0 items-center gap-2 rounded bg-[rgb(var(--panel)/0.58)] px-2 py-1.5 text-xs"
             >
-              <TypeChip type={chargedMove.type} label={chargedMove.name} compact />
+              <TypeChip
+                type={chargedMove.type}
+                label={chargedMove.name}
+                compact
+              />
               <span className="shrink-0 text-[rgb(var(--muted-foreground))]">
                 {timing
                   ? `${timing.firstFastMoveCount} fast / ${number(timing.firstSeconds)}s`
-                  : 'No timing'}
+                  : "No timing"}
               </span>
             </div>
           ))}
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-function initialSlot(species: PokemonSpecies, data: ApplicationData): SlotState {
-  const maps = moveMaps(data)
-  const fastMoves = legalFastMoves(species, maps)
-  const chargedMoves = legalChargedMoves(species, maps)
+function initialSlot(
+  species: PokemonSpecies,
+  data: ApplicationData,
+): SlotState {
+  const maps = moveMaps(data);
+  const fastMoves = legalFastMoves(species, maps);
+  const chargedMoves = legalChargedMoves(species, maps);
   return {
     speciesId: species.id,
     fastMoveId: fastMoves[0].id,
     chargedOneId: chargedMoves[0].id,
     chargedTwoId: chargedMoves[1]?.id ?? chargedMoves[0].id,
-  }
+  };
 }
 
 function resolveSlot(
@@ -654,17 +1242,25 @@ function resolveSlot(
   data: ApplicationData,
   maps: ReturnType<typeof moveMaps>,
 ): SlotBuild {
-  const species = data.pokemon.candidates.find((candidate) => candidate.id === slot.speciesId) ?? data.pokemon.candidates[0]
-  const fastMoves = legalFastMoves(species, maps)
-  const chargedMoves = legalChargedMoves(species, maps)
-  const fastMove = fastMoves.find((move) => move.id === slot.fastMoveId) ?? fastMoves[0]
-  const chargedOne = chargedMoves.find((move) => move.id === slot.chargedOneId) ?? chargedMoves[0]
+  const species =
+    data.pokemon.candidates.find(
+      (candidate) => candidate.id === slot.speciesId,
+    ) ?? data.pokemon.candidates[0];
+  const fastMoves = legalFastMoves(species, maps);
+  const chargedMoves = legalChargedMoves(species, maps);
+  const fastMove =
+    fastMoves.find((move) => move.id === slot.fastMoveId) ?? fastMoves[0];
+  const chargedOne =
+    chargedMoves.find((move) => move.id === slot.chargedOneId) ??
+    chargedMoves[0];
   const chargedTwo =
-    chargedMoves.find((move) => move.id === slot.chargedTwoId && move.id !== chargedOne.id) ??
+    chargedMoves.find(
+      (move) => move.id === slot.chargedTwoId && move.id !== chargedOne.id,
+    ) ??
     chargedMoves.find((move) => move.id !== chargedOne.id) ??
-    chargedOne
+    chargedOne;
 
-  return { species, fastMove, chargedMoves: [chargedOne, chargedTwo] }
+  return { species, fastMove, chargedMoves: [chargedOne, chargedTwo] };
 }
 
 function toPokemonBuild(slot: SlotBuild, level: number): PokemonBuild {
@@ -676,48 +1272,56 @@ function toPokemonBuild(slot: SlotBuild, level: number): PokemonBuild {
     bestBuddy: false,
     fastMove: slot.fastMove,
     chargedMoves: slot.chargedMoves,
-  }
+  };
 }
 
 function normalizeChargedPair(slot: SlotState, chargedMoves: ChargedMove[]) {
   if (slot.chargedOneId !== slot.chargedTwoId) {
-    return slot
+    return slot;
   }
-  const replacement = chargedMoves.find((move) => move.id !== slot.chargedOneId)
-  return replacement ? { ...slot, chargedTwoId: replacement.id } : slot
+  const replacement = chargedMoves.find(
+    (move) => move.id !== slot.chargedOneId,
+  );
+  return replacement ? { ...slot, chargedTwoId: replacement.id } : slot;
 }
 
-function legalFastMoves(species: PokemonSpecies, maps: ReturnType<typeof moveMaps>) {
+function legalFastMoves(
+  species: PokemonSpecies,
+  maps: ReturnType<typeof moveMaps>,
+) {
   const moves = species.fastMoves
     .map((id) => maps.fast.get(id))
-    .filter((move): move is FastMove => Boolean(move))
+    .filter((move): move is FastMove => Boolean(move));
   if (moves.length === 0) {
-    throw new Error(`${species.name} has no resolvable fast move`)
+    throw new Error(`${species.name} has no resolvable fast move`);
   }
-  return moves
+  return moves;
 }
 
-function legalChargedMoves(species: PokemonSpecies, maps: ReturnType<typeof moveMaps>) {
+function legalChargedMoves(
+  species: PokemonSpecies,
+  maps: ReturnType<typeof moveMaps>,
+) {
   const moves = species.chargedMoves
     .map((id) => maps.charged.get(id))
-    .filter((move): move is ChargedMove => Boolean(move))
+    .filter((move): move is ChargedMove => Boolean(move));
   if (moves.length < 2) {
-    throw new Error(`${species.name} needs at least two charged moves`)
+    throw new Error(`${species.name} needs at least two charged moves`);
   }
-  return moves
+  return moves;
 }
 
 function fastMoveLabel(move: FastMove) {
-  return `${move.name} · ${typeAbbreviation(move.type)} · P${move.power} · +E${move.energyGain} · ${move.turns}T`
+  return `${move.name} · ${typeAbbreviation(move.type)} · P${move.power} · +E${move.energyGain} · ${move.turns}T`;
 }
 
 function chargedMoveLabel(move: ChargedMove) {
-  return `${move.name} · ${typeAbbreviation(move.type)} · P${move.power} · E${move.energyCost}`
+  return `${move.name} · ${typeAbbreviation(move.type)} · P${move.power} · E${move.energyCost}`;
 }
 
 function formatLineupBranch(id: string) {
   return id
     .split(/[-_]/)
     .map((part) => `${part.slice(0, 1).toUpperCase()}${part.slice(1)}`)
-    .join(' ')
+    .join(" ");
 }

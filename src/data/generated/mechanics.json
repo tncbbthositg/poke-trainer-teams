@@ -22,18 +22,58 @@
     {
       "key": "rocket_pause_after_charged_attack",
       "label": "Rocket pause after player Charged Attack",
-      "value": 2,
+      "value": 1.5,
       "unit": "seconds",
       "category": "configurable-assumption",
-      "note": "Experimental simulator default. Rocket pause duration is not yet verified and must remain visible as an assumption."
+      "note": "Experimental simulator default. Modeled as a 3-turn Rocket stun lock after player Charged Attacks; duration is not yet verified and must remain visible as an assumption."
+    },
+    {
+      "key": "rocket_pause_after_player_switch",
+      "label": "Rocket pause after player switch",
+      "value": 1.5,
+      "unit": "turns",
+      "category": "configurable-assumption",
+      "note": "Experimental simulator default. Modeled as a 1.5-turn Rocket pause after the player switches Pokemon."
     },
     {
       "key": "charged_attack_wall_clock",
       "label": "Charged Attack wall-clock overhead",
-      "value": 0,
+      "value": 10,
       "unit": "seconds",
       "category": "unverified",
-      "note": "Device and animation timing are unresolved. Milestone 1 displays turn timing only."
+      "note": "Approximate real animation duration from tap through damage and normal play resuming. This is not used as the battle-turn timeline scale."
+    },
+    {
+      "key": "charged_attack_registration_turns",
+      "label": "Charged Attack battle-turn registration",
+      "value": 0.5,
+      "unit": "turns",
+      "category": "configurable-assumption",
+      "note": "Experimental simulator default. Charged Attacks register as a 0.5-turn span on the battle-turn timeline, while real animation takes longer."
+    },
+    {
+      "key": "rocket_opponent_charged_attack_interval",
+      "label": "Rocket opponent Charged Attack interval",
+      "value": 18,
+      "unit": "turns",
+      "category": "configurable-assumption",
+      "note": "Experimental simulator default. Opponent Charged Attack timing is a placeholder cadence until Rocket move energy and move selection are implemented."
+    },
+    {
+      "key": "rocket_opponent_charged_attack_damage",
+      "label": "Rocket opponent Charged Attack damage",
+      "value": 35,
+      "unit": "hp",
+      "category": "configurable-assumption",
+      "note": "Experimental simulator default. Damage after player shields are exhausted is a placeholder until Rocket charged moves and scaling are implemented."
+    },
+    {
+      "key": "player_shields",
+      "label": "Player shields",
+      "value": 2,
+      "unit": "shields",
+      "category": "configurable-assumption",
+      "note": "Experimental simulator default. Modeled naively as shielding the first two opponent Charged Attacks."
     },
     {
       "key": "rocket_grunt_shields",

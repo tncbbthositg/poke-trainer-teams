@@ -1,0 +1,15 @@
+{
+  "name": "Rocket Pair Lab",
+  "short_name": "Rocket Pair",
+  "icons": [
+    {
+      "src": "app-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#0f172a",
+  "background_color": "#0f172a",
+  "display": "standalone"
+}
