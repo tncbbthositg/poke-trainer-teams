@@ -3,6 +3,7 @@ import {
   Activity,
   BarChart3,
   BookOpen,
+  Monitor,
   GitCompare,
   ListFilter,
   Moon,
@@ -49,6 +50,8 @@ type ViewId =
   | 'lineups'
   | 'methodology'
 
+type ThemeMode = 'light' | 'dark' | 'system'
+
 const views: Array<{
   id: ViewId
   label: string
@@ -58,7 +61,7 @@ const views: Array<{
   { id: 'overview', label: 'Overview', path: '/', icon: BarChart3 },
   { id: 'pokemon', label: 'Pokemon', path: '/pokemon', icon: ListFilter },
   { id: 'movesets', label: 'Movesets', path: '/movesets', icon: GitCompare },
-  { id: 'pairs', label: 'Pair Builder', path: '/pairs', icon: Users },
+  { id: 'pairs', label: 'Battle Sim', path: '/pairs', icon: Users },
   { id: 'lineups', label: 'Lineups', path: '/lineups', icon: Table2 },
   { id: 'methodology', label: 'Methodology', path: '/methodology', icon: BookOpen },
 ]
@@ -92,17 +95,23 @@ function useHashView() {
 export default function App() {
   const data = useMemo(() => loadApplicationData(), [])
   const activeView = useHashView()
-  const [dark, setDark] = useState(() =>
+  const [themeMode, setThemeMode] = useState<ThemeMode>(() => readThemeMode())
+  const [systemDark, setSystemDark] = useState(() =>
     window.matchMedia('(prefers-color-scheme: dark)').matches,
   )
+  const dark = themeMode === 'dark' || (themeMode === 'system' && systemDark)
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
-    const updateTheme = () => setDark(mediaQuery.matches)
+    const updateTheme = () => setSystemDark(mediaQuery.matches)
     updateTheme()
     mediaQuery.addEventListener('change', updateTheme)
     return () => mediaQuery.removeEventListener('change', updateTheme)
   }, [])
+
+  useEffect(() => {
+    window.localStorage.setItem(themeModeStorageKey, themeMode)
+  }, [themeMode])
 
   return (
     <div className={cn(dark && 'dark')}>
@@ -120,13 +129,7 @@ export default function App() {
                 Milestone 1 data explorer. Rankings remain experimental.
               </p>
             </div>
-            <span
-              className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-[rgb(var(--border))] bg-[rgb(var(--panel))]"
-              aria-label="Theme follows system preference"
-              title="Theme follows system preference"
-            >
-              {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </span>
+            <ThemeModeControl mode={themeMode} onChange={setThemeMode} />
           </div>
           <nav
             className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-3 pb-3 sm:px-4"
@@ -171,6 +174,67 @@ export default function App() {
           </Suspense>
         </main>
       </div>
+    </div>
+  )
+}
+
+const themeModeStorageKey = 'rocket-pair-lab:theme-mode'
+
+function readThemeMode(): ThemeMode {
+  try {
+    const value = window.localStorage.getItem(themeModeStorageKey)
+    return isThemeMode(value) ? value : 'system'
+  } catch {
+    return 'system'
+  }
+}
+
+function isThemeMode(value: unknown): value is ThemeMode {
+  return value === 'light' || value === 'dark' || value === 'system'
+}
+
+function ThemeModeControl({
+  mode,
+  onChange,
+}: {
+  mode: ThemeMode
+  onChange: (mode: ThemeMode) => void
+}) {
+  const options: Array<{ mode: ThemeMode; label: string; icon: typeof Sun }> = [
+    { mode: 'light', label: 'Light', icon: Sun },
+    { mode: 'dark', label: 'Dark', icon: Moon },
+    { mode: 'system', label: 'System', icon: Monitor },
+  ]
+
+  return (
+    <div
+      className="inline-flex h-10 shrink-0 items-center rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--muted)/0.36)] p-1"
+      role="group"
+      aria-label="Theme mode"
+    >
+      {options.map((option) => {
+        const Icon = option.icon
+        const selected = mode === option.mode
+
+        return (
+          <button
+            key={option.mode}
+            type="button"
+            onClick={() => onChange(option.mode)}
+            aria-pressed={selected}
+            aria-label={`${option.label} theme`}
+            title={`${option.label} theme`}
+            className={cn(
+              'grid h-8 w-8 place-items-center rounded-full text-[rgb(var(--muted-foreground))] transition-colors',
+              selected &&
+                'bg-[rgb(var(--panel))] text-[rgb(var(--foreground))] shadow-sm ring-1 ring-[rgb(var(--border))]',
+              !selected && 'hover:bg-[rgb(var(--muted)/0.72)] hover:text-[rgb(var(--foreground))]',
+            )}
+          >
+            <Icon className="h-4 w-4" aria-hidden />
+          </button>
+        )
+      })}
     </div>
   )
 }

@@ -120,15 +120,16 @@ function scoreMoveset(
     coverageTypeCount * 10 +
     stats.attack * neutralOutputPerTurn * 0.35
 
-  const score =
+  const baseScore =
     strategy === 'fastest-victory'
-      ? stats.attack * neutralOutputPerTurn +
-        analytics.fast.damagePerTurn * stats.attack * 0.5 +
+      ? stats.attack * neutralOutputPerTurn * 1.08 +
+        analytics.fast.damagePerTurn * stats.attack * 0.12 +
         openingChargeSpeed * 16 +
         coverageTypeCount * 12
       : strategy === 'practical-spam'
         ? spamScore * practicalAvailabilityMultiplier(species)
         : spamScore
+  const score = baseScore * rocketReliabilityMultiplier(species)
 
   return {
     fastMove,
@@ -172,11 +173,11 @@ function chargedMoveDpe(species: PokemonSpecies, chargedMove: ChargedMove) {
 function practicalAvailabilityMultiplier(species: PokemonSpecies) {
   let multiplier = 1
 
-  if (species.tags.includes('legendary') || species.tags.includes('mythical')) {
+  if (isLegendaryOrMythical(species)) {
     multiplier *= 0.72
   }
 
-  if (species.tags.includes('ultrabeast')) {
+  if (isUltraBeast(species)) {
     multiplier *= 0.76
   }
 
@@ -184,11 +185,39 @@ function practicalAvailabilityMultiplier(species: PokemonSpecies) {
     multiplier *= 1.08
   }
 
-  if (raidCandyCompetitionSpecies.has(species.id)) {
+  if (hasRaidCandyCompetition(species)) {
     multiplier *= 0.84
   }
 
   return multiplier
+}
+
+function rocketReliabilityMultiplier(species: PokemonSpecies) {
+  return isRocketUnreliableFieldReport(species) ? 0.58 : 1
+}
+
+export function hasScarceCandyAccess(species: PokemonSpecies) {
+  return isLegendaryOrMythical(species) || isUltraBeast(species) || hasRaidCandyCompetition(species)
+}
+
+export function hasRocketReliabilityWarning(species: PokemonSpecies) {
+  return isRocketUnreliableFieldReport(species)
+}
+
+function isLegendaryOrMythical(species: PokemonSpecies) {
+  return species.tags.includes('legendary') || species.tags.includes('mythical')
+}
+
+function isUltraBeast(species: PokemonSpecies) {
+  return species.tags.includes('ultrabeast')
+}
+
+function hasRaidCandyCompetition(species: PokemonSpecies) {
+  return raidCandyCompetitionSpecies.has(species.id)
+}
+
+function isRocketUnreliableFieldReport(species: PokemonSpecies) {
+  return species.tags.includes('rocket-unreliable-field-report')
 }
 
 const raidCandyCompetitionSpecies = new Set([
@@ -203,11 +232,13 @@ const raidCandyCompetitionSpecies = new Set([
   'landorus_therian',
   'zekrom',
   'dialga',
+  'dialga_origin',
   'garchomp',
   'lucario',
   'metagross',
   'tyranitar',
   'kyogre',
+  'palkia_origin',
   'rhyperior',
   'excadrill',
 ])

@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-07-31T19:55:21.989Z",
+  "generatedAt": "2026-08-01T17:34:03.906Z",
   "sourceHash": "29f084cdc69c1886724a92f99785ddfe5a799431a7297fe834b7759a6d406070",
   "candidates": [
     {
@@ -32,7 +32,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -71,7 +71,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -111,7 +111,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -149,7 +149,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -189,7 +189,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -227,7 +227,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -269,7 +269,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -307,7 +307,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -340,17 +340,18 @@
         "AURA_WHEEL_ELECTRIC"
       ],
       "tags": [
-        "include2500"
+        "include2500",
+        "rocket-unreliable-field-report"
       ],
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
         "category": "sourced",
-        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported. PvPoke models Morpeko as form-specific entries; Full Belly is the Milestone 1 display form."
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported. PvPoke models Morpeko as form-specific entries; Full Belly is the display form. Live Rocket field report on 2026-08-01 indicates the Morpeko shortcut is unreliable; Aura Wheel alternates by form in battle and Morpeko is treated as Rocket-unreliable until validated."
       }
     },
     {
@@ -385,7 +386,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -427,7 +428,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -467,7 +468,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -521,7 +522,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -560,7 +561,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -599,7 +600,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -638,7 +639,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -679,7 +680,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -720,7 +721,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -760,7 +761,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -796,7 +797,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -835,7 +836,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -873,7 +874,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -911,7 +912,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -950,7 +951,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -987,7 +988,44 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "dialga_origin",
+      "dex": 483,
+      "name": "Dialga (Origin)",
+      "types": [
+        "steel",
+        "dragon"
+      ],
+      "baseStats": {
+        "attack": 270,
+        "defense": 225,
+        "stamina": 205
+      },
+      "fastMoves": [
+        "DRAGON_BREATH",
+        "METAL_CLAW"
+      ],
+      "chargedMoves": [
+        "DRACO_METEOR",
+        "IRON_HEAD",
+        "THUNDER",
+        "ROAR_OF_TIME"
+      ],
+      "tags": [
+        "legendary"
+      ],
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1025,7 +1063,45 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
+        "sourceVersion": "2026-07-30 21:39:36",
+        "parserVersion": "pvpoke-normalizer-0.1.0",
+        "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
+        "category": "sourced",
+        "notes": "Normalized Trainer Battle data from PvPoke source data; rankings are not imported."
+      }
+    },
+    {
+      "id": "palkia_origin",
+      "dex": 484,
+      "name": "Palkia (Origin)",
+      "types": [
+        "water",
+        "dragon"
+      ],
+      "baseStats": {
+        "attack": 286,
+        "defense": 223,
+        "stamina": 189
+      },
+      "fastMoves": [
+        "DRAGON_BREATH",
+        "DRAGON_TAIL"
+      ],
+      "chargedMoves": [
+        "DRACO_METEOR",
+        "FIRE_BLAST",
+        "HYDRO_PUMP",
+        "AQUA_TAIL",
+        "SPACIAL_REND"
+      ],
+      "tags": [
+        "legendary"
+      ],
+      "provenance": {
+        "sourceName": "PvPoke GameMaster",
+        "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1063,7 +1139,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1105,7 +1181,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1143,7 +1219,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1186,7 +1262,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1225,7 +1301,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1266,7 +1342,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",
@@ -1305,7 +1381,7 @@
       "provenance": {
         "sourceName": "PvPoke GameMaster",
         "sourceUrl": "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json",
-        "retrievedAt": "2026-07-31T19:55:21.989Z",
+        "retrievedAt": "2026-08-01T17:34:03.906Z",
         "sourceVersion": "2026-07-30 21:39:36",
         "parserVersion": "pvpoke-normalizer-0.1.0",
         "license": "MIT; attribution required in Rocket Pair Lab methodology and README",

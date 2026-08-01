@@ -77,14 +77,15 @@ Duck, Pokemon GO Hub, or PokeMiners.
 
 ## Current Limitations
 
-- Rocket simulator and universal pair rankings are not implemented in Milestone
-  1.
+- Verified Rocket simulation and universal pair rankings are not implemented;
+  Pair Builder currently exposes an experimental proxy simulator only.
 - Rocket lineups are a manually reviewable scaffold and need source
   reconciliation before ranking.
 - Rocket scaling, pauses, shield AI, and wall-clock timings are unresolved.
 - The candidate pool is curated for practical Rocket options, not complete
   Pokedex coverage.
-- Morpeko uses PvPoke's Full Belly form in the candidate snapshot.
+- Morpeko uses PvPoke's Full Belly form in the candidate snapshot and is marked
+  Rocket-unreliable after a 2026-08-01 field report.
 
 ## Adding A Pokemon
 

@@ -51,9 +51,9 @@
     }
   ],
   "limitations": [
-    "Milestone 1 does not simulate Rocket battles or rank universal pairs.",
+    "Verified Rocket simulation and universal pair rankings are not implemented; Pair Builder currently exposes an experimental proxy simulator only.",
     "Rocket scaling, pauses, shield AI, and wall-clock timings remain unresolved or configurable.",
     "Rocket lineups include a reconciled subset; Cliff slot 2 is explicitly disputed and most Grunt classes are not yet imported.",
-    "Morpeko is represented by PvPoke's Full Belly form for Milestone 1 display."
+    "Morpeko is represented by PvPoke's Full Belly form and is marked Rocket-unreliable after a 2026-08-01 field report."
   ]
 }

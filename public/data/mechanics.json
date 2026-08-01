@@ -22,10 +22,10 @@
     {
       "key": "rocket_pause_after_charged_attack",
       "label": "Rocket pause after player Charged Attack",
-      "value": 0,
+      "value": 2,
       "unit": "seconds",
-      "category": "unverified",
-      "note": "Scaffolded for Milestone 2. No verified default is applied to rankings in Milestone 1."
+      "category": "configurable-assumption",
+      "note": "Experimental simulator default. Rocket pause duration is not yet verified and must remain visible as an assumption."
     },
     {
       "key": "charged_attack_wall_clock",
@@ -34,6 +34,78 @@
       "unit": "seconds",
       "category": "unverified",
       "note": "Device and animation timing are unresolved. Milestone 1 displays turn timing only."
+    },
+    {
+      "key": "rocket_grunt_shields",
+      "label": "Rocket Grunt shields",
+      "value": 0,
+      "unit": "shields",
+      "category": "configurable-assumption",
+      "note": "Experimental simulator default. Grunt shield behavior is treated as configurable until validated."
+    },
+    {
+      "key": "rocket_leader_shields",
+      "label": "Rocket Leader shields",
+      "value": 2,
+      "unit": "shields",
+      "category": "configurable-assumption",
+      "note": "Experimental simulator default. Leaders are modeled as shielding the first available player Charged Attacks."
+    },
+    {
+      "key": "rocket_giovanni_shields",
+      "label": "Giovanni shields",
+      "value": 2,
+      "unit": "shields",
+      "category": "configurable-assumption",
+      "note": "Experimental simulator default. Giovanni is modeled as shielding the first available player Charged Attacks."
+    },
+    {
+      "key": "rocket_opponent_hp_slot_1",
+      "label": "Rocket opponent proxy HP slot 1",
+      "value": 115,
+      "unit": "proxy hp",
+      "category": "experimental",
+      "note": "Temporary proxy HP for deterministic simulation before exact Rocket scaling and individual opponent stats are implemented."
+    },
+    {
+      "key": "rocket_opponent_hp_slot_2",
+      "label": "Rocket opponent proxy HP slot 2",
+      "value": 140,
+      "unit": "proxy hp",
+      "category": "experimental",
+      "note": "Temporary proxy HP for deterministic simulation before exact Rocket scaling and individual opponent stats are implemented."
+    },
+    {
+      "key": "rocket_opponent_hp_slot_3",
+      "label": "Rocket opponent proxy HP slot 3",
+      "value": 170,
+      "unit": "proxy hp",
+      "category": "experimental",
+      "note": "Temporary proxy HP for deterministic simulation before exact Rocket scaling and individual opponent stats are implemented."
+    },
+    {
+      "key": "rocket_incoming_damage_per_turn_grunt",
+      "label": "Rocket Grunt incoming damage proxy",
+      "value": 1.8,
+      "unit": "hp per turn",
+      "category": "experimental",
+      "note": "Temporary incoming damage proxy. It is not sourced and should only be used for experimental comparisons."
+    },
+    {
+      "key": "rocket_incoming_damage_per_turn_leader",
+      "label": "Rocket Leader incoming damage proxy",
+      "value": 2.4,
+      "unit": "hp per turn",
+      "category": "experimental",
+      "note": "Temporary incoming damage proxy. It is not sourced and should only be used for experimental comparisons."
+    },
+    {
+      "key": "rocket_incoming_damage_per_turn_giovanni",
+      "label": "Giovanni incoming damage proxy",
+      "value": 2.8,
+      "unit": "hp per turn",
+      "category": "experimental",
+      "note": "Temporary incoming damage proxy. It is not sourced and should only be used for experimental comparisons."
     }
   ]
 }

@@ -17,7 +17,8 @@ const candidates = [
   {
     sourceId: 'morpeko_full_belly',
     displayName: 'Morpeko',
-    note: 'PvPoke models Morpeko as form-specific entries; Full Belly is the Milestone 1 display form.',
+    extraTags: ['rocket-unreliable-field-report'],
+    note: 'PvPoke models Morpeko as form-specific entries; Full Belly is the display form. Live Rocket field report on 2026-08-01 indicates the Morpeko shortcut is unreliable; Aura Wheel alternates by form in battle and Morpeko is treated as Rocket-unreliable until validated.',
   },
   { sourceId: 'greninja', displayName: 'Greninja' },
   { sourceId: 'dragonite', displayName: 'Dragonite' },
@@ -35,7 +36,9 @@ const candidates = [
   { sourceId: 'kyogre', displayName: 'Kyogre' },
   { sourceId: 'rayquaza', displayName: 'Rayquaza' },
   { sourceId: 'dialga', displayName: 'Dialga' },
+  { sourceId: 'dialga_origin', displayName: 'Dialga (Origin)' },
   { sourceId: 'palkia', displayName: 'Palkia' },
+  { sourceId: 'palkia_origin', displayName: 'Palkia (Origin)' },
   { sourceId: 'landorus_therian', displayName: 'Landorus' },
   { sourceId: 'poliwrath', displayName: 'Poliwrath' },
   { sourceId: 'obstagoon', displayName: 'Obstagoon' },
@@ -122,7 +125,7 @@ async function main() {
       },
       fastMoves: species.fastMoves,
       chargedMoves: species.chargedMoves,
-      tags: species.tags ?? [],
+      tags: Array.from(new Set([...(species.tags ?? []), ...(candidate.extraTags ?? [])])),
       provenance: candidate.note
         ? {
             ...provenance,

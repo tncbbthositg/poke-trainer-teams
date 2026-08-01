@@ -1,4 +1,4 @@
-import { Fragment, useMemo, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import type { ColumnDef } from '@tanstack/react-table'
 import {
   flexRender,
@@ -15,6 +15,8 @@ import { Panel, PanelHeader } from '../../components/molecules/Panel'
 import type { ApplicationData } from '../../data/loaders'
 import type { PokemonType } from '../../data/schemas/pokemon'
 import {
+  hasScarceCandyAccess,
+  hasRocketReliabilityWarning,
   pokemonFocusStrategyLabels,
   pokemonFocusStrategyNotes,
   rankPokemonForFocus,
@@ -54,56 +56,76 @@ type ExplorerRow = {
   firstChargeTurns: number
   repeatChargeTurns: number
   neutralOutputPerTurn: number
+  scarceCandy: boolean
+  rocketReliabilityWarning: boolean
   reason: string
   confidence: string
 }
 
 export function PokemonExplorer({ data }: { data: ApplicationData }) {
-  const [filter, setFilter] = useState('')
-  const [strategy, setStrategy] = useState<PokemonFocusStrategy>('fastest-victory')
+  const initialControls = useMemo(() => readPersistedControls(), [])
+  const [filter, setFilter] = useState(initialControls.filter)
+  const [strategy, setStrategy] = useState<PokemonFocusStrategy>(initialControls.strategy)
+  const [hideScarceCandy, setHideScarceCandy] = useState(initialControls.hideScarceCandy)
   const [expandedIds, setExpandedIds] = useState<Set<string>>(() => new Set())
+
+  useEffect(() => {
+    persistControls({ filter, strategy, hideScarceCandy })
+  }, [filter, hideScarceCandy, strategy])
+
   const rows = useMemo<ExplorerRow[]>(
     () => {
       const rankings = rankPokemonForFocus(data.pokemon.candidates, data.moves, strategy, 40)
 
-      return rankings.map((ranking) => {
-        const { species, moveset } = ranking
-        const stats = calculateEffectiveStats(species, 40)
-        return {
-          id: species.id,
-          rank: ranking.rank,
-          name: species.name,
-          types: species.types,
-          score: ranking.score,
-          cp: stats.cp,
-          attack: stats.attack,
-          defense: stats.defense,
-          hp: stats.hp,
-          bulk: stats.rawBulkProxy,
-          fastMoveId: moveset.fastMove.id,
-          fastMove: moveset.fastMove.name,
-          fastMoveType: moveset.fastMove.type,
-          chargedOneId: moveset.chargedMoves[0].id,
-          chargedOne: moveset.chargedMoves[0].name,
-          chargedOneType: moveset.chargedMoves[0].type,
-          chargedOneCost: moveset.chargedMoves[0].energyCost,
-          chargedOneDpe: chargedDpe(species.types, moveset.chargedMoves[0]),
-          chargedTwoId: moveset.chargedMoves[1].id,
-          chargedTwo: moveset.chargedMoves[1].name,
-          chargedTwoType: moveset.chargedMoves[1].type,
-          chargedTwoCost: moveset.chargedMoves[1].energyCost,
-          chargedTwoDpe: chargedDpe(species.types, moveset.chargedMoves[1]),
-          dpt: moveset.fastDamagePerTurn,
-          ept: moveset.fastEnergyPerTurn,
-          firstChargeTurns: moveset.firstChargeTurns,
-          repeatChargeTurns: moveset.repeatChargeTurns,
-          neutralOutputPerTurn: moveset.neutralOutputPerTurn,
-          reason: ranking.reason,
-          confidence: species.provenance.category,
-        }
-      })
+      return rankings
+        .map((ranking) => {
+          const { species, moveset } = ranking
+          const stats = calculateEffectiveStats(species, 40)
+          return {
+            id: species.id,
+            rank: ranking.rank,
+            name: species.name,
+            types: species.types,
+            score: ranking.score,
+            cp: stats.cp,
+            attack: stats.attack,
+            defense: stats.defense,
+            hp: stats.hp,
+            bulk: stats.rawBulkProxy,
+            fastMoveId: moveset.fastMove.id,
+            fastMove: moveset.fastMove.name,
+            fastMoveType: moveset.fastMove.type,
+            chargedOneId: moveset.chargedMoves[0].id,
+            chargedOne: moveset.chargedMoves[0].name,
+            chargedOneType: moveset.chargedMoves[0].type,
+            chargedOneCost: moveset.chargedMoves[0].energyCost,
+            chargedOneDpe: chargedDpe(species.types, moveset.chargedMoves[0]),
+            chargedTwoId: moveset.chargedMoves[1].id,
+            chargedTwo: moveset.chargedMoves[1].name,
+            chargedTwoType: moveset.chargedMoves[1].type,
+            chargedTwoCost: moveset.chargedMoves[1].energyCost,
+            chargedTwoDpe: chargedDpe(species.types, moveset.chargedMoves[1]),
+            dpt: moveset.fastDamagePerTurn,
+            ept: moveset.fastEnergyPerTurn,
+            firstChargeTurns: moveset.firstChargeTurns,
+            repeatChargeTurns: moveset.repeatChargeTurns,
+            neutralOutputPerTurn: moveset.neutralOutputPerTurn,
+            scarceCandy: hasScarceCandyAccess(species),
+            rocketReliabilityWarning: hasRocketReliabilityWarning(species),
+            reason: ranking.reason,
+            confidence: species.provenance.category,
+          }
+        })
+        .filter((row) => !hideScarceCandy || !row.scarceCandy)
     },
-    [data, strategy],
+    [data, hideScarceCandy, strategy],
+  )
+  const hiddenScarceCandyCount = useMemo(
+    () =>
+      hideScarceCandy
+        ? data.pokemon.candidates.filter((species) => hasScarceCandyAccess(species)).length
+        : 0,
+    [data.pokemon.candidates, hideScarceCandy],
   )
 
   const columns = useMemo<ColumnDef<ExplorerRow>[]>(
@@ -145,7 +167,18 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
         ),
       },
       { accessorKey: 'rank', header: sortableHeader('Rank'), cell: (info) => integer(info.getValue<number>()) },
-      { accessorKey: 'name', header: 'Pokemon' },
+      {
+        accessorKey: 'name',
+        header: 'Pokemon',
+        cell: (info) => (
+          <span className="inline-flex flex-wrap items-center gap-1.5">
+            <span>{info.getValue<string>()}</span>
+            {info.row.original.rocketReliabilityWarning ? (
+              <Badge tone="warning">Rocket risk</Badge>
+            ) : null}
+          </span>
+        ),
+      },
       {
         accessorKey: 'types',
         header: 'Types',
@@ -209,7 +242,7 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
         title="Pokemon Explorer"
         subtitle={`Level 40, 15/15/15 heuristic focus ranking. ${pokemonFocusStrategyNotes[strategy]}`}
         right={
-          <div className="grid gap-2 sm:grid-cols-[190px_160px]">
+          <div className="grid gap-2 sm:grid-cols-[190px_160px_170px]">
             <DataSelect
               label="Strategy"
               value={strategy}
@@ -229,6 +262,15 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
                 aria-label="Filter Pokemon table"
               />
             </label>
+            <label className="flex h-full min-h-[52px] items-end gap-2 px-1 py-2 text-xs font-medium text-[rgb(var(--foreground))]">
+              <input
+                type="checkbox"
+                checked={hideScarceCandy}
+                onChange={(event) => setHideScarceCandy(event.target.checked)}
+                className="mb-0.5 h-4 w-4 accent-[rgb(var(--primary))]"
+              />
+              Hide scarce candy
+            </label>
           </div>
         }
       />
@@ -238,6 +280,12 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
           This ranking recommends which Pokemon and movesets to focus on before Rocket win/loss
           simulation is available.
         </span>
+        {hiddenScarceCandyCount > 0 ? (
+          <span className="ml-2">
+            Hiding {integer(hiddenScarceCandyCount)} legendary, mythical, Ultra Beast, or raid-candy
+            competition candidates.
+          </span>
+        ) : null}
       </div>
       <div className="overflow-x-auto">
         <table className="w-full min-w-[1080px] text-left text-sm">
@@ -355,6 +403,13 @@ function ExpandedDetails({ row }: { row: ExplorerRow }) {
       <Detail label="Neutral output" value={`${number(row.neutralOutputPerTurn)} per turn`} />
       <Detail label="Confidence" value={row.confidence} />
       <Detail label="Heuristic read" value={row.reason} className="col-span-2 sm:col-span-4 xl:col-span-1" />
+      {row.rocketReliabilityWarning ? (
+        <Detail
+          label="Rocket warning"
+          value="Field report says this shortcut failed; form-changing Aura Wheel and low bulk are not validated for Rocket reliability."
+          className="col-span-2 sm:col-span-4 xl:col-span-8"
+        />
+      ) : null}
     </div>
   )
 }
@@ -369,6 +424,55 @@ function movesetHref(row: ExplorerRow, strategy: PokemonFocusStrategy) {
   })
 
   return `#/movesets?${params.toString()}`
+}
+
+type PersistedExplorerControls = {
+  filter: string
+  strategy: PokemonFocusStrategy
+  hideScarceCandy: boolean
+}
+
+const explorerControlsStorageKey = 'rocket-pair-lab:pokemon-explorer-controls'
+const defaultExplorerControls: PersistedExplorerControls = {
+  filter: '',
+  strategy: 'fastest-victory',
+  hideScarceCandy: true,
+}
+
+function readPersistedControls(): PersistedExplorerControls {
+  try {
+    const persisted = window.sessionStorage.getItem(explorerControlsStorageKey)
+    if (!persisted) {
+      return defaultExplorerControls
+    }
+
+    const parsed = JSON.parse(persisted) as Partial<PersistedExplorerControls>
+
+    return {
+      filter: typeof parsed.filter === 'string' ? parsed.filter : defaultExplorerControls.filter,
+      strategy: isPokemonFocusStrategy(parsed.strategy)
+        ? parsed.strategy
+        : defaultExplorerControls.strategy,
+      hideScarceCandy:
+        typeof parsed.hideScarceCandy === 'boolean'
+          ? parsed.hideScarceCandy
+          : defaultExplorerControls.hideScarceCandy,
+    }
+  } catch {
+    return defaultExplorerControls
+  }
+}
+
+function persistControls(controls: PersistedExplorerControls) {
+  try {
+    window.sessionStorage.setItem(explorerControlsStorageKey, JSON.stringify(controls))
+  } catch {
+    // Browser storage can be unavailable in private or locked-down contexts.
+  }
+}
+
+function isPokemonFocusStrategy(value: unknown): value is PokemonFocusStrategy {
+  return typeof value === 'string' && value in pokemonFocusStrategyLabels
 }
 
 function Detail({ label, value, className = '' }: { label: string; value: string; className?: string }) {
