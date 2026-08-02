@@ -7,10 +7,18 @@ foundation, not a finished Rocket ranking engine.
 
 ## Current Repository State
 
-- Greenfield repository on `main`.
-- No package manager, framework, or source files are present yet.
-- No remote is configured.
-- Use Yarn Classic.
+- Vite, React, TypeScript strict mode, Tailwind CSS, Radix, Lucide, Zod,
+  TanStack Table, Recharts, Vitest, Playwright, ESLint, and Prettier are
+  scaffolded with Yarn Classic.
+- Static snapshots are checked in under `public/data` and mirrored to
+  `src/data/generated`.
+- The app includes Overview, Pokemon Explorer, Moveset Comparator, Pair Builder,
+  Lineup Matrix, and Methodology views.
+- Pure domain modules cover effective stats, CP, type effectiveness, move
+  analytics, Pokemon focus scoring, Rocket stat scaling, and an experimental
+  Rocket battle engine.
+- Current verification status: `yarn lint`, `yarn typecheck`, `yarn test`,
+  `yarn data:validate`, and `yarn build` pass as of 2026-08-02.
 
 ## Source Status
 
@@ -195,28 +203,40 @@ docs/
 
 ### Milestone 1: Trustworthy Interactive Data Explorer
 
-1. Scaffold Vite, React, TypeScript strict mode, Tailwind CSS, shadcn/ui, Radix,
-   Lucide, Zod, Recharts, TanStack Table, Vitest, React Testing Library,
-   Playwright smoke tests, ESLint, and Prettier with Yarn Classic.
-2. Add source registry, provenance types, and Zod schemas.
-3. Add PvPoke fetch and normalization scripts for the curated candidate pool.
-4. Add checked-in `public/data` snapshots for candidates, moves, Rocket
-   lineups, mechanics assumptions, and source metadata.
-5. Implement level-40 15/15/15 stat, CP, type, STAB, bulk, and move analytics,
-   using PvPoke Moves as the display reference for fast/charged move controls.
-6. Implement responsive app shell, light/dark themes, and compact navigation.
-7. Build Overview, Pokemon Explorer, Moveset Comparator, Pair Builder scaffold,
-   Lineup Matrix scaffold, and Methodology views.
-8. Add battle engine interfaces and boundary tests without claiming universal
-   rankings.
-9. Add docs, README, CI, and GitHub Pages deployment workflow.
-10. Verify `yarn install --frozen-lockfile`, lint, typecheck, tests, and build.
+Status: implemented as the current foundation.
+
+- Scaffold Vite, React, TypeScript strict mode, Tailwind CSS, shadcn/ui
+  conventions, Radix, Lucide, Zod, Recharts, TanStack Table, Vitest, React
+  Testing Library, Playwright smoke tests, ESLint, and Prettier with Yarn
+  Classic.
+- Add source registry, provenance types, and Zod schemas.
+- Add PvPoke fetch and normalization scripts for the curated candidate pool.
+- Add checked-in `public/data` snapshots for candidates, moves, Rocket lineups,
+  mechanics assumptions, and source metadata.
+- Implement level-40 15/15/15 stat, CP, type, STAB, bulk, and move analytics,
+  using PvPoke Moves as the display reference for fast/charged move controls.
+- Implement responsive app shell, light/dark themes, and compact navigation.
+- Build Overview, Pokemon Explorer, Moveset Comparator, Pair Builder, Lineup
+  Matrix, and Methodology views.
+- Add battle engine interfaces, an experimental Rocket branch, and boundary
+  tests without claiming universal rankings.
+- Add docs, README, CI, and GitHub Pages deployment workflow.
+- Verify lint, typecheck, tests, data validation, and build.
 
 ### Milestone 2: Deterministic Rocket Simulator
 
-- Add opponent stats and scaling, Rocket shield behavior, Rocket pauses,
-  strategy policies, pair simulations, battle timeline, and universal pass/fail
-  evaluation. Mark simulator output Experimental.
+Status: in progress.
+
+- Add focused deterministic engine tests for shields, energy caps, fainting,
+  switches, ordered pair behavior, and the two-slot limit.
+- Replace remaining proxy simulator pieces with source-labeled mechanics where
+  available: Rocket stat scaling, shield counts, NPC pauses, move damage, move
+  timing, ordered send-ins, and explicit fallback assumptions.
+- Add a Battle Timeline view that exposes event-by-event simulator output with
+  HP, turns, move details, shields, pauses, faints, and assumptions.
+- Keep simulator output Experimental until recorded-battle validation exists.
+- Add universal pass/fail evaluation only after deterministic branch behavior is
+  covered and inspectable.
 
 ### Milestone 3: Empirical Validation
 
