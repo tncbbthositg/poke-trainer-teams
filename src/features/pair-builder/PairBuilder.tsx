@@ -473,7 +473,7 @@ function FastAttackTrack({
             contentStyle={attackTooltipStyle(span.event)}
           >
             <span
-              className="absolute top-1/2 h-3 -translate-y-1/2 cursor-help rounded-full opacity-82 outline-none ring-offset-2 ring-offset-[rgb(var(--background))] focus-visible:ring-2"
+              className="absolute top-1/2 h-3 -translate-y-1/2 rounded-full opacity-82 outline-none ring-offset-2 ring-offset-[rgb(var(--background))] focus-visible:ring-2"
               style={{
                 backgroundColor: color,
                 left: `${left}%`,
@@ -486,7 +486,10 @@ function FastAttackTrack({
         );
       })}
       {chargedAttacks.length > 0 ? (
-        <div className="absolute inset-0" aria-label={chargedAttackAriaLabel}>
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-label={chargedAttackAriaLabel}
+        >
           {chargedAttacks.map((event, index) => {
             const left = (event.turn / maxTurn) * 100;
             const durationTurns = Math.max(0.5, event.durationTurns ?? 0.5);
@@ -503,7 +506,7 @@ function FastAttackTrack({
                 contentStyle={attackTooltipStyle(event)}
               >
                 <span
-                  className="absolute top-1/2 z-10 h-5 -translate-y-1/2 cursor-help rounded-full shadow-sm outline-none ring-offset-2 ring-offset-[rgb(var(--background))] focus-visible:ring-2"
+                  className="pointer-events-auto absolute top-1/2 z-10 h-5 -translate-y-1/2 rounded-full shadow-sm outline-none ring-offset-2 ring-offset-[rgb(var(--background))] focus-visible:ring-2"
                   style={{
                     backgroundColor: color,
                     left: `${left}%`,
@@ -518,7 +521,10 @@ function FastAttackTrack({
         </div>
       ) : null}
       {shields.length > 0 ? (
-        <div className="absolute inset-0" aria-label={shieldAriaLabel}>
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-label={shieldAriaLabel}
+        >
           {shields.map((event, index) => {
             const durationTurns = Math.max(0, event.durationTurns ?? 0);
             const left = ((event.turn + durationTurns / 2) / maxTurn) * 100;
@@ -526,7 +532,7 @@ function FastAttackTrack({
             return (
               <span
                 key={`${event.turn}-${event.kind}-${index}`}
-                className="absolute top-1/2 z-20 grid h-6 w-6 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--panel)/0.92)] text-[rgb(var(--foreground))] shadow-sm"
+                className="pointer-events-auto absolute top-1/2 z-20 grid h-6 w-6 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--panel)/0.92)] text-[rgb(var(--foreground))] shadow-sm"
                 style={{ left: `${left}%` }}
                 aria-label={`Shield used at ${number((event.turn + durationTurns / 2) * 0.5)} seconds`}
               >
