@@ -11,6 +11,7 @@ import type { ApplicationData } from "../../data/loaders";
 import type { ChargedMove, FastMove } from "../../data/schemas/moves";
 import type { PokemonSpecies, PokemonType } from "../../data/schemas/pokemon";
 import { simulateRocketLineupExperimental } from "../../domain/battle/engine";
+import { evaluateUniversalPairExperimental } from "../../domain/battle/pairEvaluation";
 import type {
   BattleConfidence,
   BattleEvent,
@@ -73,6 +74,28 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
       data.pokemon.rocketOpponents,
       lead,
       lineup,
+      strategy,
+    ],
+  );
+  const universalEvaluation = useMemo(
+    () =>
+      evaluateUniversalPairExperimental({
+        lead: toPokemonBuild(lead, boundedTrainerLevel),
+        backup: toPokemonBuild(backup, boundedTrainerLevel),
+        lineups: data.rocket.lineups,
+        mechanics: data.mechanics,
+        rocketOpponents: data.pokemon.rocketOpponents,
+        moves: data.moves,
+        strategy,
+      }),
+    [
+      backup,
+      boundedTrainerLevel,
+      data.mechanics,
+      data.moves,
+      data.pokemon.rocketOpponents,
+      data.rocket.lineups,
+      lead,
       strategy,
     ],
   );
@@ -164,9 +187,7 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
           </div>
         </div>
         <div className="mt-4 border-t border-[rgb(var(--border))] pt-3">
-          <h3 className="mb-3 text-sm font-semibold">
-            Proxy Estimate Result
-          </h3>
+          <h3 className="mb-3 text-sm font-semibold">Proxy Estimate Result</h3>
           <div className="flex flex-wrap items-center gap-2">
             <Badge tone="warning">{formatConfidence(result.confidence)}</Badge>
             <Badge tone={result.outcome === "win" ? "ok" : "danger"}>
@@ -195,6 +216,45 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
             label="Charged attacks"
             value={integer(result.chargedAttacksUsed)}
           />
+        </div>
+        <div className="mt-3 rounded border border-[rgb(var(--border))] bg-[rgb(var(--muted)/0.12)] p-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge
+              tone={universalEvaluation.universalProxyClear ? "ok" : "danger"}
+            >
+              {universalEvaluation.universalProxyClear
+                ? "Universal proxy clear"
+                : "Universal proxy fail"}
+            </Badge>
+            <Badge tone="info">
+              {integer(universalEvaluation.proxyClears)} /{" "}
+              {integer(universalEvaluation.totalLineups)} lineups
+            </Badge>
+            <Badge tone="warning">Experimental</Badge>
+          </div>
+          {universalEvaluation.failingLineups.length > 0 ? (
+            <div className="mt-2 grid gap-1 text-xs text-[rgb(var(--muted-foreground))]">
+              {universalEvaluation.failingLineups.slice(0, 5).map((item) => (
+                <div
+                  key={item.lineup.id}
+                  className="flex items-center justify-between gap-3 rounded bg-[rgb(var(--panel)/0.62)] px-2 py-1"
+                >
+                  <span className="min-w-0 truncate">
+                    {item.lineup.trainerName}
+                  </span>
+                  <span className="shrink-0 tabular-nums">
+                    {integer(item.result.totalTurns)} turns
+                  </span>
+                </div>
+              ))}
+              {universalEvaluation.failingLineups.length > 5 ? (
+                <div>
+                  +{integer(universalEvaluation.failingLineups.length - 5)} more
+                  proxy failure(s)
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </div>
         <BattleTimeline events={result.events} totalTurns={result.totalTurns} />
       </Panel>

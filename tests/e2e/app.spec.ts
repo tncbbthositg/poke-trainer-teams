@@ -64,6 +64,9 @@ test("supports picking a battle team", async ({ page }) => {
   await expect(page.getByLabel("Rocket Lineup")).toBeVisible();
   await expect(page.getByText("Proxy estimate", { exact: true })).toBeVisible();
   await expect(page.getByText(/^(Proxy clear|Proxy fail)$/)).toBeVisible();
+  await expect(
+    page.getByText(/Universal proxy (clear|fail)/),
+  ).toBeVisible();
   await expect(page.getByText("not a verified Rocket result")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Timeline" })).toBeVisible();
   await expect(
