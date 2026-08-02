@@ -4,6 +4,6 @@ import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: process.env.GITHUB_ACTIONS ? '/poke_trainer_teams/' : '/',
+  base: process.env.GITHUB_ACTIONS ? '/poke-trainer-teams/' : '/',
   plugins: [react(), tailwindcss()],
 })
