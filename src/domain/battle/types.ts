@@ -46,9 +46,11 @@ export type BattleEvent = {
   durationTurns?: number;
   playerHp?: number;
   playerMaxHp?: number;
+  playerEnergy?: number;
   playerTypes?: PokemonType[];
   opponentHp?: number;
   opponentMaxHp?: number;
+  opponentEnergy?: number;
   opponentTypes?: PokemonType[];
 };
 

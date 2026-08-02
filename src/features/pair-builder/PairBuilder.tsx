@@ -82,7 +82,7 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
       <Panel>
         <PanelHeader
           title="Proxy Battle Estimate"
-          subtitle="Rough two-Pokemon Rocket preview using placeholder opponent stats, scaling, timing, and shield assumptions."
+          subtitle="Experimental two-Pokemon Rocket preview using sourced stats and move timing where available, with explicit fallbacks."
           right={<Badge tone="warning">Experimental</Badge>}
         />
         <div className="grid gap-3 p-3 md:grid-cols-3">

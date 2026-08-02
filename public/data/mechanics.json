@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "generatedAt": "2026-08-02T00:00:00.000Z",
-  "simulationVersion": "m2-experimental-rocket-0.3.0",
+  "simulationVersion": "m2-experimental-rocket-0.4.0",
   "values": [
     {
       "key": "trainer_level_demo_default",
@@ -121,7 +121,7 @@
       "value": 18,
       "unit": "turns",
       "category": "configurable-assumption",
-      "note": "Experimental simulator default. Opponent Charged Attack timing is a placeholder cadence until Rocket move energy and move selection are implemented."
+      "note": "Fallback cadence used only when a Rocket opponent has no sourced charged move. Sourced Rocket moves now use fast-move energy gain and charged-move costs."
     },
     {
       "key": "rocket_opponent_charged_attack_damage",

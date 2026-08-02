@@ -369,8 +369,9 @@ export function simulateRocketLineupExperimental({
   let currentOpponent = config.opponents[currentOpponentIndex];
   let opponentHp = currentOpponent.hp;
   let opponentMaxHp = currentOpponent.hp;
+  let opponentEnergy = 0;
   let remainingPlayerShields = config.playerShields;
-  let nextRocketChargedTurn = config.opponentChargedAttackIntervalTurns;
+  let nextFallbackRocketChargedTurn = config.opponentChargedAttackIntervalTurns;
   const events: BattleResult["events"] = [
     {
       turn: 0,
@@ -426,6 +427,10 @@ export function simulateRocketLineupExperimental({
     energy = Math.min(100, energy + activeBuild.fastMove.energyGain);
     opponentHp = clampHp(opponentHp - playerFastDetails.totalDamage);
     if (rocketWillAttack) {
+      opponentEnergy = Math.min(
+        100,
+        opponentEnergy + (opponentFastMove?.energyGain ?? 0),
+      );
       activeHp = clampHp(
         activeHp -
           (opponentFastDetails?.totalDamage ??
@@ -471,8 +476,20 @@ export function simulateRocketLineupExperimental({
       continue;
     }
 
-    if (rocketWillAttack && turn >= nextRocketChargedTurn) {
-      const opponentChargedMove = currentOpponent.chargedMove;
+    const opponentChargedMove = selectOpponentChargedMove(
+      currentOpponent,
+      opponentEnergy,
+      activeBuild,
+    );
+    const shouldUseFallbackChargedAttack =
+      rocketWillAttack &&
+      !opponentChargedMove &&
+      currentOpponent.chargedMoves.length === 0 &&
+      turn >= nextFallbackRocketChargedTurn;
+    if (
+      rocketWillAttack &&
+      (opponentChargedMove || shouldUseFallbackChargedAttack)
+    ) {
       const opponentChargedDetails = opponentChargedMove
         ? opponentMoveDamageDetails(
             currentOpponent,
@@ -480,6 +497,12 @@ export function simulateRocketLineupExperimental({
             activeBuild,
           )
         : undefined;
+      if (opponentChargedMove) {
+        opponentEnergy = Math.max(
+          0,
+          opponentEnergy - opponentChargedMove.energyCost,
+        );
+      }
       chargedAttacksUsed += 1;
       const playerShielded = remainingPlayerShields > 0;
       if (playerShielded) {
@@ -518,7 +541,8 @@ export function simulateRocketLineupExperimental({
         });
       }
       turn += config.chargedAttackTurns;
-      nextRocketChargedTurn = turn + config.opponentChargedAttackIntervalTurns;
+      nextFallbackRocketChargedTurn =
+        turn + config.opponentChargedAttackIntervalTurns;
       if (activeHp <= 0) {
         if (!switchToBackup()) {
           return finish("loss");
@@ -621,7 +645,9 @@ export function simulateRocketLineupExperimental({
     }
     opponentHp = currentOpponent.hp;
     opponentMaxHp = currentOpponent.hp;
-    nextRocketChargedTurn = turn + config.opponentChargedAttackIntervalTurns;
+    opponentEnergy = 0;
+    nextFallbackRocketChargedTurn =
+      turn + config.opponentChargedAttackIntervalTurns;
     events.push({
       turn,
       wallClockSeconds: wallClockSeconds(),
@@ -709,11 +735,12 @@ export function simulateRocketLineupExperimental({
         `Mechanics used: ${config.mechanicsUsed.join(" ")}`,
         ...config.fallbackAssumptions,
         "Player Charged Attack decisions use current opponent HP, type effectiveness, and remaining Rocket shields, but exact Rocket shield AI is still unverified.",
-        "Rocket move pools are sourced, but this deterministic branch selects the first available Rocket fast move and first available Rocket charged move instead of modeling random move assignment.",
-        "Rocket opponent Charged Attack timing uses a configurable placeholder cadence; buffs, debuffs, random move assignment probabilities, and live battle validation are not implemented.",
+        "Rocket move pools are sourced, but this deterministic branch selects the first available Rocket fast move and the highest-damage affordable Rocket charged move instead of modeling random move assignment.",
+        "Rocket opponent Charged Attack timing uses sourced fast-move energy and charged-move costs when moves are available; the configurable placeholder cadence is only used when no sourced Rocket charged move is available.",
+        "Buffs, debuffs, random move assignment probabilities, and live battle validation are not implemented.",
         `Third slot unavailable; strategy=${strategy}.`,
       ],
-      simulationVersion: "m2-experimental-rocket-0.3.0",
+      simulationVersion: "m2-experimental-rocket-0.4.0",
       events,
     };
   }
@@ -722,9 +749,11 @@ export function simulateRocketLineupExperimental({
     return {
       playerHp: Math.max(0, Math.ceil(activeHp)),
       playerMaxHp: Math.ceil(activeMaxHp),
+      playerEnergy: energy,
       playerTypes: activeBuild?.species.types ?? lead.species.types,
       opponentHp: Math.max(0, Math.ceil(opponentHp)),
       opponentMaxHp: Math.ceil(opponentMaxHp),
+      opponentEnergy,
       opponentTypes: currentOpponent?.types ?? ["normal"],
     };
   }
@@ -907,6 +936,26 @@ function formatMechanicKey(key: string) {
 type ExperimentalRocketOpponent = ReturnType<
   typeof experimentalRocketConfig
 >["opponents"][number];
+
+function selectOpponentChargedMove(
+  opponent: ExperimentalRocketOpponent,
+  energy: number,
+  defender: PokemonBuild,
+) {
+  const available = opponent.chargedMoves.filter(
+    (move) => move.energyCost <= energy,
+  );
+  if (available.length === 0) {
+    return undefined;
+  }
+
+  return [...available].sort(
+    (a, b) =>
+      opponentMoveDamageDetails(opponent, b, defender).totalDamage -
+        opponentMoveDamageDetails(opponent, a, defender).totalDamage ||
+      a.energyCost - b.energyCost,
+  )[0];
+}
 
 function playerMoveDamageDetails(
   build: PokemonBuild,
