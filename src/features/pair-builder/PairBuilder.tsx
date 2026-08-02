@@ -380,6 +380,7 @@ function BattleTimeline({
           chargedAttackAriaLabel="Player charged attack spans"
           shields={playerShields}
           shieldAriaLabel="Player shield uses"
+          shieldPlacement="above"
           maxTurn={maxTurn}
           labelForEvent={playerNameFromFastAttack}
         />
@@ -398,6 +399,7 @@ function BattleTimeline({
           chargedAttackAriaLabel="Opponent charged attack spans"
           shields={opponentShields}
           shieldAriaLabel="Opponent shield uses"
+          shieldPlacement="below"
           maxTurn={maxTurn}
           labelForEvent={opponentNameFromFastAttack}
         />
@@ -610,6 +612,7 @@ function FastAttackTrack({
   chargedAttackAriaLabel,
   shields,
   shieldAriaLabel,
+  shieldPlacement,
   maxTurn,
   labelForEvent,
 }: {
@@ -619,12 +622,21 @@ function FastAttackTrack({
   chargedAttackAriaLabel: string;
   shields: BattleEvent[];
   shieldAriaLabel: string;
+  shieldPlacement: "above" | "below";
   maxTurn: number;
   labelForEvent: (event: BattleEvent) => string;
 }) {
+  const attackLaneClassName = timelineAttackLaneClassName(
+    shields.length > 0,
+    shieldPlacement,
+  );
+  const shieldClassName = timelineShieldClassName(shieldPlacement);
+
   return (
-    <div className="relative h-8" aria-label={ariaLabel}>
-      <div className="absolute left-0 right-0 top-1/2 h-px bg-[rgb(var(--border)/0.72)]" />
+    <div className="relative h-12" aria-label={ariaLabel}>
+      <div
+        className={`absolute left-0 right-0 h-px bg-[rgb(var(--border)/0.72)] ${attackLaneClassName}`}
+      />
       {spans.map((span, index) => {
         const actor = labelForEvent(span.event);
         const left = (span.startTurn / maxTurn) * 100;
@@ -644,7 +656,7 @@ function FastAttackTrack({
             contentStyle={attackTooltipStyle(span.event)}
           >
             <span
-              className="absolute top-1/2 h-3 -translate-y-1/2 rounded-full opacity-82 outline-none ring-offset-2 ring-offset-[rgb(var(--background))] focus-visible:ring-2"
+              className={`absolute h-3 -translate-y-1/2 rounded-full opacity-82 outline-none ring-offset-2 ring-offset-[rgb(var(--background))] focus-visible:ring-2 ${attackLaneClassName}`}
               style={{
                 backgroundColor: color,
                 left: `${left}%`,
@@ -677,7 +689,7 @@ function FastAttackTrack({
                 contentStyle={attackTooltipStyle(event)}
               >
                 <span
-                  className="pointer-events-auto absolute top-1/2 z-10 h-5 -translate-y-1/2 rounded-full shadow-sm outline-none ring-offset-2 ring-offset-[rgb(var(--background))] focus-visible:ring-2"
+                  className={`pointer-events-auto absolute z-10 h-5 -translate-y-1/2 rounded-full shadow-sm outline-none ring-offset-2 ring-offset-[rgb(var(--background))] focus-visible:ring-2 ${attackLaneClassName}`}
                   style={{
                     backgroundColor: color,
                     left: `${left}%`,
@@ -703,7 +715,7 @@ function FastAttackTrack({
             return (
               <span
                 key={`${event.turn}-${event.kind}-${index}`}
-                className="pointer-events-auto absolute top-1/2 z-20 grid h-6 w-6 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--panel)/0.92)] text-[rgb(var(--foreground))] shadow-sm"
+                className={shieldClassName}
                 style={{ left: `${left}%` }}
                 aria-label={`Shield used at ${number((event.turn + durationTurns / 2) * 0.5)} seconds`}
               >
@@ -715,6 +727,24 @@ function FastAttackTrack({
       ) : null}
     </div>
   );
+}
+
+function timelineAttackLaneClassName(
+  hasShields: boolean,
+  shieldPlacement: "above" | "below",
+) {
+  if (!hasShields) {
+    return "top-1/2";
+  }
+
+  return shieldPlacement === "above" ? "top-[68%]" : "top-[32%]";
+}
+
+function timelineShieldClassName(shieldPlacement: "above" | "below") {
+  const shared =
+    "pointer-events-auto absolute z-20 grid h-6 w-6 -translate-x-1/2 place-items-center rounded-full border border-[rgb(var(--border))] bg-[rgb(var(--panel)/0.92)] text-[rgb(var(--foreground))] shadow-sm";
+
+  return shieldPlacement === "above" ? `${shared} top-0` : `${shared} bottom-0`;
 }
 
 function attackTooltipContent(event: BattleEvent, label: string) {
