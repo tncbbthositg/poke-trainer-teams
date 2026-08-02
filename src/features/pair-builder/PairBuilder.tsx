@@ -11,7 +11,12 @@ import type { ApplicationData } from "../../data/loaders";
 import type { ChargedMove, FastMove } from "../../data/schemas/moves";
 import type { PokemonSpecies, PokemonType } from "../../data/schemas/pokemon";
 import { simulateRocketLineupExperimental } from "../../domain/battle/engine";
-import type { BattleEvent, BattleStrategy } from "../../domain/battle/types";
+import type {
+  BattleConfidence,
+  BattleEvent,
+  BattleOutcome,
+  BattleStrategy,
+} from "../../domain/battle/types";
 import { analyzeMoveset } from "../../domain/moves/analytics";
 import type { PokemonBuild } from "../../domain/pokemon/types";
 import { calculateEffectiveStats } from "../../domain/stats/effectiveStats";
@@ -76,8 +81,8 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
     <div className="grid gap-4">
       <Panel>
         <PanelHeader
-          title="Battle Simulation"
-          subtitle="Experimental Rocket simulation for a two-Pokemon team. Third slot remains outside calculations."
+          title="Proxy Battle Estimate"
+          subtitle="Rough two-Pokemon Rocket preview using placeholder opponent stats, scaling, timing, and shield assumptions."
           right={<Badge tone="warning">Experimental</Badge>}
         />
         <div className="grid gap-3 p-3 md:grid-cols-3">
@@ -160,16 +165,21 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
         </div>
         <div className="mt-4 border-t border-[rgb(var(--border))] pt-3">
           <h3 className="mb-3 text-sm font-semibold">
-            Battle Simulation Result
+            Proxy Estimate Result
           </h3>
           <div className="flex flex-wrap items-center gap-2">
-            <Badge tone="warning">Experimental simulation</Badge>
+            <Badge tone="warning">{formatConfidence(result.confidence)}</Badge>
             <Badge tone={result.outcome === "win" ? "ok" : "danger"}>
-              {result.outcome === "win" ? "Win" : "Loss"}
+              {formatProxyOutcome(result.outcome)}
             </Badge>
             <Badge tone="info">{lead.species.name} lead</Badge>
             <Badge tone="info">{backup.species.name} backup</Badge>
           </div>
+          <p className="mt-2 text-xs text-[rgb(var(--muted-foreground))]">
+            This is not a verified Rocket result. Treat a proxy clear as a
+            prompt to inspect the timeline, not proof that the pair beats the
+            lineup in game.
+          </p>
         </div>
         <div className="mt-3 grid gap-3 sm:grid-cols-4">
           <PreviewMetric label="Turns" value={integer(result.totalTurns)} />
@@ -190,6 +200,32 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
       </Panel>
     </div>
   );
+}
+
+function formatConfidence(confidence: BattleConfidence) {
+  switch (confidence) {
+    case "proxy-estimate":
+      return "Proxy estimate";
+    case "deterministic-assumption":
+      return "Deterministic assumptions";
+    case "verified":
+      return "Verified";
+    default:
+      return "Not simulated";
+  }
+}
+
+function formatProxyOutcome(outcome: BattleOutcome) {
+  if (outcome === "win") {
+    return "Proxy clear";
+  }
+  if (outcome === "loss") {
+    return "Proxy fail";
+  }
+  if (outcome === "third-slot-required") {
+    return "Third slot required";
+  }
+  return "Not simulated";
 }
 
 function PreviewMetric({ label, value }: { label: string; value: string }) {

@@ -29,7 +29,8 @@ export function Methodology({ data }: { data: ApplicationData }) {
           <p>Time to Charged Attack uses discrete fast-move energy: ceil(energy cost / fast energy gain) times fast-move turns. Leftover energy is preserved for repeat timing displays.</p>
           <p>Candidate discovery keeps a hand-picked seed list, then adds top high-energy species/forms from each focus strategy. Discovered candidates must be non-shadow, non-mega, non-primal, have a fast move at 4+ EPT, have at least two charged moves, and have at least one charged move costing 45 energy or less.</p>
           <p>Focus rankings are experimental heuristics. Practical spam starts from charged-pause-control scoring, then downweights legendary, mythical, Ultra Beast, and high-value raid attacker overlap while slightly upweighting starter candidates to reflect candy competition and build accessibility.</p>
-          <p>Battle engine interfaces distinguish combat turns, simulated duration, and wall-clock duration, but Rocket simulation is deferred to Milestone 2.</p>
+          <p>Pair Builder uses a proxy Rocket estimate. Its clear/fail label is not a verified battle result because Rocket opponent stats, scaling, move selection, shield AI, and exact pauses still use assumptions or placeholders.</p>
+          <p>Battle engine interfaces distinguish combat turns, simulated duration, and wall-clock duration so Milestone 2 can replace proxy pieces with deterministic, source-labeled mechanics.</p>
         </div>
       </Panel>
       <Panel>

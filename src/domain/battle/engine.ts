@@ -58,6 +58,7 @@ export function createNotSimulatedResult(reason: string): BattleResult {
     fastAttacksUsed: 0,
     switches: 0,
     playerDecisions: 0,
+    confidence: "not-simulated",
     assumptionsUsed: [reason],
     simulationVersion: "m1-interface-only",
     events: [
@@ -153,6 +154,7 @@ export function simulatePlayerOffensePreview({
     fastAttacksUsed,
     switches: 0,
     playerDecisions: chargedAttacksUsed,
+    confidence: "not-simulated",
     assumptionsUsed: [
       "Player-side offense preview only.",
       "Rocket opponent HP, damage, shields, pauses, fainting, switching, and win/loss are disabled.",
@@ -576,10 +578,11 @@ export function simulateRocketLineupExperimental({
       fastAttacksUsed,
       switches,
       playerDecisions: chargedAttacksUsed,
+      confidence: "proxy-estimate",
       assumptionsUsed: [
-        `Experimental simulation for ${lineup.trainerName}; selected first listed Pokemon in each Rocket slot.`,
-        "Rocket opponent HP and incoming damage use versioned assumptions, not sourced battle stats.",
-        "Rocket opponent Charged Attack timing uses a configurable placeholder cadence; buffs, debuffs, type-specific opponent defense, and exact scaling are not implemented.",
+        `Proxy estimate for ${lineup.trainerName}; selected first listed Pokemon in each Rocket slot.`,
+        "Outcome is not a verified Rocket win/loss. Rocket opponent HP, scaling, and incoming damage use versioned assumptions, not sourced battle stats.",
+        "Rocket opponent Charged Attack timing uses a configurable placeholder cadence; buffs, debuffs, shield AI, type-specific opponent defense, and exact scaling are not implemented.",
         `Third slot unavailable; strategy=${strategy}.`,
       ],
       simulationVersion: "m2-experimental-rocket-0.1.0",

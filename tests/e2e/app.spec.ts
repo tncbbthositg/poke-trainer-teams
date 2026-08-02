@@ -48,10 +48,10 @@ test("supports overriding the theme mode", async ({ page }) => {
 test("supports picking a battle team", async ({ page }) => {
   await page.goto("/#/pairs");
   await expect(
-    page.getByRole("heading", { name: "Battle Simulation", exact: true }),
+    page.getByRole("heading", { name: "Proxy Battle Estimate", exact: true }),
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Battle Simulation Result" }),
+    page.getByRole("heading", { name: "Proxy Estimate Result" }),
   ).toBeVisible();
   await expect(page.getByLabel("Lead Pokemon")).toHaveValue("kingambit");
   await page.getByLabel("Backup Pokemon").selectOption("lucario");
@@ -60,8 +60,9 @@ test("supports picking a battle team", async ({ page }) => {
   await expect(page.getByLabel("Charged 1").first()).toBeVisible();
   await expect(page.getByLabel("Charged 2").first()).toBeVisible();
   await expect(page.getByLabel("Rocket Lineup")).toBeVisible();
-  await expect(page.getByText("Experimental simulation")).toBeVisible();
-  await expect(page.getByText(/^(Win|Loss)$/)).toBeVisible();
+  await expect(page.getByText("Proxy estimate", { exact: true })).toBeVisible();
+  await expect(page.getByText(/^(Proxy clear|Proxy fail)$/)).toBeVisible();
+  await expect(page.getByText("not a verified Rocket result")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Timeline" })).toBeVisible();
   await expect(
     page.getByLabel(/Battle timeline from 0.0 seconds/),

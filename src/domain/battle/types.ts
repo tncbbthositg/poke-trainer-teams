@@ -11,6 +11,12 @@ export type BattleStrategy =
 export type BattleOutcome =
   "win" | "loss" | "third-slot-required" | "not-simulated";
 
+export type BattleConfidence =
+  | "verified"
+  | "deterministic-assumption"
+  | "proxy-estimate"
+  | "not-simulated";
+
 export type BattleEvent = {
   turn: number;
   wallClockSeconds: number;
@@ -57,6 +63,7 @@ export type BattleResult = {
   fastAttacksUsed: number;
   switches: number;
   playerDecisions: number;
+  confidence: BattleConfidence;
   assumptionsUsed: string[];
   simulationVersion: string;
   events: BattleEvent[];

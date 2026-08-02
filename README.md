@@ -65,12 +65,26 @@ snapshot edits. The app does not scrape third-party sites at runtime.
 
 ## Data Sources And Attribution
 
-- PvPoke GameMaster: primary normalized source for Trainer Battle Pokemon,
-  legal moves, stats, and move data. PvPoke is MIT licensed.
-- PvPoke Moves: human-readable move table reference.
-- Leek Duck Rocket Lineups: practical Rocket lineup snapshot source.
-- Pokemon GO Hub Rocket Guide: planned independent lineup cross-check.
-- Niantic Help Center: general Rocket terminology and behavior.
+- [PvPoke GameMaster](https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json):
+  primary normalized source for Trainer Battle Pokemon, legal moves, stats, and
+  move data. PvPoke is MIT licensed; Rocket Pair Lab preserves attribution and
+  does not import PvPoke rankings as Rocket rankings.
+- [PvPoke Moves](https://pvpoke.com/moves/): human-readable reference for
+  Trainer Battle move labels and metrics. It is used for manual UI
+  cross-checking and is not scraped by the deployed app.
+- [Leek Duck Rocket Lineups](https://leekduck.com/rocket-lineups/): primary
+  practical Rocket lineup snapshot source for the checked-in Milestone 1
+  lineups. Attribution status is not established; records are manually reviewed
+  factual lineup snapshots.
+- [Pokemon GO Hub Rocket Guide](https://pokemongohub.net/post/guide/team-go-rocket-battle-guide/):
+  secondary manual lineup cross-check source. Disagreements are marked disputed
+  or unverified instead of silently resolved.
+- Niantic Help Center: general Team GO Rocket terminology and game-flow
+  reference. It is not treated as a complete lineup, formula, or battle
+  mechanics source.
+- PokeMiners: planned lower-level Game Master verification source. The
+  verification adapter is scaffolded, but PokeMiners data is not a runtime
+  browser dependency.
 
 This project is not affiliated with Niantic, The Pokemon Company, PvPoke, Leek
 Duck, Pokemon GO Hub, or PokeMiners.

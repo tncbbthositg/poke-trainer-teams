@@ -13,6 +13,7 @@ describe("battle engine interface scaffold", () => {
     const b = createNotSimulatedResult("test boundary");
     expect(a).toEqual(b);
     expect(a.outcome).toBe("not-simulated");
+    expect(a.confidence).toBe("not-simulated");
     expect(a.pokemonUsed).toBe(0);
     expect(a.assumptionsUsed).toContain("test boundary");
   });
@@ -49,6 +50,7 @@ describe("battle engine interface scaffold", () => {
 
     expect(a).toEqual(b);
     expect(a.outcome).toBe("not-simulated");
+    expect(a.confidence).toBe("not-simulated");
     expect(a.simulationVersion).toBe("m2-player-offense-preview-0.1.0");
     expect(a.fastAttacksUsed).toBe(10);
     expect(a.chargedAttacksUsed).toBe(2);
@@ -91,10 +93,14 @@ describe("battle engine interface scaffold", () => {
     });
 
     expect(["win", "loss"]).toContain(result.outcome);
+    expect(result.confidence).toBe("proxy-estimate");
     expect(result.simulationVersion).toBe("m2-experimental-rocket-0.1.0");
     expect(result.pokemonUsed).toBeLessThanOrEqual(2);
     expect(result.shieldsUsed).toBeLessThanOrEqual(4);
-    expect(result.assumptionsUsed.join(" ")).toMatch(/Experimental simulation/);
+    expect(result.assumptionsUsed.join(" ")).toMatch(/Proxy estimate/);
+    expect(result.assumptionsUsed.join(" ")).toMatch(
+      /not a verified Rocket win\/loss/,
+    );
     expect(result.assumptionsUsed.join(" ")).toMatch(/Third slot unavailable/);
     expect(result.events.some((event) => event.kind === "shield")).toBe(true);
     expect(
