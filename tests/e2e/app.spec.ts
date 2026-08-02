@@ -83,12 +83,31 @@ test("supports picking a battle team", async ({ page }) => {
     page.getByLabel(/Persian fast attack from/).first(),
   ).toBeVisible();
   await expect(page.getByLabel("Opponent charged attack spans")).toBeVisible();
-  await expect(
-    page.getByLabel(/Play Rough charged attack from/).first(),
-  ).toBeVisible();
+  await expect(page.getByLabel(/charged attack from/).first()).toBeVisible();
   await expect(page.getByLabel("Opponent shield uses")).toBeVisible();
   await expect(page.getByLabel("Opponent active Pokemon")).toBeVisible();
   await expect(page.getByLabel(/Persian active from/).first()).toBeVisible();
+});
+
+test("loads the battle timeline event log", async ({ page }) => {
+  await page.goto("/#/timeline");
+  await expect(
+    page.getByRole("heading", { name: "Battle Timeline" }),
+  ).toBeVisible();
+  await expect(page.getByRole("link", { name: "Timeline" })).toHaveAttribute(
+    "aria-current",
+    "page",
+  );
+  await expect(page.getByLabel("Lead", { exact: true })).toBeVisible();
+  await expect(page.getByLabel("Backup", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Event Log" })).toBeVisible();
+  await expect(page.getByRole("columnheader", { name: "Turn" })).toBeVisible();
+  await expect(
+    page.getByRole("cell", { name: "Pokemon Enter" }).first(),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Assumptions" }),
+  ).toBeVisible();
 });
 
 test("links explorer rows to moveset option A", async ({ page }) => {

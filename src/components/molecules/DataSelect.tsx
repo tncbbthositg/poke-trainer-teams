@@ -1,11 +1,11 @@
-import type { PokemonType } from '../../data/schemas/pokemon'
-import { typeColor } from '../../domain/types/typeColors'
+import type { PokemonType } from "../../data/schemas/pokemon";
+import { typeColor } from "../../domain/types/typeColors";
 
 export type DataSelectOption = {
-  value: string
-  label: string
-  type?: PokemonType
-}
+  value: string;
+  label: string;
+  type?: PokemonType;
+};
 
 export function DataSelect({
   label,
@@ -14,18 +14,19 @@ export function DataSelect({
   onChange,
   options,
 }: {
-  label: string
-  value: string
-  selectedType?: PokemonType
-  onChange: (value: string) => void
-  options: DataSelectOption[]
+  label: string;
+  value: string;
+  selectedType?: PokemonType;
+  onChange: (value: string) => void;
+  options: DataSelectOption[];
 }) {
-  const selectedColor = selectedType ? typeColor(selectedType) : undefined
+  const selectedColor = selectedType ? typeColor(selectedType) : undefined;
 
   return (
     <label className="grid min-w-0 gap-1 text-xs font-medium text-[rgb(var(--muted-foreground))]">
       {label}
       <select
+        aria-label={label}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         className="h-9 min-w-0 truncate rounded-md border border-[rgb(var(--border))] bg-[rgb(var(--panel))] py-0 pl-2 pr-10 text-xs text-[rgb(var(--foreground))]"
@@ -39,7 +40,7 @@ export function DataSelect({
         }
       >
         {options.map((option) => {
-          const color = option.type ? typeColor(option.type) : undefined
+          const color = option.type ? typeColor(option.type) : undefined;
 
           return (
             <option
@@ -56,9 +57,9 @@ export function DataSelect({
             >
               {option.label}
             </option>
-          )
+          );
         })}
       </select>
     </label>
-  )
+  );
 }

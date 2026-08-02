@@ -3,6 +3,7 @@ import {
   Activity,
   BarChart3,
   BookOpen,
+  Clock3,
   Monitor,
   GitCompare,
   ListFilter,
@@ -37,6 +38,11 @@ const PairBuilder = lazy(() =>
     default: module.PairBuilder,
   })),
 );
+const BattleTimelineView = lazy(() =>
+  import("./features/battle-timeline/BattleTimelineView").then((module) => ({
+    default: module.BattleTimelineView,
+  })),
+);
 const LineupMatrix = lazy(() =>
   import("./features/lineup-matrix/LineupMatrix").then((module) => ({
     default: module.LineupMatrix,
@@ -49,7 +55,13 @@ const Methodology = lazy(() =>
 );
 
 type ViewId =
-  "overview" | "pokemon" | "movesets" | "pairs" | "lineups" | "methodology";
+  | "overview"
+  | "pokemon"
+  | "movesets"
+  | "pairs"
+  | "timeline"
+  | "lineups"
+  | "methodology";
 
 type ThemeMode = "light" | "dark" | "system";
 
@@ -63,6 +75,7 @@ const views: Array<{
   { id: "pokemon", label: "Pokemon", path: "/pokemon", icon: ListFilter },
   { id: "movesets", label: "Movesets", path: "/movesets", icon: GitCompare },
   { id: "pairs", label: "Battle Sim", path: "/pairs", icon: Users },
+  { id: "timeline", label: "Timeline", path: "/timeline", icon: Clock3 },
   { id: "lineups", label: "Lineups", path: "/lineups", icon: Table2 },
   {
     id: "methodology",
@@ -243,6 +256,7 @@ function AppView({
       {activeView === "pokemon" && <PokemonExplorer data={data} />}
       {activeView === "movesets" && <MovesetComparator data={data} />}
       {activeView === "pairs" && <PairBuilder data={data} />}
+      {activeView === "timeline" && <BattleTimelineView data={data} />}
       {activeView === "lineups" && <LineupMatrix data={data} />}
       {activeView === "methodology" && <Methodology data={data} />}
     </Suspense>
