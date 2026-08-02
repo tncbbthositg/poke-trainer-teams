@@ -27,6 +27,7 @@ export function Methodology({ data }: { data: ApplicationData }) {
           <p>Effective stats use Pokemon GO CP multipliers for the selected level and IVs. Milestone 1 exposes level 40, 15/15/15 attacker calculations.</p>
           <p>Raw bulk proxy is effective defense times effective HP. It is not matchup-specific survivability.</p>
           <p>Time to Charged Attack uses discrete fast-move energy: ceil(energy cost / fast energy gain) times fast-move turns. Leftover energy is preserved for repeat timing displays.</p>
+          <p>Candidate discovery keeps a hand-picked seed list, then adds top high-energy species/forms from each focus strategy. Discovered candidates must be non-shadow, non-mega, non-primal, have a fast move at 4+ EPT, have at least two charged moves, and have at least one charged move costing 45 energy or less.</p>
           <p>Focus rankings are experimental heuristics. Practical spam starts from charged-pause-control scoring, then downweights legendary, mythical, Ultra Beast, and high-value raid attacker overlap while slightly upweighting starter candidates to reflect candy competition and build accessibility.</p>
           <p>Battle engine interfaces distinguish combat turns, simulated duration, and wall-clock duration, but Rocket simulation is deferred to Milestone 2.</p>
         </div>

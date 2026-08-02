@@ -1,11 +1,22 @@
 import { writeFile, mkdir } from "node:fs/promises";
 import { dirname } from "node:path";
+import {
+  rankPokemonForFocus,
+  type PokemonFocusStrategy,
+} from "../../src/domain/ranking/pokemonFocus";
+import type { MovesSnapshot } from "../../src/data/schemas/moves";
+import {
+  pokemonTypeSchema,
+  type PokemonSpecies,
+  type PokemonType,
+} from "../../src/data/schemas/pokemon";
+import type { DataProvenance } from "../../src/data/schemas/provenance";
 import { sha256, nowIso } from "./shared";
 
 const pvpokeUrl =
   "https://raw.githubusercontent.com/pvpoke/pvpoke/master/src/data/gamemaster.json";
 const parserVersion = "pvpoke-normalizer-0.1.0";
-const candidates = [
+const seedCandidates = [
   { sourceId: "kingambit", displayName: "Kingambit" },
   { sourceId: "annihilape", displayName: "Annihilape" },
   { sourceId: "lucario", displayName: "Lucario" },
@@ -46,6 +57,12 @@ const candidates = [
   { sourceId: "venusaur", displayName: "Venusaur" },
   { sourceId: "gyarados", displayName: "Gyarados" },
   { sourceId: "primarina", displayName: "Primarina" },
+];
+const discoveredCandidatesPerStrategy = 30;
+const discoveryStrategies: PokemonFocusStrategy[] = [
+  "fastest-victory",
+  "charged-pause-control",
+  "practical-spam",
 ];
 
 const rocketOpponentIds = [
@@ -132,7 +149,7 @@ async function main() {
   const sourceHash = sha256(raw);
   const gameMaster = JSON.parse(raw) as PvPokeGameMaster;
   const generatedAt = nowIso();
-  const provenance = {
+  const provenance: DataProvenance = {
     sourceName: "PvPoke GameMaster",
     sourceUrl: pvpokeUrl,
     retrievedAt: generatedAt,
@@ -146,15 +163,20 @@ async function main() {
   };
 
   const byMoveId = new Map(gameMaster.moves.map((move) => [move.moveId, move]));
+  const bySpeciesId = new Map(
+    gameMaster.pokemon.map((pokemon) => [pokemon.speciesId, pokemon]),
+  );
+  const seedBySourceId = new Map(
+    seedCandidates.map((candidate) => [candidate.sourceId, candidate]),
+  );
+
   function normalizeSpecies(
     sourceId: string,
     displayName?: string,
     extraTags: string[] = [],
     note?: string,
-  ) {
-    const species = gameMaster.pokemon.find(
-      (pokemon) => pokemon.speciesId === sourceId,
-    );
+  ): PokemonSpecies {
+    const species = bySpeciesId.get(sourceId);
     if (!species) {
       throw new Error(`Pokemon ${sourceId} not found in PvPoke GameMaster`);
     }
@@ -162,7 +184,9 @@ async function main() {
       id: species.speciesId,
       dex: species.dex,
       name: displayName ?? species.speciesName,
-      types: species.types.filter((type) => type !== "none"),
+      types: species.types
+        .filter((type) => type !== "none")
+        .map((type) => normalizePokemonType(type)),
       baseStats: {
         attack: species.baseStats.atk,
         defense: species.baseStats.def,
@@ -180,35 +204,12 @@ async function main() {
     };
   }
 
-  const normalizedCandidates = candidates.map((candidate) =>
-    normalizeSpecies(
-      candidate.sourceId,
-      candidate.displayName,
-      candidate.extraTags,
-      candidate.note,
-    ),
-  );
-  const normalizedRocketOpponents = rocketOpponentIds.map((sourceId) =>
-    normalizeSpecies(sourceId),
-  );
-
-  const legalMoveIds = new Set<string>();
-  for (const species of [
-    ...normalizedCandidates,
-    ...normalizedRocketOpponents,
-  ]) {
-    species.fastMoves.forEach((move) => legalMoveIds.add(move));
-    species.chargedMoves.forEach((move) => legalMoveIds.add(move));
-  }
-
-  const fastMoves = Array.from(legalMoveIds)
-    .map((id) => byMoveId.get(id))
-    .filter((move): move is PvPokeMove => Boolean(move))
+  const fastMoves = gameMaster.moves
     .filter((move) => (move.energyGain ?? 0) > 0)
     .map((move) => ({
       id: move.moveId,
       name: move.name,
-      type: move.type,
+      type: normalizePokemonType(move.type),
       power: move.power,
       energyGain: move.energyGain ?? 0,
       turns:
@@ -219,14 +220,12 @@ async function main() {
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
 
-  const chargedMoves = Array.from(legalMoveIds)
-    .map((id) => byMoveId.get(id))
-    .filter((move): move is PvPokeMove => Boolean(move))
+  const chargedMoves = gameMaster.moves
     .filter((move) => (move.energy ?? 0) > 0)
     .map((move) => ({
       id: move.moveId,
       name: move.name,
-      type: move.type,
+      type: normalizePokemonType(move.type),
       power: move.power,
       energyCost: move.energy ?? 0,
       buffs: normalizeBuff(move),
@@ -234,19 +233,45 @@ async function main() {
     }))
     .sort((a, b) => a.name.localeCompare(b.name));
 
+  const movesSnapshot: MovesSnapshot = {
+    schemaVersion: "1.0.0",
+    generatedAt,
+    sourceHash,
+    fastMoves,
+    chargedMoves,
+  };
+
+  const eligibleDiscoverySpecies = gameMaster.pokemon
+    .filter((species) => isDiscoveryEligible(species, byMoveId))
+    .map((species) => normalizeSpecies(species.speciesId));
+  const discoveredIds = discoverCandidateIds(
+    eligibleDiscoverySpecies,
+    movesSnapshot,
+  );
+  const candidateIds = orderedUnique([
+    ...seedCandidates.map((candidate) => candidate.sourceId),
+    ...discoveredIds,
+  ]);
+  const normalizedCandidates = candidateIds.map((sourceId) => {
+    const seed = seedBySourceId.get(sourceId);
+
+    return normalizeSpecies(
+      sourceId,
+      seed?.displayName,
+      seed?.extraTags,
+      seed?.note,
+    );
+  });
+  const normalizedRocketOpponents = rocketOpponentIds.map((sourceId) =>
+    normalizeSpecies(sourceId),
+  );
+
   const pokemonSnapshot = {
     schemaVersion: "1.0.0",
     generatedAt,
     sourceHash,
     candidates: normalizedCandidates,
     rocketOpponents: normalizedRocketOpponents,
-  };
-  const movesSnapshot = {
-    schemaVersion: "1.0.0",
-    generatedAt,
-    sourceHash,
-    fastMoves,
-    chargedMoves,
   };
 
   await writeJson("public/data/pokemon.json", pokemonSnapshot);
@@ -262,9 +287,18 @@ async function main() {
       `Source timestamp: ${gameMaster.timestamp}`,
       `Source hash: ${sourceHash}`,
       `Candidates: ${normalizedCandidates.length}`,
+      `Seed candidates: ${seedCandidates.length}`,
+      `Discovery-eligible species/forms: ${eligibleDiscoverySpecies.length}`,
+      `Discovered candidate limit per strategy: ${discoveredCandidatesPerStrategy}`,
       `Rocket opponents: ${normalizedRocketOpponents.length}`,
       `Fast moves: ${fastMoves.length}`,
       `Charged moves: ${chargedMoves.length}`,
+      "",
+      "Candidate discovery keeps the hand-picked seed list, then adds the top",
+      "high-energy species/forms from each focus strategy. Eligible discovered",
+      "species/forms must be non-shadow, non-mega, non-primal, have at least one",
+      "fast move with EPT >= 4, at least two charged moves, and at least one",
+      "charged move costing 45 energy or less.",
       "",
     ].join("\n"),
   );
@@ -279,6 +313,77 @@ function normalizeBuff(move: PvPokeMove) {
     stages: move.buffs,
     chance: Number(move.buffApplyChance ?? 0),
   };
+}
+
+function normalizePokemonType(type: string): PokemonType {
+  return pokemonTypeSchema.parse(type);
+}
+
+function discoverCandidateIds(
+  eligibleSpecies: PokemonSpecies[],
+  movesSnapshot: MovesSnapshot,
+) {
+  const ids = new Set<string>();
+
+  for (const strategy of discoveryStrategies) {
+    const rankings = rankPokemonForFocus(
+      eligibleSpecies,
+      movesSnapshot,
+      strategy,
+      40,
+    );
+
+    for (const ranking of rankings.slice(0, discoveredCandidatesPerStrategy)) {
+      ids.add(ranking.species.id);
+    }
+  }
+
+  return Array.from(ids);
+}
+
+function isDiscoveryEligible(
+  species: PvPokePokemon,
+  byMoveId: Map<string, PvPokeMove>,
+) {
+  if (
+    species.speciesId.includes("_shadow") ||
+    species.speciesId.includes("_mega") ||
+    species.speciesId.includes("_primal")
+  ) {
+    return false;
+  }
+
+  const hasHighEnergyFastMove = species.fastMoves.some((moveId) => {
+    const move = byMoveId.get(moveId);
+
+    return move ? fastMoveEnergyPerTurn(move) >= 4 : false;
+  });
+  const hasCheapChargedMove = species.chargedMoves.some((moveId) => {
+    const move = byMoveId.get(moveId);
+
+    return (move?.energy ?? Infinity) <= 45;
+  });
+
+  return (
+    hasHighEnergyFastMove &&
+    hasCheapChargedMove &&
+    species.chargedMoves.length >= 2
+  );
+}
+
+function fastMoveEnergyPerTurn(move: PvPokeMove) {
+  if (!move.energyGain) {
+    return 0;
+  }
+
+  const turns =
+    move.turns ?? Math.max(1, Math.round((move.cooldown ?? 500) / 500));
+
+  return move.energyGain / turns;
+}
+
+function orderedUnique(values: string[]) {
+  return Array.from(new Set(values));
 }
 
 main().catch((error) => {

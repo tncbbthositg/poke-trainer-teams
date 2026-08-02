@@ -9,6 +9,13 @@ PvPoke rankings are not imported as Rocket rankings.
 PvPoke Moves is a human-readable cross-check for move table labels and metrics.
 The deployed app does not scrape it.
 
+Candidate discovery keeps a hand-picked seed list, then adds the top
+high-energy species/forms from Rocket Pair Lab's local focus-strategy scoring.
+Discovered species/forms must be non-shadow, non-mega, non-primal, have at
+least one fast move with EPT >= 4, at least two charged moves, and at least one
+charged move costing 45 energy or less. This selects a reviewable candidate set
+from PvPoke source data; it does not import PvPoke rankings.
+
 ## Rocket Lineups
 
 Leek Duck is the primary practical lineup snapshot source for Milestone 1.
