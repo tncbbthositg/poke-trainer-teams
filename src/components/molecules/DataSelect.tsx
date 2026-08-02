@@ -1,3 +1,4 @@
+import { ChevronDown } from "lucide-react";
 import type { PokemonType } from "../../data/schemas/pokemon";
 import { typeColor } from "../../domain/types/typeColors";
 
@@ -25,41 +26,47 @@ export function DataSelect({
   return (
     <label className="grid min-w-0 gap-1 text-xs font-medium text-[rgb(var(--muted-foreground))]">
       {label}
-      <select
-        aria-label={label}
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        className="h-9 min-w-0 truncate rounded-md border border-[rgb(var(--border))] bg-[rgb(var(--panel))] py-0 pl-2 pr-10 text-xs text-[rgb(var(--foreground))]"
-        style={
-          selectedColor
-            ? {
-                borderLeftColor: selectedColor.bg,
-                borderLeftWidth: 6,
-              }
-            : undefined
-        }
-      >
-        {options.map((option) => {
-          const color = option.type ? typeColor(option.type) : undefined;
+      <span className="relative min-w-0">
+        <select
+          aria-label={label}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          className="h-9 w-full min-w-0 appearance-none truncate rounded-md border border-[rgb(var(--border))] bg-[rgb(var(--panel))] py-0 pl-2 pr-11 text-xs text-[rgb(var(--foreground))]"
+          style={
+            selectedColor
+              ? {
+                  borderLeftColor: selectedColor.bg,
+                  borderLeftWidth: 6,
+                }
+              : undefined
+          }
+        >
+          {options.map((option) => {
+            const color = option.type ? typeColor(option.type) : undefined;
 
-          return (
-            <option
-              key={option.value}
-              value={option.value}
-              style={
-                color
-                  ? {
-                      backgroundColor: color.bg,
-                      color: color.text,
-                    }
-                  : undefined
-              }
-            >
-              {option.label}
-            </option>
-          );
-        })}
-      </select>
+            return (
+              <option
+                key={option.value}
+                value={option.value}
+                style={
+                  color
+                    ? {
+                        backgroundColor: color.bg,
+                        color: color.text,
+                      }
+                    : undefined
+                }
+              >
+                {option.label}
+              </option>
+            );
+          })}
+        </select>
+        <ChevronDown
+          className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[rgb(var(--foreground))]"
+          aria-hidden="true"
+        />
+      </span>
     </label>
   );
 }

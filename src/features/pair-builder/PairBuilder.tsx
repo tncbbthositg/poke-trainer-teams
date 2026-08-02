@@ -1,6 +1,7 @@
 import {
   type CSSProperties,
   type PointerEvent,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -21,14 +22,23 @@ import type {
   BattleConfidence,
   BattleEvent,
   BattleOutcome,
-  BattleStrategy,
 } from "../../domain/battle/types";
 import { analyzeMoveset } from "../../domain/moves/analytics";
 import type { PokemonBuild } from "../../domain/pokemon/types";
+import {
+  bestMovesetForStrategy,
+  pokemonFocusStrategyLabels,
+  type PokemonFocusStrategy,
+} from "../../domain/ranking/pokemonFocus";
 import { calculateEffectiveStats } from "../../domain/stats/effectiveStats";
 import { typeColor } from "../../domain/types/typeColors";
 import { integer, number } from "../../lib/format";
 import { moveMaps } from "../shared/dataHelpers";
+import { battleStrategyForFocus } from "../shared/strategyMapping";
+import {
+  persistSelectedBattleTeam,
+  readSelectedBattleTeam,
+} from "../shared/teamSelection";
 
 type SlotState = {
   speciesId: string;
@@ -46,13 +56,15 @@ type SlotBuild = {
 export function PairBuilder({ data }: { data: ApplicationData }) {
   const maps = useMemo(() => moveMaps(data), [data]);
   const [trainerLevel, setTrainerLevel] = useState(50);
-  const [strategy, setStrategy] = useState<BattleStrategy>("charge-asap");
+  const [strategy, setStrategy] =
+    useState<PokemonFocusStrategy>("fastest-victory");
   const [lineupId, setLineupId] = useState(data.rocket.lineups[0]?.id ?? "");
+  const initialTeam = useMemo(() => readSelectedBattleTeam(data), [data]);
   const [leadSlot, setLeadSlot] = useState(() =>
-    initialSlot(data.pokemon.candidates[0], data),
+    recommendedSlotById(initialTeam.leadId, data, strategy),
   );
   const [backupSlot, setBackupSlot] = useState(() =>
-    initialSlot(data.pokemon.candidates[1], data),
+    recommendedSlotById(initialTeam.backupId, data, strategy),
   );
   const lead = resolveSlot(leadSlot, data, maps);
   const backup = resolveSlot(backupSlot, data, maps);
@@ -60,50 +72,73 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
     data.rocket.lineups.find((candidate) => candidate.id === lineupId) ??
     data.rocket.lineups[0];
   const boundedTrainerLevel = Math.min(50, Math.max(1, trainerLevel));
+  const candidateLevel = candidatePokemonLevel(boundedTrainerLevel);
+  const battleStrategy = battleStrategyForFocus(strategy);
   const result = useMemo(
     () =>
       simulateRocketLineupExperimental({
-        lead: toPokemonBuild(lead, boundedTrainerLevel),
-        backup: toPokemonBuild(backup, boundedTrainerLevel),
+        lead: toPokemonBuild(lead, candidateLevel),
+        backup: toPokemonBuild(backup, candidateLevel),
         lineup,
         mechanics: data.mechanics,
         rocketOpponents: data.pokemon.rocketOpponents,
         moves: data.moves,
-        strategy,
+        strategy: battleStrategy,
+        trainerLevel: boundedTrainerLevel,
       }),
     [
       backup,
+      battleStrategy,
       boundedTrainerLevel,
+      candidateLevel,
       data.mechanics,
       data.moves,
       data.pokemon.rocketOpponents,
       lead,
       lineup,
-      strategy,
     ],
   );
   const universalEvaluation = useMemo(
     () =>
       evaluateUniversalPairExperimental({
-        lead: toPokemonBuild(lead, boundedTrainerLevel),
-        backup: toPokemonBuild(backup, boundedTrainerLevel),
+        lead: toPokemonBuild(lead, candidateLevel),
+        backup: toPokemonBuild(backup, candidateLevel),
         lineups: data.rocket.lineups,
         mechanics: data.mechanics,
         rocketOpponents: data.pokemon.rocketOpponents,
         moves: data.moves,
-        strategy,
+        strategy: battleStrategy,
+        trainerLevel: boundedTrainerLevel,
       }),
     [
       backup,
+      battleStrategy,
       boundedTrainerLevel,
+      candidateLevel,
       data.mechanics,
       data.moves,
       data.pokemon.rocketOpponents,
       data.rocket.lineups,
       lead,
-      strategy,
     ],
   );
+
+  useEffect(() => {
+    persistSelectedBattleTeam({
+      leadId: lead.species.id,
+      backupId: backup.species.id,
+    });
+  }, [backup.species.id, lead.species.id]);
+
+  function setFocusStrategy(nextStrategy: PokemonFocusStrategy) {
+    setStrategy(nextStrategy);
+    setLeadSlot((current) =>
+      recommendedSlotById(current.speciesId, data, nextStrategy),
+    );
+    setBackupSlot((current) =>
+      recommendedSlotById(current.speciesId, data, nextStrategy),
+    );
+  }
 
   return (
     <div className="grid gap-4">
@@ -128,21 +163,18 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
           <DataSelect
             label="Strategy"
             value={strategy}
-            onChange={(value) => setStrategy(value as BattleStrategy)}
-            options={[
-              { value: "charge-asap", label: "Charge ASAP" },
-              {
-                value: "fastest-expected-knockout",
-                label: "Fastest expected knockout",
-              },
-              { value: "shield-breaker", label: "Shield breaker" },
-              { value: "preserve-lead", label: "Preserve lead" },
-              { value: "minimal-interaction", label: "Minimal interaction" },
-            ]}
+            onChange={(value) => setFocusStrategy(value as PokemonFocusStrategy)}
+            options={Object.entries(pokemonFocusStrategyLabels).map(
+              ([value, label]) => ({
+                value,
+                label,
+              }),
+            )}
           />
           <div className="flex flex-wrap items-end gap-2">
             <Badge tone="info">Trainer Level {trainerLevel}</Badge>
-            <Badge tone="warning">{strategy}</Badge>
+            <Badge tone="info">Pokemon Level {candidateLevel}</Badge>
+            <Badge tone="warning">{pokemonFocusStrategyLabels[strategy]}</Badge>
             <Badge tone="danger">Third slot unavailable</Badge>
           </div>
         </div>
@@ -154,7 +186,8 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
           build={lead}
           data={data}
           maps={maps}
-          trainerLevel={trainerLevel}
+          strategy={strategy}
+          trainerLevel={candidateLevel}
           onChange={setLeadSlot}
         />
         <TeamSlot
@@ -163,7 +196,8 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
           build={backup}
           data={data}
           maps={maps}
-          trainerLevel={trainerLevel}
+          strategy={strategy}
+          trainerLevel={candidateLevel}
           onChange={setBackupSlot}
         />
       </div>
@@ -1393,6 +1427,7 @@ function TeamSlot({
   build,
   data,
   maps,
+  strategy,
   trainerLevel,
   onChange,
 }: {
@@ -1401,6 +1436,7 @@ function TeamSlot({
   build: SlotBuild;
   data: ApplicationData;
   maps: ReturnType<typeof moveMaps>;
+  strategy: PokemonFocusStrategy;
   trainerLevel: number;
   onChange: (slot: SlotState) => void;
 }) {
@@ -1428,7 +1464,7 @@ function TeamSlot({
     if (!species) {
       return;
     }
-    onChange(initialSlot(species, data));
+    onChange(recommendedSlot(species, data, strategy));
   }
 
   function setChargedOne(chargedOneId: string) {
@@ -1573,19 +1609,31 @@ function TeamSlotSummary({
   );
 }
 
-function initialSlot(
+function recommendedSlot(
   species: PokemonSpecies,
   data: ApplicationData,
+  strategy: PokemonFocusStrategy,
 ): SlotState {
-  const maps = moveMaps(data);
-  const fastMoves = legalFastMoves(species, maps);
-  const chargedMoves = legalChargedMoves(species, maps);
+  const moveset = bestMovesetForStrategy(species, data.moves, strategy, 40);
+
   return {
     speciesId: species.id,
-    fastMoveId: fastMoves[0].id,
-    chargedOneId: chargedMoves[0].id,
-    chargedTwoId: chargedMoves[1]?.id ?? chargedMoves[0].id,
+    fastMoveId: moveset.fastMove.id,
+    chargedOneId: moveset.chargedMoves[0].id,
+    chargedTwoId: moveset.chargedMoves[1].id,
   };
+}
+
+function recommendedSlotById(
+  speciesId: string,
+  data: ApplicationData,
+  strategy: PokemonFocusStrategy,
+): SlotState {
+  const species =
+    data.pokemon.candidates.find((candidate) => candidate.id === speciesId) ??
+    data.pokemon.candidates[0];
+
+  return recommendedSlot(species, data, strategy);
 }
 
 function resolveSlot(
@@ -1663,11 +1711,15 @@ function legalChargedMoves(
 }
 
 function fastMoveLabel(move: FastMove) {
-  return `${move.name} · ${typeAbbreviation(move.type)} · P${move.power} · +E${move.energyGain} · ${move.turns}T`;
+  return `${move.name} · ${typeAbbreviation(move.type)} · DPT ${number(move.power / move.turns)} · EPT ${number(move.energyGain / move.turns)}`;
 }
 
 function chargedMoveLabel(move: ChargedMove) {
   return `${move.name} · ${typeAbbreviation(move.type)} · P${move.power} · E${move.energyCost}`;
+}
+
+function candidatePokemonLevel(trainerLevel: number) {
+  return Math.min(40, trainerLevel);
 }
 
 function formatLineupBranch(id: string) {

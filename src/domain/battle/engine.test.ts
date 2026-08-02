@@ -268,6 +268,56 @@ describe("battle engine interface scaffold", () => {
     expect(firstFastResolve?.message).toContain("Teddiursa HP is 105");
   });
 
+  it("prefers matchup-effective charged damage over cheaper spam after shields are gone", () => {
+    const data = loadApplicationData();
+    const kingambit = buildFor(
+      data,
+      "kingambit",
+      "METAL_SOUND",
+      "FOUL_PLAY",
+      "X_SCISSOR",
+    );
+    const lucario = buildFor(
+      data,
+      "lucario",
+      "COUNTER",
+      "POWER_UP_PUNCH",
+      "AURA_SPHERE",
+    );
+    const baseLineup = data.rocket.lineups.find(
+      (item) => item.id === "grunt-normal-male-2026-06-25",
+    )!;
+    const tyranitarLineup = {
+      ...baseLineup,
+      slots: [{ slot: 1, pokemonIds: ["tyranitar"] }],
+    };
+
+    const result = simulateRocketLineupExperimental({
+      lead: {
+        ...kingambit,
+        fastMove: { ...kingambit.fastMove, energyGain: 100 },
+        chargedMoves: [
+          { ...kingambit.chargedMoves[0], energyCost: 35 },
+          { ...kingambit.chargedMoves[1], energyCost: 55 },
+        ],
+      },
+      backup: lucario,
+      lineup: tyranitarLineup,
+      mechanics: data.mechanics,
+      rocketOpponents: data.pokemon.rocketOpponents,
+      moves: data.moves,
+      strategy: "charge-asap",
+      maxTurns: 4,
+    });
+
+    const firstChargedAttack = result.events.find(
+      (event) => event.actor === "player" && event.kind === "charged-attack",
+    );
+
+    expect(firstChargedAttack?.attack?.name).toBe("X-Scissor");
+    expect(firstChargedAttack?.attack?.typeMultiplier).toBeGreaterThan(1);
+  });
+
   it("uses the cheapest available charged move to break Rocket shields", () => {
     const data = loadApplicationData();
     const lucario = buildFor(

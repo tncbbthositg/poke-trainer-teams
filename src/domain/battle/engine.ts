@@ -179,6 +179,10 @@ function selectChargedMove(
     opponent: ExperimentalRocketOpponent;
     opponentHp: number;
     remainingOpponentShields: number;
+    playerAttackStage: number;
+    playerDefenseStage: number;
+    opponentAttackStage: number;
+    opponentDefenseStage: number;
   },
 ): ChargedMove | undefined {
   const available = build.chargedMoves.filter(
@@ -217,10 +221,18 @@ function selectMatchupChargedMove(
     opponent,
     opponentHp,
     remainingOpponentShields,
+    playerAttackStage,
+    playerDefenseStage,
+    opponentAttackStage,
+    opponentDefenseStage,
   }: {
     opponent: ExperimentalRocketOpponent;
     opponentHp: number;
     remainingOpponentShields: number;
+    playerAttackStage: number;
+    playerDefenseStage: number;
+    opponentAttackStage: number;
+    opponentDefenseStage: number;
   },
 ): ChargedMove | undefined {
   const available = build.chargedMoves.filter(
@@ -234,6 +246,10 @@ function selectMatchupChargedMove(
     build,
     build.fastMove,
     opponent,
+    {
+      attackerAttackStage: playerAttackStage,
+      defenderDefenseStage: opponentDefenseStage,
+    },
   ).totalDamage;
   if (remainingOpponentShields === 0 && fastDamage >= opponentHp) {
     return undefined;
@@ -242,44 +258,98 @@ function selectMatchupChargedMove(
   if (remainingOpponentShields > 0) {
     return [...available].sort(
       (a, b) =>
-        a.energyCost - b.energyCost ||
-        matchupDamage(build, b, opponent) - matchupDamage(build, a, opponent),
+        shieldedChargedMoveUtility(build, b, opponent, {
+          playerAttackStage,
+          playerDefenseStage,
+          opponentAttackStage,
+          opponentDefenseStage,
+        }) -
+          shieldedChargedMoveUtility(build, a, opponent, {
+            playerAttackStage,
+            playerDefenseStage,
+            opponentAttackStage,
+            opponentDefenseStage,
+          }) || a.energyCost - b.energyCost,
     )[0];
   }
 
   const knockoutMoves = available.filter(
-    (move) => matchupDamage(build, move, opponent) >= opponentHp,
+    (move) =>
+      matchupDamage(build, move, opponent, {
+        playerAttackStage,
+        opponentDefenseStage,
+      }) >= opponentHp,
   );
   if (knockoutMoves.length > 0) {
     return knockoutMoves.sort(
       (a, b) =>
         a.energyCost - b.energyCost ||
-        matchupDamage(build, a, opponent) - matchupDamage(build, b, opponent),
+        matchupDamage(build, a, opponent, {
+          playerAttackStage,
+          opponentDefenseStage,
+        }) -
+          matchupDamage(build, b, opponent, {
+            playerAttackStage,
+            opponentDefenseStage,
+          }),
     )[0];
   }
 
   if (strategy === "charge-asap") {
     return [...available].sort(
       (a, b) =>
-        a.energyCost - b.energyCost ||
-        matchupDamage(build, b, opponent) / b.energyCost -
-          matchupDamage(build, a, opponent) / a.energyCost,
+        chargedMoveUtility(build, b, opponent, {
+          playerAttackStage,
+          playerDefenseStage,
+          opponentAttackStage,
+          opponentDefenseStage,
+          strategy,
+        }) -
+          chargedMoveUtility(build, a, opponent, {
+            playerAttackStage,
+            playerDefenseStage,
+            opponentAttackStage,
+            opponentDefenseStage,
+            strategy,
+          }) || a.energyCost - b.energyCost,
     )[0];
   }
 
   if (strategy === "shield-breaker") {
     return [...available].sort(
       (a, b) =>
-        matchupDamage(build, b, opponent) / b.energyCost -
-          matchupDamage(build, a, opponent) / a.energyCost ||
+        chargedMoveUtility(build, b, opponent, {
+          playerAttackStage,
+          playerDefenseStage,
+          opponentAttackStage,
+          opponentDefenseStage,
+          strategy,
+        }) -
+          chargedMoveUtility(build, a, opponent, {
+            playerAttackStage,
+            playerDefenseStage,
+            opponentAttackStage,
+            opponentDefenseStage,
+            strategy,
+          }) ||
         a.energyCost - b.energyCost,
     )[0];
   }
 
   const allMovesByExpectedKoPressure = [...build.chargedMoves].sort(
     (a, b) =>
-      chargedMovePressure(build, b, opponent, energy) -
-        chargedMovePressure(build, a, opponent, energy) ||
+      chargedMovePressure(build, b, opponent, energy, {
+        playerAttackStage,
+        playerDefenseStage,
+        opponentAttackStage,
+        opponentDefenseStage,
+      }) -
+        chargedMovePressure(build, a, opponent, energy, {
+          playerAttackStage,
+          playerDefenseStage,
+          opponentAttackStage,
+          opponentDefenseStage,
+        }) ||
       a.energyCost - b.energyCost,
   );
   const bestMove = allMovesByExpectedKoPressure[0];
@@ -290,7 +360,20 @@ function selectMatchupChargedMove(
   if (strategy === "preserve-lead") {
     return [...available].sort(
       (a, b) =>
-        matchupDamage(build, b, opponent) - matchupDamage(build, a, opponent) ||
+        chargedMoveUtility(build, b, opponent, {
+          playerAttackStage,
+          playerDefenseStage,
+          opponentAttackStage,
+          opponentDefenseStage,
+          strategy,
+        }) -
+          chargedMoveUtility(build, a, opponent, {
+            playerAttackStage,
+            playerDefenseStage,
+            opponentAttackStage,
+            opponentDefenseStage,
+            strategy,
+          }) ||
         a.energyCost - b.energyCost,
     )[0];
   }
@@ -303,19 +386,142 @@ function chargedMovePressure(
   move: ChargedMove,
   opponent: ExperimentalRocketOpponent,
   currentEnergy: number,
+  stages: ChargedMoveDecisionStages,
 ) {
   const missingEnergy = Math.max(0, move.energyCost - currentEnergy);
   const fastMovesNeeded = Math.ceil(missingEnergy / build.fastMove.energyGain);
   const turnsUntilMove = fastMovesNeeded * build.fastMove.turns;
-  return matchupDamage(build, move, opponent) / Math.max(1, turnsUntilMove + 1);
+  return (
+    chargedMoveUtility(build, move, opponent, {
+      ...stages,
+      strategy: "fastest-expected-knockout",
+    }) / Math.max(1, turnsUntilMove + 1)
+  );
 }
 
 function matchupDamage(
   build: PokemonBuild,
   move: FastMove | ChargedMove,
   opponent: ExperimentalRocketOpponent,
+  stages: {
+    playerAttackStage: number;
+    opponentDefenseStage: number;
+  } = { playerAttackStage: 0, opponentDefenseStage: 0 },
 ) {
-  return playerMoveDamageDetails(build, move, opponent).totalDamage;
+  return playerMoveDamageDetails(build, move, opponent, {
+    attackerAttackStage: stages.playerAttackStage,
+    defenderDefenseStage: stages.opponentDefenseStage,
+  }).totalDamage;
+}
+
+type ChargedMoveDecisionStages = {
+  playerAttackStage: number;
+  playerDefenseStage: number;
+  opponentAttackStage: number;
+  opponentDefenseStage: number;
+};
+
+function chargedMoveUtility(
+  build: PokemonBuild,
+  move: ChargedMove,
+  opponent: ExperimentalRocketOpponent,
+  context: ChargedMoveDecisionStages & { strategy: BattleStrategy },
+) {
+  const details = playerMoveDamageDetails(build, move, opponent, {
+    attackerAttackStage: context.playerAttackStage,
+    defenderDefenseStage: context.opponentDefenseStage,
+  });
+  const damagePerEnergy = details.totalDamage / move.energyCost;
+  const offensiveBuff = guaranteedOffensiveStageValue(move, context);
+  const defensiveBuff = guaranteedDefensiveStageValue(move, context);
+  const buffValue =
+    context.strategy === "preserve-lead"
+      ? defensiveBuff * 1.35 + offensiveBuff
+      : offensiveBuff * 1.25 + defensiveBuff * 0.7;
+
+  if (context.strategy === "shield-breaker") {
+    return damagePerEnergy * 32 + details.totalDamage * 0.28 + buffValue * 12;
+  }
+
+  if (context.strategy === "fastest-expected-knockout") {
+    return details.totalDamage * 1.2 + damagePerEnergy * 12 + buffValue * 7;
+  }
+
+  return details.totalDamage + damagePerEnergy * 18 + buffValue * 9;
+}
+
+function shieldedChargedMoveUtility(
+  build: PokemonBuild,
+  move: ChargedMove,
+  opponent: ExperimentalRocketOpponent,
+  context: ChargedMoveDecisionStages,
+) {
+  const damage = playerMoveDamageDetails(build, move, opponent, {
+    attackerAttackStage: context.playerAttackStage,
+    defenderDefenseStage: context.opponentDefenseStage,
+  }).totalDamage;
+  const buffValue =
+    guaranteedOffensiveStageValue(move, context) +
+    guaranteedDefensiveStageValue(move, context);
+
+  return 1000 / move.energyCost + buffValue * 18 + damage * 0.03;
+}
+
+function guaranteedOffensiveStageValue(
+  move: ChargedMove,
+  context: ChargedMoveDecisionStages,
+) {
+  if (!move.buffs || move.buffs.chance < 1) {
+    return 0;
+  }
+
+  const [attackDelta, defenseDelta] = move.buffs.stages;
+  let value = 0;
+  if (move.buffs.target === "self" || move.buffs.target === "both") {
+    value += positiveStageChangeValue(context.playerAttackStage, attackDelta);
+  }
+  if (move.buffs.target === "opponent" || move.buffs.target === "both") {
+    value += positiveStageChangeValue(
+      context.opponentDefenseStage,
+      -defenseDelta,
+    );
+  }
+
+  return value;
+}
+
+function guaranteedDefensiveStageValue(
+  move: ChargedMove,
+  context: ChargedMoveDecisionStages,
+) {
+  if (!move.buffs || move.buffs.chance < 1) {
+    return 0;
+  }
+
+  const [attackDelta, defenseDelta] = move.buffs.stages;
+  let value = 0;
+  if (move.buffs.target === "self" || move.buffs.target === "both") {
+    value += positiveStageChangeValue(context.playerDefenseStage, defenseDelta);
+  }
+  if (move.buffs.target === "opponent" || move.buffs.target === "both") {
+    value += positiveStageChangeValue(
+      context.opponentAttackStage,
+      -attackDelta,
+    );
+  }
+
+  return value;
+}
+
+function positiveStageChangeValue(currentStage: number, delta: number) {
+  if (delta <= 0) {
+    return 0;
+  }
+
+  return Math.max(
+    0,
+    clampStage(currentStage + delta) - clampStage(currentStage),
+  );
 }
 
 function adjustedPower(build: PokemonBuild, move: ChargedMove) {
@@ -330,6 +536,7 @@ export function simulateRocketLineupExperimental({
   rocketOpponents = [],
   moves,
   strategy,
+  trainerLevel = lead.level,
   maxTurns = 240,
 }: {
   lead: PokemonBuild;
@@ -339,6 +546,7 @@ export function simulateRocketLineupExperimental({
   rocketOpponents?: PokemonSpecies[];
   moves?: MovesSnapshot;
   strategy: BattleStrategy;
+  trainerLevel?: number;
   maxTurns?: number;
 }): BattleResult {
   const config = experimentalRocketConfig(
@@ -346,7 +554,7 @@ export function simulateRocketLineupExperimental({
     mechanics,
     rocketOpponents,
     moves,
-    lead.level,
+    trainerLevel,
   );
   const team = [lead, backup];
   let activeIndex = 0;
@@ -578,6 +786,10 @@ export function simulateRocketLineupExperimental({
       opponent: currentOpponent,
       opponentHp,
       remainingOpponentShields: config.remainingShields,
+      playerAttackStage,
+      playerDefenseStage,
+      opponentAttackStage,
+      opponentDefenseStage,
     });
     if (chargedMove) {
       energy -= chargedMove.energyCost;
@@ -770,7 +982,7 @@ export function simulateRocketLineupExperimental({
         "Rocket opponent HP, Attack, Defense, shield counts, ordered send-ins, and NPC pause windows use source-backed mechanics.",
         `Mechanics used: ${config.mechanicsUsed.join(" ")}`,
         ...config.fallbackAssumptions,
-        "Player Charged Attack decisions use current opponent HP, type effectiveness, and remaining Rocket shields, but exact Rocket shield AI is still unverified.",
+        "Player Charged Attack decisions use current opponent HP, type effectiveness, remaining Rocket shields, and guaranteed stage-effect value, but exact Rocket shield AI is still unverified.",
         "Rocket move pools are sourced, but this deterministic branch selects the first available Rocket fast move and the highest-damage affordable Rocket charged move instead of modeling random move assignment.",
         "Rocket opponent Charged Attack timing uses sourced fast-move energy and charged-move costs when moves are available; the configurable placeholder cadence is only used when no sourced Rocket charged move is available.",
         "Guaranteed buffs and debuffs apply with Pokemon GO stage limits; chance-based effects, random move assignment probabilities, and live battle validation are not implemented.",

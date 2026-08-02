@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Badge } from "../../components/atoms/Badge";
 import { TypeChipList } from "../../components/atoms/TypeChip";
 import { DataSelect } from "../../components/molecules/DataSelect";
@@ -8,20 +8,28 @@ import { simulateRocketLineupExperimental } from "../../domain/battle/engine";
 import type {
   BattleEvent,
   BattleOutcome,
-  BattleStrategy,
 } from "../../domain/battle/types";
 import type { PokemonBuild } from "../../domain/pokemon/types";
+import {
+  bestMovesetForStrategy,
+  pokemonFocusStrategyLabels,
+  type PokemonFocusStrategy,
+} from "../../domain/ranking/pokemonFocus";
 import { integer, number } from "../../lib/format";
-import { firstLegalMoves } from "../shared/dataHelpers";
+import { battleStrategyForFocus } from "../shared/strategyMapping";
+import {
+  persistSelectedBattleTeam,
+  readSelectedBattleTeam,
+} from "../shared/teamSelection";
 
 export function BattleTimelineView({ data }: { data: ApplicationData }) {
   const [trainerLevel, setTrainerLevel] = useState(50);
-  const [strategy, setStrategy] = useState<BattleStrategy>("charge-asap");
+  const [strategy, setStrategy] =
+    useState<PokemonFocusStrategy>("fastest-victory");
   const [lineupId, setLineupId] = useState(data.rocket.lineups[0]?.id ?? "");
-  const [leadId, setLeadId] = useState(data.pokemon.candidates[0]?.id ?? "");
-  const [backupId, setBackupId] = useState(
-    data.pokemon.candidates[1]?.id ?? "",
-  );
+  const initialTeam = useMemo(() => readSelectedBattleTeam(data), [data]);
+  const [leadId, setLeadId] = useState(initialTeam.leadId);
+  const [backupId, setBackupId] = useState(initialTeam.backupId);
   const lead =
     data.pokemon.candidates.find((candidate) => candidate.id === leadId) ??
     data.pokemon.candidates[0];
@@ -33,26 +41,40 @@ export function BattleTimelineView({ data }: { data: ApplicationData }) {
     data.rocket.lineups.find((candidate) => candidate.id === lineupId) ??
     data.rocket.lineups[0];
   const boundedTrainerLevel = Math.min(50, Math.max(1, trainerLevel));
+  const candidateLevel = candidatePokemonLevel(boundedTrainerLevel);
+  const battleStrategy = battleStrategyForFocus(strategy);
   const result = useMemo(
     () =>
       simulateRocketLineupExperimental({
-        lead: toDefaultBuild(data, lead.id, boundedTrainerLevel),
-        backup: toDefaultBuild(data, backup.id, boundedTrainerLevel),
+        lead: toRecommendedBuild(data, lead.id, candidateLevel, strategy),
+        backup: toRecommendedBuild(
+          data,
+          backup.id,
+          candidateLevel,
+          strategy,
+        ),
         lineup,
         mechanics: data.mechanics,
         rocketOpponents: data.pokemon.rocketOpponents,
         moves: data.moves,
-        strategy,
+        strategy: battleStrategy,
+        trainerLevel: boundedTrainerLevel,
       }),
     [
       backup.id,
+      battleStrategy,
       boundedTrainerLevel,
+      candidateLevel,
       data,
       lead.id,
       lineup,
       strategy,
     ],
   );
+
+  useEffect(() => {
+    persistSelectedBattleTeam({ leadId: lead.id, backupId: backup.id });
+  }, [backup.id, lead.id]);
 
   return (
     <div className="grid gap-4">
@@ -98,17 +120,13 @@ export function BattleTimelineView({ data }: { data: ApplicationData }) {
           <DataSelect
             label="Strategy"
             value={strategy}
-            onChange={(value) => setStrategy(value as BattleStrategy)}
-            options={[
-              { value: "charge-asap", label: "Charge ASAP" },
-              {
-                value: "fastest-expected-knockout",
-                label: "Fastest expected knockout",
-              },
-              { value: "shield-breaker", label: "Shield breaker" },
-              { value: "preserve-lead", label: "Preserve lead" },
-              { value: "minimal-interaction", label: "Minimal interaction" },
-            ]}
+            onChange={(value) => setStrategy(value as PokemonFocusStrategy)}
+            options={Object.entries(pokemonFocusStrategyLabels).map(
+              ([value, label]) => ({
+                value,
+                label,
+              }),
+            )}
           />
         </div>
       </Panel>
@@ -148,16 +166,26 @@ export function BattleTimelineView({ data }: { data: ApplicationData }) {
           <Panel>
             <PanelHeader
               title="Team"
-              subtitle={`${strategy} · Level ${boundedTrainerLevel}`}
+              subtitle={`${pokemonFocusStrategyLabels[strategy]} · Pokemon Level ${candidateLevel} · Trainer Level ${boundedTrainerLevel}`}
             />
             <div className="grid gap-3 p-3">
               <PokemonSummary
                 label="Lead"
-                build={toDefaultBuild(data, lead.id, boundedTrainerLevel)}
+                build={toRecommendedBuild(
+                  data,
+                  lead.id,
+                  candidateLevel,
+                  strategy,
+                )}
               />
               <PokemonSummary
                 label="Backup"
-                build={toDefaultBuild(data, backup.id, boundedTrainerLevel)}
+                build={toRecommendedBuild(
+                  data,
+                  backup.id,
+                  candidateLevel,
+                  strategy,
+                )}
               />
               <div className="rounded bg-[rgb(var(--muted)/0.18)] px-3 py-2 text-xs">
                 <div className="font-semibold text-[rgb(var(--foreground))]">
@@ -304,15 +332,16 @@ function TimelineMetric({ label, value }: { label: string; value: string }) {
   );
 }
 
-function toDefaultBuild(
+function toRecommendedBuild(
   data: ApplicationData,
   speciesId: string,
   level: number,
+  strategy: PokemonFocusStrategy,
 ): PokemonBuild {
   const species =
     data.pokemon.candidates.find((candidate) => candidate.id === speciesId) ??
     data.pokemon.candidates[0];
-  const moves = firstLegalMoves(species, data);
+  const moveset = bestMovesetForStrategy(species, data.moves, strategy, 40);
 
   return {
     species,
@@ -320,8 +349,8 @@ function toDefaultBuild(
     ivs: { attack: 15, defense: 15, stamina: 15 },
     shadow: false,
     bestBuddy: false,
-    fastMove: moves.fastMove,
-    chargedMoves: moves.chargedMoves,
+    fastMove: moveset.fastMove,
+    chargedMoves: moveset.chargedMoves,
   };
 }
 
@@ -332,6 +361,10 @@ function pokemonOptions(data: ApplicationData) {
       value: candidate.id,
       label: candidate.name,
     }));
+}
+
+function candidatePokemonLevel(trainerLevel: number) {
+  return Math.min(40, trainerLevel);
 }
 
 function formatOutcome(outcome: BattleOutcome) {

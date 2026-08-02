@@ -7,7 +7,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
-import { ArrowUpDown, ChevronRight, GitCompare } from 'lucide-react'
+import { ArrowUpDown, ChevronRight, GitCompare, User, UserRound } from 'lucide-react'
 import { Badge } from '../../components/atoms/Badge'
 import { TypeChipList } from '../../components/atoms/TypeChip'
 import { DataSelect } from '../../components/molecules/DataSelect'
@@ -26,6 +26,12 @@ import { calculateEffectiveStats } from '../../domain/stats/effectiveStats'
 import { stabMultiplier } from '../../domain/types/effectiveness'
 import { typeColor } from '../../domain/types/typeColors'
 import { integer, number } from '../../lib/format'
+import {
+  persistSelectedBattleTeam,
+  readSelectedBattleTeam,
+  selectedBattleTeamHref,
+  type SelectedBattleTeam,
+} from '../shared/teamSelection'
 
 type ExplorerRow = {
   id: string
@@ -68,10 +74,15 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
   const [strategy, setStrategy] = useState<PokemonFocusStrategy>(initialControls.strategy)
   const [hideScarceCandy, setHideScarceCandy] = useState(initialControls.hideScarceCandy)
   const [expandedIds, setExpandedIds] = useState<Set<string>>(() => new Set())
+  const [selectedTeam, setSelectedTeam] = useState(() => readSelectedBattleTeam(data))
 
   useEffect(() => {
     persistControls({ filter, strategy, hideScarceCandy })
   }, [filter, hideScarceCandy, strategy])
+
+  useEffect(() => {
+    persistSelectedBattleTeam(selectedTeam)
+  }, [selectedTeam])
 
   const rows = useMemo<ExplorerRow[]>(
     () => {
@@ -166,6 +177,18 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
           </a>
         ),
       },
+      {
+        id: 'team-pick',
+        header: '',
+        cell: (info) => (
+          <TeamPickCell
+            row={info.row.original}
+            selectedTeam={selectedTeam}
+            onPickLead={() => setTeamMember('lead', info.row.original.id)}
+            onPickBackup={() => setTeamMember('backup', info.row.original.id)}
+          />
+        ),
+      },
       { accessorKey: 'rank', header: sortableHeader('Rank'), cell: (info) => integer(info.getValue<number>()) },
       {
         accessorKey: 'name',
@@ -211,7 +234,7 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
         cell: (info) => <ChargedMoveCell row={info.row.original} slot="two" />,
       },
     ],
-    [expandedIds, strategy],
+    [expandedIds, selectedTeam, strategy],
   )
 
   function toggleExpanded(id: string) {
@@ -223,6 +246,22 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
         next.add(id)
       }
       return next
+    })
+  }
+
+  function setTeamMember(slot: 'lead' | 'backup', speciesId: string) {
+    setSelectedTeam((current) => {
+      if (slot === 'lead') {
+        return {
+          leadId: speciesId,
+          backupId: current.backupId === speciesId ? current.leadId : current.backupId,
+        }
+      }
+
+      return {
+        leadId: current.leadId === speciesId ? current.backupId : current.leadId,
+        backupId: speciesId,
+      }
     })
   }
 
@@ -280,6 +319,12 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
           This ranking recommends which Pokemon and movesets to focus on before Rocket win/loss
           simulation is available.
         </span>
+        <a
+          href={selectedBattleTeamHref(selectedTeam)}
+          className="ml-2 inline-flex items-center gap-1 font-semibold text-[rgb(var(--primary))] hover:underline"
+        >
+          Battle with selected team
+        </a>
         {hiddenScarceCandyCount > 0 ? (
           <span className="ml-2">
             Hiding {integer(hiddenScarceCandyCount)} legendary, mythical, Ultra Beast, or raid-candy
@@ -327,6 +372,73 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
         </table>
       </div>
     </Panel>
+  )
+}
+
+function TeamPickCell({
+  row,
+  selectedTeam,
+  onPickLead,
+  onPickBackup,
+}: {
+  row: ExplorerRow
+  selectedTeam: SelectedBattleTeam
+  onPickLead: () => void
+  onPickBackup: () => void
+}) {
+  return (
+    <div className="flex items-center gap-1" aria-label={`Battle team picks for ${row.name}`}>
+      <TeamPickButton
+        label={`Set ${row.name} as player 1`}
+        activeLabel={`${row.name} is player 1`}
+        active={selectedTeam.leadId === row.id}
+        onClick={onPickLead}
+        icon="player-1"
+      />
+      <TeamPickButton
+        label={`Set ${row.name} as player 2`}
+        activeLabel={`${row.name} is player 2`}
+        active={selectedTeam.backupId === row.id}
+        onClick={onPickBackup}
+        icon="player-2"
+      />
+    </div>
+  )
+}
+
+function TeamPickButton({
+  label,
+  activeLabel,
+  active,
+  onClick,
+  icon,
+}: {
+  label: string
+  activeLabel: string
+  active: boolean
+  onClick: () => void
+  icon: 'player-1' | 'player-2'
+}) {
+  const Icon = icon === 'player-1' ? UserRound : User
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      aria-label={active ? activeLabel : label}
+      title={active ? activeLabel : label}
+      className={`relative grid h-7 w-7 place-items-center rounded-md border ${
+        active
+          ? 'border-[rgb(var(--primary))] bg-[rgb(var(--primary)/0.16)] text-[rgb(var(--foreground))]'
+          : 'border-transparent text-[rgb(var(--muted-foreground))] hover:bg-[rgb(var(--muted))] hover:text-[rgb(var(--foreground))]'
+      }`}
+    >
+      <Icon className="h-4 w-4" aria-hidden />
+      <span className="absolute -right-0.5 -top-0.5 grid h-3.5 min-w-3.5 place-items-center rounded-full bg-[rgb(var(--panel))] px-0.5 text-[8px] font-bold leading-none text-[rgb(var(--foreground))] ring-1 ring-[rgb(var(--border))]">
+        {icon === 'player-1' ? '1' : '2'}
+      </span>
+    </button>
   )
 }
 

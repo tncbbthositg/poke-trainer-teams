@@ -77,6 +77,13 @@ export function Methodology({ data }: { data: ApplicationData }) {
             when source data is missing.
           </p>
           <p>
+            Player Charged Attack choice is matchup-aware: after obvious fast
+            move knockouts, it weighs current opponent HP, type-effective
+            damage, damage per energy, remaining Rocket shields, and guaranteed
+            buff or debuff stage value. Chance-based stage effects remain
+            documented but are not simulated.
+          </p>
+          <p>
             Universal proxy clear/fail checks run one ordered pair across every
             checked-in Rocket lineup. They are useful failure indicators, not
             verified rankings.

@@ -682,7 +682,7 @@ function RepeatPattern({
 }
 
 function fastMoveLabel(move: FastMove) {
-  return `${move.name} · ${typeAbbreviation(move.type)} · P${move.power} · +E${move.energyGain} · ${move.turns}T`
+  return `${move.name} · ${typeAbbreviation(move.type)} · DPT ${number(move.power / move.turns)} · EPT ${number(move.energyGain / move.turns)}`
 }
 
 function chargedMoveLabel(move: ChargedMove) {
