@@ -359,6 +359,8 @@ function TimelineAxis({
   opponentPokemonSegments: PokemonTransitionSegment[];
   maxTurn: number;
 }) {
+  const lastLabeledTick = labeledTicks.at(-1);
+
   return (
     <div className="relative h-40">
       <TimelineHpAreas
@@ -367,26 +369,35 @@ function TimelineAxis({
         opponentPokemonSegments={opponentPokemonSegments}
         maxTurn={maxTurn}
       />
-      <div className="absolute left-0 right-0 top-1/2 h-px bg-[rgb(var(--muted-foreground)/0.72)]" />
+      <div className="absolute left-0 right-0 top-1/2 z-10 h-px bg-[rgb(var(--foreground)/0.82)] shadow-[0_0_0_1px_rgb(var(--panel)/0.52)]" />
       {turnTicks.map((tick) => (
         <span
           key={tick}
-          className={`absolute top-1/2 w-px -translate-x-1/2 -translate-y-1/2 bg-[rgb(var(--muted-foreground)/0.72)] ${
+          className={`absolute top-1/2 z-10 w-px -translate-x-1/2 -translate-y-1/2 bg-[rgb(var(--foreground)/0.82)] shadow-[0_0_0_1px_rgb(var(--panel)/0.52)] ${
             tick % 2 === 0 ? "h-4" : "h-2.5"
           }`}
           style={{ left: `${(tick / maxTurn) * 100}%` }}
           aria-hidden="true"
         />
       ))}
-      {labeledTicks.map((tick) => (
-        <div
-          key={tick}
-          className="absolute top-[calc(50%+14px)] -translate-x-1/2 text-[11px] font-semibold text-[rgb(var(--muted-foreground))]"
-          style={{ left: `${(tick / maxTurn) * 100}%` }}
-        >
-          <span>{number(tick * 0.5)}s</span>
-        </div>
-      ))}
+      {labeledTicks.map((tick) => {
+        const alignClass =
+          tick === 0
+            ? "translate-x-0"
+            : tick === lastLabeledTick
+              ? "-translate-x-full"
+              : "-translate-x-1/2";
+
+        return (
+          <div
+            key={tick}
+            className={`absolute top-[calc(50%+12px)] z-20 ${alignClass} rounded-sm bg-[rgb(var(--panel)/0.88)] px-1.5 py-0.5 text-[11px] font-bold leading-none text-[rgb(var(--foreground))] shadow-sm ring-1 ring-[rgb(var(--border)/0.9)]`}
+            style={{ left: `${(tick / maxTurn) * 100}%` }}
+          >
+            <span>{number(tick * 0.5)}s</span>
+          </div>
+        );
+      })}
     </div>
   );
 }
