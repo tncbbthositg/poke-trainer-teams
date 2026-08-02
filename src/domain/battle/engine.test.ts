@@ -361,6 +361,168 @@ describe("battle engine interface scaffold", () => {
       ),
     ).toBe(true);
   });
+
+  it("caps player energy at 100 before charged move spending", () => {
+    const data = loadApplicationData();
+    const swampert = buildFor(
+      data,
+      "swampert",
+      "MUD_SHOT",
+      "HYDRO_CANNON",
+      "EARTHQUAKE",
+    );
+    const lucario = buildFor(
+      data,
+      "lucario",
+      "COUNTER",
+      "POWER_UP_PUNCH",
+      "AURA_SPHERE",
+    );
+    const baseLineup = data.rocket.lineups.find(
+      (item) => item.id === "grunt-normal-male-2026-06-25",
+    )!;
+    const highHpMechanics = {
+      ...data.mechanics,
+      values: data.mechanics.values.map((item) =>
+        item.key === "rocket_opponent_hp_slot_1"
+          ? { ...item, value: 999 }
+          : item,
+      ),
+    };
+
+    const result = simulateRocketLineupExperimental({
+      lead: {
+        ...swampert,
+        fastMove: { ...swampert.fastMove, turns: 1, energyGain: 60 },
+        chargedMoves: [
+          { ...swampert.chargedMoves[0], energyCost: 90, power: 1 },
+        ],
+      },
+      backup: lucario,
+      lineup: {
+        ...baseLineup,
+        slots: [baseLineup.slots[0]],
+      },
+      mechanics: highHpMechanics,
+      rocketOpponents: [],
+      moves: data.moves,
+      strategy: "charge-asap",
+      maxTurns: 3,
+    });
+
+    expect(result.chargedAttacksUsed).toBe(1);
+    expect(
+      result.events.filter(
+        (event) => event.actor === "player" && event.kind === "charged-attack",
+      ),
+    ).toHaveLength(1);
+  });
+
+  it("switches once after the lead faints and never uses a third slot", () => {
+    const data = loadApplicationData();
+    const lucario = buildFor(
+      data,
+      "lucario",
+      "COUNTER",
+      "POWER_UP_PUNCH",
+      "AURA_SPHERE",
+    );
+    const swampert = buildFor(
+      data,
+      "swampert",
+      "MUD_SHOT",
+      "HYDRO_CANNON",
+      "EARTHQUAKE",
+    );
+    const baseLineup = data.rocket.lineups.find(
+      (item) => item.id === "grunt-normal-male-2026-06-25",
+    )!;
+    const punishingMechanics = {
+      ...data.mechanics,
+      values: data.mechanics.values.map((item) => {
+        if (item.key === "rocket_opponent_hp_slot_1") {
+          return { ...item, value: 999 };
+        }
+        if (item.key === "rocket_incoming_damage_per_turn_grunt") {
+          return { ...item, value: 999 };
+        }
+        return item;
+      }),
+    };
+
+    const result = simulateRocketLineupExperimental({
+      lead: lucario,
+      backup: swampert,
+      lineup: {
+        ...baseLineup,
+        slots: [baseLineup.slots[0]],
+      },
+      mechanics: punishingMechanics,
+      rocketOpponents: [],
+      moves: data.moves,
+      strategy: "charge-asap",
+      maxTurns: 8,
+    });
+
+    expect(result.outcome).toBe("loss");
+    expect(result.switches).toBe(1);
+    expect(result.pokemonUsed).toBe(2);
+    expect(result.pokemonFainted).toBe(2);
+    expect(
+      result.events.some((event) =>
+        event.message.includes("Third slot remains unavailable"),
+      ),
+    ).toBe(true);
+    expect(result.assumptionsUsed.join(" ")).toMatch(/Third slot unavailable/);
+  });
+
+  it("treats the pair as ordered by entering the selected lead first", () => {
+    const data = loadApplicationData();
+    const lucario = buildFor(
+      data,
+      "lucario",
+      "COUNTER",
+      "POWER_UP_PUNCH",
+      "AURA_SPHERE",
+    );
+    const swampert = buildFor(
+      data,
+      "swampert",
+      "MUD_SHOT",
+      "HYDRO_CANNON",
+      "EARTHQUAKE",
+    );
+    const lineup = data.rocket.lineups.find(
+      (item) => item.id === "grunt-normal-male-2026-06-25",
+    )!;
+
+    const lucarioLead = simulateRocketLineupExperimental({
+      lead: lucario,
+      backup: swampert,
+      lineup,
+      mechanics: data.mechanics,
+      rocketOpponents: [],
+      moves: data.moves,
+      strategy: "charge-asap",
+      maxTurns: 2,
+    });
+    const swampertLead = simulateRocketLineupExperimental({
+      lead: swampert,
+      backup: lucario,
+      lineup,
+      mechanics: data.mechanics,
+      rocketOpponents: [],
+      moves: data.moves,
+      strategy: "charge-asap",
+      maxTurns: 2,
+    });
+
+    expect(lucarioLead.events[0].message).toContain("Lucario enters");
+    expect(swampertLead.events[0].message).toContain("Swampert enters");
+    expect(lucarioLead.events[0].message).not.toBe(
+      swampertLead.events[0].message,
+    );
+  });
 });
 
 function buildFor(
