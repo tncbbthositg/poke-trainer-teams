@@ -3,7 +3,10 @@ import type {
   FastMove,
   MovesSnapshot,
 } from "../../data/schemas/moves";
-import type { MechanicsSnapshot } from "../../data/schemas/mechanics";
+import type {
+  MechanicsSnapshot,
+  MechanicsValue,
+} from "../../data/schemas/mechanics";
 import type { PokemonSpecies, PokemonType } from "../../data/schemas/pokemon";
 import type { RocketLineup } from "../../data/schemas/rocket";
 import type { PokemonBuild } from "../pokemon/types";
@@ -12,7 +15,7 @@ import { stabMultiplier, typeEffectiveness } from "../types/effectiveness";
 import { calculateRocketEffectiveStats } from "./rocketStats";
 import type { BattleResult, BattleStrategy } from "./types";
 
-const TRAINER_BATTLE_DAMAGE_MULTIPLIER = 1.3;
+const FALLBACK_TRAINER_BATTLE_DAMAGE_MULTIPLIER = 1.3;
 
 const knownRocketOpponentTypes: Record<string, PokemonType[]> = {
   alakazam: ["psychic"],
@@ -371,7 +374,7 @@ export function simulateRocketLineupExperimental({
   const events: BattleResult["events"] = [
     {
       turn: 0,
-      wallClockSeconds: 0,
+      wallClockSeconds: wallClockSeconds(),
       actor: "player",
       kind: "pokemon-enter",
       message: `${activeBuild.species.name} enters against ${lineup.trainerName}'s ${currentOpponent.name}.`,
@@ -397,7 +400,7 @@ export function simulateRocketLineupExperimental({
       : undefined;
     events.push({
       turn,
-      wallClockSeconds: turn * 0.5,
+      wallClockSeconds: wallClockSeconds(),
       actor: "player",
       kind: "fast-start",
       message: `${activeBuild.species.name} starts ${activeBuild.fastMove.name}.`,
@@ -408,7 +411,7 @@ export function simulateRocketLineupExperimental({
     if (rocketWillAttack) {
       events.push({
         turn,
-        wallClockSeconds: turn * 0.5,
+        wallClockSeconds: wallClockSeconds(),
         actor: "rocket",
         kind: "fast-start",
         message: `${currentOpponent.name} starts ${opponentFastMove?.name ?? "attacking"}.`,
@@ -432,7 +435,7 @@ export function simulateRocketLineupExperimental({
 
     events.push({
       turn,
-      wallClockSeconds: turn * 0.5,
+      wallClockSeconds: wallClockSeconds(),
       actor: "player",
       kind: "fast-resolve",
       message: `${activeBuild.fastMove.name} resolves; ${currentOpponent.name} HP is ${Math.max(0, Math.ceil(opponentHp))}.`,
@@ -443,7 +446,7 @@ export function simulateRocketLineupExperimental({
     if (rocketWillAttack) {
       events.push({
         turn,
-        wallClockSeconds: turn * 0.5,
+        wallClockSeconds: wallClockSeconds(),
         actor: "rocket",
         kind: "fast-resolve",
         message: `${currentOpponent.name} uses ${opponentFastMove?.name ?? "attack"}; ${activeBuild.species.name} HP is ${Math.max(0, Math.ceil(activeHp))}.`,
@@ -491,7 +494,7 @@ export function simulateRocketLineupExperimental({
       }
       events.push({
         turn,
-        wallClockSeconds: turn * 0.5,
+        wallClockSeconds: wallClockSeconds(),
         actor: "rocket",
         kind: "charged-attack",
         message: playerShielded
@@ -506,7 +509,7 @@ export function simulateRocketLineupExperimental({
       if (playerShielded) {
         events.push({
           turn,
-          wallClockSeconds: turn * 0.5,
+          wallClockSeconds: wallClockSeconds(),
           actor: "player",
           kind: "shield",
           message: `${activeBuild.species.name} shields Charged Attack; ${remainingPlayerShields} shield(s) remain.`,
@@ -544,7 +547,7 @@ export function simulateRocketLineupExperimental({
         shieldsUsed += 1;
         events.push({
           turn,
-          wallClockSeconds: turn * 0.5,
+          wallClockSeconds: wallClockSeconds(),
           actor: "player",
           kind: "charged-attack",
           message: `${activeBuild.species.name} uses ${chargedMove.name}; ${lineup.trainerName} shields.`,
@@ -555,7 +558,7 @@ export function simulateRocketLineupExperimental({
         });
         events.push({
           turn,
-          wallClockSeconds: turn * 0.5,
+          wallClockSeconds: wallClockSeconds(),
           actor: "rocket",
           kind: "shield",
           message: `${lineup.trainerName} shields ${chargedMove.name}; ${config.remainingShields} shield(s) remain.`,
@@ -566,7 +569,7 @@ export function simulateRocketLineupExperimental({
         opponentHp = clampHp(opponentHp - playerChargedDetails.totalDamage);
         events.push({
           turn,
-          wallClockSeconds: turn * 0.5,
+          wallClockSeconds: wallClockSeconds(),
           actor: "player",
           kind: "charged-attack",
           message: `${activeBuild.species.name} uses ${chargedMove.name}; ${currentOpponent.name} HP is ${Math.max(0, Math.ceil(opponentHp))}.`,
@@ -583,7 +586,7 @@ export function simulateRocketLineupExperimental({
         rocketPausedUntilTurn = turn + config.pauseAfterChargedTurns;
         events.push({
           turn,
-          wallClockSeconds: turn * 0.5,
+          wallClockSeconds: wallClockSeconds(),
           actor: "rocket",
           kind: "pause",
           message: `${lineup.trainerName} pauses for ${config.pauseAfterChargedTurns} turn(s) after the player Charged Attack.`,
@@ -605,7 +608,7 @@ export function simulateRocketLineupExperimental({
   function advanceOpponent() {
     events.push({
       turn,
-      wallClockSeconds: turn * 0.5,
+      wallClockSeconds: wallClockSeconds(),
       actor: "rocket",
       kind: "faint",
       message: `${currentOpponent.name} faints under experimental HP.`,
@@ -621,7 +624,7 @@ export function simulateRocketLineupExperimental({
     nextRocketChargedTurn = turn + config.opponentChargedAttackIntervalTurns;
     events.push({
       turn,
-      wallClockSeconds: turn * 0.5,
+      wallClockSeconds: wallClockSeconds(),
       actor: "rocket",
       kind: "pokemon-enter",
       message: `${lineup.trainerName} sends in ${currentOpponent.name}.`,
@@ -633,7 +636,7 @@ export function simulateRocketLineupExperimental({
   function switchToBackup() {
     events.push({
       turn,
-      wallClockSeconds: turn * 0.5,
+      wallClockSeconds: wallClockSeconds(),
       actor: "player",
       kind: "faint",
       message: `${activeBuild.species.name} faints under incoming damage.`,
@@ -654,7 +657,7 @@ export function simulateRocketLineupExperimental({
     switches += 1;
     events.push({
       turn,
-      wallClockSeconds: turn * 0.5,
+      wallClockSeconds: wallClockSeconds(),
       actor: "player",
       kind: "switch",
       message: `${activeBuild.species.name} enters as backup. Third slot remains unavailable.`,
@@ -664,7 +667,7 @@ export function simulateRocketLineupExperimental({
       rocketPausedUntilTurn = turn + config.pauseAfterSwitchTurns;
       events.push({
         turn,
-        wallClockSeconds: turn * 0.5,
+        wallClockSeconds: wallClockSeconds(),
         actor: "rocket",
         kind: "pause",
         message: `${lineup.trainerName} pauses for ${config.pauseAfterSwitchTurns} turn(s) after the player switch.`,
@@ -677,7 +680,7 @@ export function simulateRocketLineupExperimental({
   function finish(outcome: "win" | "loss"): BattleResult {
     events.push({
       turn,
-      wallClockSeconds: turn * 0.5,
+      wallClockSeconds: wallClockSeconds(),
       actor: "system",
       kind: "battle-end",
       message:
@@ -690,7 +693,7 @@ export function simulateRocketLineupExperimental({
     return {
       outcome,
       totalTurns: turn,
-      wallClockSeconds: turn * 0.5,
+      wallClockSeconds: wallClockSeconds(),
       pokemonUsed: Math.min(team.length, activeIndex + 1),
       pokemonFainted,
       shieldsUsed: shieldsUsed + playerShieldsUsed,
@@ -703,6 +706,8 @@ export function simulateRocketLineupExperimental({
         `Proxy estimate for ${lineup.trainerName}; selected first listed Pokemon in each Rocket slot.`,
         "Outcome is not a verified Rocket win/loss until simulator output is compared against recorded real battles.",
         "Rocket opponent HP, Attack, Defense, shield counts, ordered send-ins, and NPC pause windows use source-backed mechanics.",
+        `Mechanics used: ${config.mechanicsUsed.join(" ")}`,
+        ...config.fallbackAssumptions,
         "Player Charged Attack decisions use current opponent HP, type effectiveness, and remaining Rocket shields, but exact Rocket shield AI is still unverified.",
         "Rocket move pools are sourced, but this deterministic branch selects the first available Rocket fast move and first available Rocket charged move instead of modeling random move assignment.",
         "Rocket opponent Charged Attack timing uses a configurable placeholder cadence; buffs, debuffs, random move assignment probabilities, and live battle validation are not implemented.",
@@ -723,6 +728,10 @@ export function simulateRocketLineupExperimental({
       opponentTypes: currentOpponent?.types ?? ["normal"],
     };
   }
+
+  function wallClockSeconds() {
+    return turn * config.turnSeconds;
+  }
 }
 
 function experimentalRocketConfig(
@@ -732,8 +741,18 @@ function experimentalRocketConfig(
   moves: MovesSnapshot | undefined,
   trainerLevel: number,
 ) {
+  const mechanicsByKey = new Map(
+    mechanics.values.map((item) => [item.key, item]),
+  );
   const value = (key: string, fallback: number) =>
-    mechanics.values.find((item) => item.key === key)?.value ?? fallback;
+    mechanicsByKey.get(key)?.value ?? fallback;
+  const mechanicSummary = (key: string, fallback: number) => {
+    const mechanic = mechanicsByKey.get(key);
+    if (mechanic) {
+      return formatMechanicSummary(mechanic);
+    }
+    return `${formatMechanicKey(key)} fallback=${fallback}.`;
+  };
   const classKey =
     lineup.trainerClass === "giovanni"
       ? "giovanni"
@@ -756,11 +775,83 @@ function experimentalRocketConfig(
   const chargedMoveById = new Map(
     moves?.chargedMoves.map((move) => [move.id, move]) ?? [],
   );
+  const turnSeconds = value("battle_turn_seconds", 0.5);
+  const fallbackHpKeys = lineup.slots.map(
+    (slot) => `rocket_opponent_hp_slot_${slot.slot}`,
+  );
+  const opponents = lineup.slots.map((slot) => {
+    const species = opponentById.get(slot.pokemonIds[0]);
+    const stats = species
+      ? calculateRocketEffectiveStats({
+          species,
+          trainerLevel,
+          trainerClass: lineup.trainerClass,
+        })
+      : undefined;
+    const fastMoves =
+      species?.fastMoves
+        .map((id) => fastMoveById.get(id))
+        .filter((move): move is FastMove => Boolean(move)) ?? [];
+    const chargedMoves =
+      species?.chargedMoves
+        .map((id) => chargedMoveById.get(id))
+        .filter((move): move is ChargedMove => Boolean(move)) ?? [];
+    const fallbackHp = value(
+      `rocket_opponent_hp_slot_${slot.slot}`,
+      100 + slot.slot * 25,
+    );
+
+    return {
+      id: slot.pokemonIds[0],
+      name: species?.name ?? formatPokemonId(slot.pokemonIds[0]),
+      species,
+      types: species?.types ??
+        knownRocketOpponentTypes[slot.pokemonIds[0]] ?? ["normal"],
+      fastMoves,
+      chargedMoves,
+      fastMove: fastMoves[0],
+      chargedMove: chargedMoves[0],
+      stats,
+      hp: stats?.hp ?? fallbackHp,
+      damageMultiplier: value(
+        "trainer_battle_damage_multiplier",
+        FALLBACK_TRAINER_BATTLE_DAMAGE_MULTIPLIER,
+      ),
+      usesFallbackStats: !stats,
+      usesFallbackFastDamage: fastMoves.length === 0,
+      usesFallbackChargedDamage: chargedMoves.length === 0,
+    };
+  });
+  const fallbackAssumptions = opponents.flatMap((opponent, index) => {
+    const slotNumber = index + 1;
+    const assumptions: string[] = [];
+    if (opponent.usesFallbackStats) {
+      assumptions.push(
+        `Slot ${slotNumber} ${opponent.name} uses fallback HP because normalized Rocket species stats are unavailable.`,
+      );
+    }
+    if (opponent.usesFallbackFastDamage) {
+      assumptions.push(
+        `Slot ${slotNumber} ${opponent.name} uses fallback incoming damage per turn because no sourced Rocket fast move is available.`,
+      );
+    }
+    if (opponent.usesFallbackChargedDamage) {
+      assumptions.push(
+        `Slot ${slotNumber} ${opponent.name} uses fallback Charged Attack damage because no sourced Rocket charged move is available.`,
+      );
+    }
+    return assumptions;
+  });
 
   return {
+    turnSeconds,
     chargedAttackTurns: Math.max(
       0.5,
       value("charged_attack_registration_turns", 0.5),
+    ),
+    damageMultiplier: value(
+      "trainer_battle_damage_multiplier",
+      FALLBACK_TRAINER_BATTLE_DAMAGE_MULTIPLIER,
     ),
     opponentChargedAttackIntervalTurns: Math.max(
       1,
@@ -775,53 +866,42 @@ function experimentalRocketConfig(
       35,
     ),
     pauseAfterChargedTurns: Math.round(
-      value("rocket_pause_after_charged_attack", 0) / 0.5,
+      value("rocket_pause_after_charged_attack", 0) / turnSeconds,
     ),
     pauseAfterSwitchTurns: value("rocket_pause_after_player_switch", 4),
     playerShields: Math.round(value("player_shields", 2)),
     remainingShields: Math.round(
       value(shieldKey, classKey === "grunt" ? 0 : 2),
     ),
-    opponents: lineup.slots.map((slot) => {
-      const species = opponentById.get(slot.pokemonIds[0]);
-      const stats = species
-        ? calculateRocketEffectiveStats({
-            species,
-            trainerLevel,
-            trainerClass: lineup.trainerClass,
-          })
-        : undefined;
-
-      return {
-        id: slot.pokemonIds[0],
-        name: species?.name ?? formatPokemonId(slot.pokemonIds[0]),
-        species,
-        types:
-          species?.types ??
-          knownRocketOpponentTypes[slot.pokemonIds[0]] ?? ["normal"],
-        fastMoves:
-          species?.fastMoves
-            .map((id) => fastMoveById.get(id))
-            .filter((move): move is FastMove => Boolean(move)) ?? [],
-        chargedMoves:
-          species?.chargedMoves
-            .map((id) => chargedMoveById.get(id))
-            .filter((move): move is ChargedMove => Boolean(move)) ?? [],
-        fastMove:
-          species?.fastMoves
-            .map((id) => fastMoveById.get(id))
-            .find((move): move is FastMove => Boolean(move)),
-        chargedMove:
-          species?.chargedMoves
-            .map((id) => chargedMoveById.get(id))
-            .find((move): move is ChargedMove => Boolean(move)),
-        stats,
-        hp:
-          stats?.hp ??
-          value(`rocket_opponent_hp_slot_${slot.slot}`, 100 + slot.slot * 25),
-      };
-    }),
+    opponents,
+    mechanicsUsed: [
+      mechanicSummary("battle_turn_seconds", 0.5),
+      mechanicSummary(
+        "trainer_battle_damage_multiplier",
+        FALLBACK_TRAINER_BATTLE_DAMAGE_MULTIPLIER,
+      ),
+      mechanicSummary("charged_attack_registration_turns", 0.5),
+      mechanicSummary("rocket_opponent_charged_attack_interval", 18),
+      mechanicSummary("rocket_pause_after_charged_attack", 0),
+      mechanicSummary("rocket_pause_after_player_switch", 4),
+      mechanicSummary("player_shields", 2),
+      mechanicSummary(shieldKey, classKey === "grunt" ? 0 : 2),
+      ...fallbackHpKeys.map((key, index) =>
+        opponents[index]?.usesFallbackStats
+          ? mechanicSummary(key, 100 + (index + 1) * 25)
+          : `Slot ${index + 1} Rocket HP uses sourced Rocket effective stamina.`,
+      ),
+    ],
+    fallbackAssumptions,
   };
+}
+
+function formatMechanicSummary(mechanic: MechanicsValue) {
+  return `${mechanic.label}: ${mechanic.value} ${mechanic.unit} (${mechanic.category}).`;
+}
+
+function formatMechanicKey(key: string) {
+  return key.replaceAll("_", " ");
 }
 
 type ExperimentalRocketOpponent = ReturnType<
@@ -845,7 +925,7 @@ function playerMoveDamageDetails(
       0.5 *
         move.power *
         (attackerAttack / defenderDefense) *
-        TRAINER_BATTLE_DAMAGE_MULTIPLIER,
+        opponent.damageMultiplier,
     ) + 1;
   const afterStab = baseDamage * stab;
   const totalDamage = Math.max(
@@ -854,7 +934,7 @@ function playerMoveDamageDetails(
       0.5 *
         move.power *
         (attackerAttack / defenderDefense) *
-        TRAINER_BATTLE_DAMAGE_MULTIPLIER *
+        opponent.damageMultiplier *
         stab *
         type,
     ) + 1,
@@ -888,16 +968,16 @@ function opponentMoveDamageDetails(
       0.5 *
         move.power *
         (attackerAttack / defenderDefense) *
-        TRAINER_BATTLE_DAMAGE_MULTIPLIER,
+        opponent.damageMultiplier,
     ) + 1;
   const afterStab = baseDamage * stab;
   const totalDamage = Math.max(
     1,
-      Math.floor(
+    Math.floor(
       0.5 *
         move.power *
         (attackerAttack / defenderDefense) *
-        TRAINER_BATTLE_DAMAGE_MULTIPLIER *
+        opponent.damageMultiplier *
         stab *
         type,
     ) + 1,

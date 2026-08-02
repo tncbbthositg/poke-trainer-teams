@@ -141,9 +141,7 @@ describe("battle engine interface scaffold", () => {
     ).toBe(true);
     expect(
       result.events.some((event) =>
-        event.message.includes(
-          "pauses for 4 turn(s) after the player switch",
-        ),
+        event.message.includes("pauses for 4 turn(s) after the player switch"),
       ),
     ).toBe(true);
     expect(
@@ -352,9 +350,9 @@ describe("battle engine interface scaffold", () => {
 
     expect(result.outcome).toBe("win");
     expect(result.chargedAttacksUsed).toBe(0);
-    expect(
-      result.events.some((event) => event.kind === "charged-attack"),
-    ).toBe(false);
+    expect(result.events.some((event) => event.kind === "charged-attack")).toBe(
+      false,
+    );
     expect(
       result.events.some((event) =>
         event.message.includes("Mud Shot resolves; Teddiursa HP is 0"),
@@ -396,6 +394,7 @@ describe("battle engine interface scaffold", () => {
         fastMove: { ...swampert.fastMove, turns: 1, energyGain: 60 },
         chargedMoves: [
           { ...swampert.chargedMoves[0], energyCost: 90, power: 1 },
+          { ...swampert.chargedMoves[1], energyCost: 90, power: 1 },
         ],
       },
       backup: lucario,
