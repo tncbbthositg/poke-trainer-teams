@@ -12,10 +12,7 @@ export type BattleOutcome =
   "win" | "loss" | "third-slot-required" | "not-simulated";
 
 export type BattleConfidence =
-  | "verified"
-  | "deterministic-assumption"
-  | "proxy-estimate"
-  | "not-simulated";
+  "verified" | "deterministic-assumption" | "proxy-estimate" | "not-simulated";
 
 export type BattleEvent = {
   turn: number;
@@ -47,10 +44,14 @@ export type BattleEvent = {
   playerHp?: number;
   playerMaxHp?: number;
   playerEnergy?: number;
+  playerAttackStage?: number;
+  playerDefenseStage?: number;
   playerTypes?: PokemonType[];
   opponentHp?: number;
   opponentMaxHp?: number;
   opponentEnergy?: number;
+  opponentAttackStage?: number;
+  opponentDefenseStage?: number;
   opponentTypes?: PokemonType[];
 };
 

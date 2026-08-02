@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
   "generatedAt": "2026-08-02T00:00:00.000Z",
-  "simulationVersion": "m2-experimental-rocket-0.4.0",
+  "simulationVersion": "m2-experimental-rocket-0.5.0",
   "values": [
     {
       "key": "trainer_level_demo_default",

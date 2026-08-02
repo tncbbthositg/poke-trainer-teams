@@ -37,7 +37,7 @@ describe("universal pair evaluation", () => {
     expect(evaluation.lineupEvaluations).toHaveLength(3);
     expect(evaluation.proxyClears + evaluation.proxyFailures).toBe(3);
     expect(evaluation.confidence).toBe("proxy-estimate");
-    expect(evaluation.simulationVersion).toBe("m2-experimental-rocket-0.4.0");
+    expect(evaluation.simulationVersion).toBe("m2-experimental-rocket-0.5.0");
     expect(
       evaluation.lineupEvaluations[0].result.pokemonUsed,
     ).toBeLessThanOrEqual(2);

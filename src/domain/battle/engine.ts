@@ -356,6 +356,8 @@ export function simulateRocketLineupExperimental({
     activeBuild.level,
   ).hp;
   let activeMaxHp = activeHp;
+  let playerAttackStage = 0;
+  let playerDefenseStage = 0;
   let energy = 0;
   let turn = 0;
   let fastAttacksUsed = 0;
@@ -370,6 +372,8 @@ export function simulateRocketLineupExperimental({
   let opponentHp = currentOpponent.hp;
   let opponentMaxHp = currentOpponent.hp;
   let opponentEnergy = 0;
+  let opponentAttackStage = 0;
+  let opponentDefenseStage = 0;
   let remainingPlayerShields = config.playerShields;
   let nextFallbackRocketChargedTurn = config.opponentChargedAttackIntervalTurns;
   const events: BattleResult["events"] = [
@@ -391,12 +395,20 @@ export function simulateRocketLineupExperimental({
       activeBuild,
       activeBuild.fastMove,
       currentOpponent,
+      {
+        attackerAttackStage: playerAttackStage,
+        defenderDefenseStage: opponentDefenseStage,
+      },
     );
     const opponentFastDetails = opponentFastMove
       ? opponentMoveDamageDetails(
           currentOpponent,
           opponentFastMove,
           activeBuild,
+          {
+            attackerAttackStage: opponentAttackStage,
+            defenderDefenseStage: playerDefenseStage,
+          },
         )
       : undefined;
     events.push({
@@ -495,6 +507,10 @@ export function simulateRocketLineupExperimental({
             currentOpponent,
             opponentChargedMove,
             activeBuild,
+            {
+              attackerAttackStage: opponentAttackStage,
+              defenderDefenseStage: playerDefenseStage,
+            },
           )
         : undefined;
       if (opponentChargedMove) {
@@ -540,6 +556,13 @@ export function simulateRocketLineupExperimental({
           ...battleState(),
         });
       }
+      if (opponentChargedMove) {
+        applyMoveStageEffects({
+          move: opponentChargedMove,
+          actor: "rocket",
+          actorName: currentOpponent.name,
+        });
+      }
       turn += config.chargedAttackTurns;
       nextFallbackRocketChargedTurn =
         turn + config.opponentChargedAttackIntervalTurns;
@@ -564,6 +587,10 @@ export function simulateRocketLineupExperimental({
         activeBuild,
         chargedMove,
         currentOpponent,
+        {
+          attackerAttackStage: playerAttackStage,
+          defenderDefenseStage: opponentDefenseStage,
+        },
       );
 
       if (config.remainingShields > 0) {
@@ -604,6 +631,11 @@ export function simulateRocketLineupExperimental({
         });
       }
 
+      applyMoveStageEffects({
+        move: chargedMove,
+        actor: "player",
+        actorName: activeBuild.species.name,
+      });
       turn += chargedAttackTurns;
 
       if (config.pauseAfterChargedTurns > 0) {
@@ -646,6 +678,8 @@ export function simulateRocketLineupExperimental({
     opponentHp = currentOpponent.hp;
     opponentMaxHp = currentOpponent.hp;
     opponentEnergy = 0;
+    opponentAttackStage = 0;
+    opponentDefenseStage = 0;
     nextFallbackRocketChargedTurn =
       turn + config.opponentChargedAttackIntervalTurns;
     events.push({
@@ -680,6 +714,8 @@ export function simulateRocketLineupExperimental({
     ).hp;
     activeMaxHp = activeHp;
     energy = 0;
+    playerAttackStage = 0;
+    playerDefenseStage = 0;
     switches += 1;
     events.push({
       turn,
@@ -737,10 +773,10 @@ export function simulateRocketLineupExperimental({
         "Player Charged Attack decisions use current opponent HP, type effectiveness, and remaining Rocket shields, but exact Rocket shield AI is still unverified.",
         "Rocket move pools are sourced, but this deterministic branch selects the first available Rocket fast move and the highest-damage affordable Rocket charged move instead of modeling random move assignment.",
         "Rocket opponent Charged Attack timing uses sourced fast-move energy and charged-move costs when moves are available; the configurable placeholder cadence is only used when no sourced Rocket charged move is available.",
-        "Buffs, debuffs, random move assignment probabilities, and live battle validation are not implemented.",
+        "Guaranteed buffs and debuffs apply with Pokemon GO stage limits; chance-based effects, random move assignment probabilities, and live battle validation are not implemented.",
         `Third slot unavailable; strategy=${strategy}.`,
       ],
-      simulationVersion: "m2-experimental-rocket-0.4.0",
+      simulationVersion: "m2-experimental-rocket-0.5.0",
       events,
     };
   }
@@ -750,12 +786,81 @@ export function simulateRocketLineupExperimental({
       playerHp: Math.max(0, Math.ceil(activeHp)),
       playerMaxHp: Math.ceil(activeMaxHp),
       playerEnergy: energy,
+      playerAttackStage,
+      playerDefenseStage,
       playerTypes: activeBuild?.species.types ?? lead.species.types,
       opponentHp: Math.max(0, Math.ceil(opponentHp)),
       opponentMaxHp: Math.ceil(opponentMaxHp),
       opponentEnergy,
+      opponentAttackStage,
+      opponentDefenseStage,
       opponentTypes: currentOpponent?.types ?? ["normal"],
     };
+  }
+
+  function applyMoveStageEffects({
+    move,
+    actor,
+    actorName,
+  }: {
+    move: ChargedMove;
+    actor: "player" | "rocket";
+    actorName: string;
+  }) {
+    if (!move.buffs || move.buffs.chance < 1) {
+      return;
+    }
+
+    const before = {
+      playerAttackStage,
+      playerDefenseStage,
+      opponentAttackStage,
+      opponentDefenseStage,
+    };
+    const [attackDelta, defenseDelta] = move.buffs.stages;
+    const affectsSelf =
+      move.buffs.target === "self" || move.buffs.target === "both";
+    const affectsOpponent =
+      move.buffs.target === "opponent" || move.buffs.target === "both";
+
+    if (actor === "player") {
+      if (affectsSelf) {
+        playerAttackStage = clampStage(playerAttackStage + attackDelta);
+        playerDefenseStage = clampStage(playerDefenseStage + defenseDelta);
+      }
+      if (affectsOpponent) {
+        opponentAttackStage = clampStage(opponentAttackStage + attackDelta);
+        opponentDefenseStage = clampStage(opponentDefenseStage + defenseDelta);
+      }
+    } else {
+      if (affectsSelf) {
+        opponentAttackStage = clampStage(opponentAttackStage + attackDelta);
+        opponentDefenseStage = clampStage(opponentDefenseStage + defenseDelta);
+      }
+      if (affectsOpponent) {
+        playerAttackStage = clampStage(playerAttackStage + attackDelta);
+        playerDefenseStage = clampStage(playerDefenseStage + defenseDelta);
+      }
+    }
+
+    if (
+      before.playerAttackStage === playerAttackStage &&
+      before.playerDefenseStage === playerDefenseStage &&
+      before.opponentAttackStage === opponentAttackStage &&
+      before.opponentDefenseStage === opponentDefenseStage
+    ) {
+      return;
+    }
+
+    events.push({
+      turn,
+      wallClockSeconds: wallClockSeconds(),
+      actor,
+      kind: "buff",
+      message: `${actorName}'s ${move.name} applies guaranteed stage effects.`,
+      moveType: move.type,
+      ...battleState(),
+    });
   }
 
   function wallClockSeconds() {
@@ -951,9 +1056,14 @@ function selectOpponentChargedMove(
 
   return [...available].sort(
     (a, b) =>
-      opponentMoveDamageDetails(opponent, b, defender).totalDamage -
-        opponentMoveDamageDetails(opponent, a, defender).totalDamage ||
-      a.energyCost - b.energyCost,
+      opponentMoveDamageDetails(opponent, b, defender, {
+        attackerAttackStage: 0,
+        defenderDefenseStage: 0,
+      }).totalDamage -
+        opponentMoveDamageDetails(opponent, a, defender, {
+          attackerAttackStage: 0,
+          defenderDefenseStage: 0,
+        }).totalDamage || a.energyCost - b.energyCost,
   )[0];
 }
 
@@ -961,12 +1071,17 @@ function playerMoveDamageDetails(
   build: PokemonBuild,
   move: FastMove | ChargedMove,
   opponent: ExperimentalRocketOpponent,
+  stages: {
+    attackerAttackStage: number;
+    defenderDefenseStage: number;
+  } = { attackerAttackStage: 0, defenderDefenseStage: 0 },
 ) {
-  const attackerAttack = calculateEffectiveStats(
-    build.species,
-    build.level,
-  ).attack;
-  const defenderDefense = opponent.stats?.defense ?? attackerAttack;
+  const attackerAttack =
+    calculateEffectiveStats(build.species, build.level).attack *
+    stageMultiplier(stages.attackerAttackStage);
+  const defenderDefense =
+    (opponent.stats?.defense ?? attackerAttack) *
+    stageMultiplier(stages.defenderDefenseStage);
   const stab = stabMultiplier(move.type, build.species.types);
   const type = typeEffectiveness(move.type, opponent.types);
   const baseDamage =
@@ -1004,12 +1119,17 @@ function opponentMoveDamageDetails(
   opponent: ExperimentalRocketOpponent,
   move: FastMove | ChargedMove,
   defender: PokemonBuild,
+  stages: {
+    attackerAttackStage: number;
+    defenderDefenseStage: number;
+  } = { attackerAttackStage: 0, defenderDefenseStage: 0 },
 ) {
-  const attackerAttack = opponent.stats?.attack ?? defender.level;
-  const defenderDefense = calculateEffectiveStats(
-    defender.species,
-    defender.level,
-  ).defense;
+  const attackerAttack =
+    (opponent.stats?.attack ?? defender.level) *
+    stageMultiplier(stages.attackerAttackStage);
+  const defenderDefense =
+    calculateEffectiveStats(defender.species, defender.level).defense *
+    stageMultiplier(stages.defenderDefenseStage);
   const stab = stabMultiplier(move.type, opponent.types);
   const type = typeEffectiveness(move.type, defender.species.types);
   const baseDamage =
@@ -1052,4 +1172,13 @@ function formatPokemonId(id: string) {
 
 function clampHp(hp: number) {
   return Math.max(0, hp);
+}
+
+function clampStage(stage: number) {
+  return Math.max(-4, Math.min(4, stage));
+}
+
+function stageMultiplier(stage: number) {
+  const clamped = clampStage(stage);
+  return clamped >= 0 ? (4 + clamped) / 4 : 4 / (4 - clamped);
 }

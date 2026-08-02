@@ -42,6 +42,8 @@ Known calculations:
 - Rocket charged attacks use sourced fast-move energy gain and charged-move
   energy costs when moves are available. The configurable cadence is only a
   fallback for opponents without a sourced charged move.
+- Guaranteed charged-move buffs and debuffs apply with Pokemon GO stage limits
+  from -4 to +4. Chance-based effects remain unresolved rather than assumed.
 - Universal proxy evaluation runs one ordered pair across every checked-in
   Rocket lineup and reports proxy clears and failures without treating them as
   verified rankings.
@@ -51,7 +53,7 @@ Unresolved Rocket mechanics remain configurable or unverified:
 - Exact random Rocket move assignment probabilities.
 - Exact Rocket charged move selection policy and random move assignment
   probabilities.
-- Buffs and debuffs during battle.
+- Chance-based buffs and debuffs during battle.
 - Fast-attack cancellation and charged-attack priority edge cases.
 - Wall-clock animation timings.
 - Real-battle validation of the resulting win/loss outputs.

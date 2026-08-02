@@ -94,7 +94,7 @@ describe("battle engine interface scaffold", () => {
 
     expect(["win", "loss"]).toContain(result.outcome);
     expect(result.confidence).toBe("proxy-estimate");
-    expect(result.simulationVersion).toBe("m2-experimental-rocket-0.4.0");
+    expect(result.simulationVersion).toBe("m2-experimental-rocket-0.5.0");
     expect(result.pokemonUsed).toBeLessThanOrEqual(2);
     expect(result.shieldsUsed).toBeLessThanOrEqual(4);
     expect(result.assumptionsUsed.join(" ")).toMatch(/Proxy estimate/);
@@ -305,6 +305,14 @@ describe("battle engine interface scaffold", () => {
     expect(
       result.events.some((event) =>
         event.message.includes("shields Power-Up Punch"),
+      ),
+    ).toBe(true);
+    expect(
+      result.events.some(
+        (event) =>
+          event.kind === "buff" &&
+          event.playerAttackStage === 1 &&
+          event.message.includes("Power-Up Punch"),
       ),
     ).toBe(true);
     expect(
