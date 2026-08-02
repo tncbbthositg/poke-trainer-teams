@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { type CSSProperties, useMemo, useState } from "react";
 import { Shield } from "lucide-react";
 import { Badge } from "../../components/atoms/Badge";
 import { MetricBar } from "../../components/atoms/MetricBar";
+import { Tooltip } from "../../components/atoms/Tooltip";
 import { TypeChip, TypeChipList } from "../../components/atoms/TypeChip";
 import { typeAbbreviation } from "../../components/atoms/typeLabels";
 import { DataSelect } from "../../components/molecules/DataSelect";
@@ -465,16 +466,23 @@ function FastAttackTrack({
           : "rgb(var(--danger))";
 
         return (
-          <span
+          <Tooltip
             key={`${span.startTurn}-${span.endTurn}-${index}`}
-            className="absolute top-1/2 h-3 -translate-y-1/2 rounded-full opacity-82"
-            style={{
-              backgroundColor: color,
-              left: `${left}%`,
-              width: `max(1px, calc(${width}% - 1px))`,
-            }}
-            aria-label={`${actor} fast attack from ${number(span.startTurn * 0.5)} to ${number(span.endTurn * 0.5)} seconds`}
-          />
+            content={attackTooltipContent(span.event, "Fast attack")}
+            contentClassName={attackTooltipClassName()}
+            contentStyle={attackTooltipStyle(span.event)}
+          >
+            <span
+              className="absolute top-1/2 h-3 -translate-y-1/2 cursor-help rounded-full opacity-82 outline-none ring-offset-2 ring-offset-[rgb(var(--background))] focus-visible:ring-2"
+              style={{
+                backgroundColor: color,
+                left: `${left}%`,
+                width: `max(1px, calc(${width}% - 1px))`,
+              }}
+              tabIndex={0}
+              aria-label={`${actor} fast attack from ${number(span.startTurn * 0.5)} to ${number(span.endTurn * 0.5)} seconds`}
+            />
+          </Tooltip>
         );
       })}
       {chargedAttacks.length > 0 ? (
@@ -488,16 +496,23 @@ function FastAttackTrack({
               : "rgb(var(--primary))";
 
             return (
-              <span
+              <Tooltip
                 key={`${event.turn}-${event.kind}-${index}`}
-                className="absolute top-1/2 z-10 h-5 -translate-y-1/2 rounded-full shadow-sm"
-                style={{
-                  backgroundColor: color,
-                  left: `${left}%`,
-                  width: `max(1px, calc(${width}% - 1px))`,
-                }}
-                aria-label={`${chargedAttackName(event)} charged attack from ${number(event.turn * 0.5)} to ${number((event.turn + durationTurns) * 0.5)} seconds`}
-              />
+                content={attackTooltipContent(event, "Charged attack")}
+                contentClassName={attackTooltipClassName()}
+                contentStyle={attackTooltipStyle(event)}
+              >
+                <span
+                  className="absolute top-1/2 z-10 h-5 -translate-y-1/2 cursor-help rounded-full shadow-sm outline-none ring-offset-2 ring-offset-[rgb(var(--background))] focus-visible:ring-2"
+                  style={{
+                    backgroundColor: color,
+                    left: `${left}%`,
+                    width: `max(1px, calc(${width}% - 1px))`,
+                  }}
+                  tabIndex={0}
+                  aria-label={`${chargedAttackName(event)} charged attack from ${number(event.turn * 0.5)} to ${number((event.turn + durationTurns) * 0.5)} seconds`}
+                />
+              </Tooltip>
             );
           })}
         </div>
@@ -523,6 +538,69 @@ function FastAttackTrack({
       ) : null}
     </div>
   );
+}
+
+function attackTooltipContent(event: BattleEvent, label: string) {
+  const attack = event.attack;
+  const name = attack?.name ?? chargedAttackName(event);
+  const rows = attack
+    ? [
+        ["Base damage", formatDamageValue(attack.baseDamage)],
+        ["STAB bonus", signedDamageValue(attack.stabBonus)],
+        ["Type bonus", signedDamageValue(attack.typeBonus)],
+        ["Total output", formatDamageValue(attack.totalDamage)],
+      ]
+    : [["Damage", "Not available"]];
+
+  return (
+    <div className="min-w-44">
+      <div className="text-[10px] font-semibold uppercase opacity-75">
+        {label}
+      </div>
+      <div className="mt-0.5 text-sm font-semibold">{name}</div>
+      <div className="mt-2 grid gap-1 text-xs">
+        {rows.map(([rowLabel, value]) => (
+          <div
+            key={rowLabel}
+            className="flex items-center justify-between gap-4"
+          >
+            <span className="opacity-78">{rowLabel}</span>
+            <span className="font-semibold tabular-nums">{value}</span>
+          </div>
+        ))}
+      </div>
+      {attack ? (
+        <div className="mt-2 border-t border-current/18 pt-1.5 text-[10px] opacity-75">
+          STAB x{number(attack.stabMultiplier)} · Type x
+          {number(attack.typeMultiplier)}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function attackTooltipClassName() {
+  return "z-50 rounded-md border px-3 py-2 text-xs shadow-lg";
+}
+
+function attackTooltipStyle(event: BattleEvent): CSSProperties {
+  const color = event.moveType ? typeColor(event.moveType) : undefined;
+  return {
+    backgroundColor: color?.bg ?? "rgb(var(--panel))",
+    borderColor: color?.bar ?? "rgb(var(--border))",
+    color: color?.text ?? "rgb(var(--foreground))",
+  };
+}
+
+function formatDamageValue(value: number) {
+  return number(value);
+}
+
+function signedDamageValue(value: number) {
+  if (value === 0) {
+    return "0";
+  }
+  return `${value > 0 ? "+" : ""}${number(value)}`;
 }
 
 type FastAttackSpan = {

@@ -1,11 +1,18 @@
-import * as TooltipPrimitive from '@radix-ui/react-tooltip'
+import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+import type { CSSProperties, ReactNode } from "react";
 
 export function Tooltip({
   label,
+  content,
   children,
+  contentClassName,
+  contentStyle,
 }: {
-  label: string
-  children: React.ReactNode
+  label?: string;
+  content?: ReactNode;
+  children: ReactNode;
+  contentClassName?: string;
+  contentStyle?: CSSProperties;
 }) {
   return (
     <TooltipPrimitive.Provider delayDuration={250}>
@@ -14,13 +21,17 @@ export function Tooltip({
         <TooltipPrimitive.Portal>
           <TooltipPrimitive.Content
             sideOffset={6}
-            className="z-50 rounded border border-[rgb(var(--border))] bg-[rgb(var(--panel))] px-2 py-1 text-xs shadow"
+            className={
+              contentClassName ??
+              "z-50 rounded border border-[rgb(var(--border))] bg-[rgb(var(--panel))] px-2 py-1 text-xs shadow"
+            }
+            style={contentStyle}
           >
-            {label}
+            {content ?? label}
             <TooltipPrimitive.Arrow className="fill-[rgb(var(--panel))]" />
           </TooltipPrimitive.Content>
         </TooltipPrimitive.Portal>
       </TooltipPrimitive.Root>
     </TooltipPrimitive.Provider>
-  )
+  );
 }

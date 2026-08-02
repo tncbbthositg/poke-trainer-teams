@@ -109,6 +109,22 @@ describe("battle engine interface scaffold", () => {
       ),
     ).toBe(true);
     expect(
+      result.events.some(
+        (event) =>
+          event.kind === "fast-resolve" &&
+          event.attack?.name === "Psycho Cut" &&
+          event.attack.totalDamage > 0,
+      ),
+    ).toBe(true);
+    expect(
+      result.events.some(
+        (event) =>
+          event.kind === "charged-attack" &&
+          event.attack?.name === "Psystrike" &&
+          event.attack.stabBonus > 0,
+      ),
+    ).toBe(true);
+    expect(
       result.events.some((event) => event.message.includes("uses Tackle")),
     ).toBe(true);
     expect(

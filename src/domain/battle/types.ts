@@ -28,6 +28,15 @@ export type BattleEvent = {
     | "battle-end";
   message: string;
   moveType?: PokemonType;
+  attack?: {
+    name: string;
+    baseDamage: number;
+    stabBonus: number;
+    typeBonus: number;
+    totalDamage: number;
+    stabMultiplier: number;
+    typeMultiplier: number;
+  };
   durationTurns?: number;
   playerHp?: number;
   playerMaxHp?: number;
