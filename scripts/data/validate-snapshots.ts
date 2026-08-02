@@ -53,6 +53,24 @@ async function main() {
     throw new Error(`Duplicate Rocket lineup ids: ${duplicateIds.join(", ")}`);
   }
 
+  const pokemonIds = new Set(
+    [...pokemon.candidates, ...pokemon.rocketOpponents].map(
+      (species) => species.id,
+    ),
+  );
+  const missingLineupSpecies = rocket.lineups.flatMap((lineup) =>
+    lineup.slots.flatMap((slot) =>
+      slot.pokemonIds
+        .filter((pokemonId) => !pokemonIds.has(pokemonId))
+        .map((pokemonId) => `${lineup.id} slot ${slot.slot}: ${pokemonId}`),
+    ),
+  );
+  if (missingLineupSpecies.length > 0) {
+    throw new Error(
+      `Rocket lineups reference unknown Pokemon ids:\n${missingLineupSpecies.join("\n")}`,
+    );
+  }
+
   await assertMirroredSnapshot("pokemon.json");
   await assertMirroredSnapshot("moves.json");
   await assertMirroredSnapshot("rocket-lineups.json");

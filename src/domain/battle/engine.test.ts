@@ -94,7 +94,7 @@ describe("battle engine interface scaffold", () => {
 
     expect(["win", "loss"]).toContain(result.outcome);
     expect(result.confidence).toBe("proxy-estimate");
-    expect(result.simulationVersion).toBe("m2-experimental-rocket-0.1.0");
+    expect(result.simulationVersion).toBe("m2-experimental-rocket-0.3.0");
     expect(result.pokemonUsed).toBeLessThanOrEqual(2);
     expect(result.shieldsUsed).toBeLessThanOrEqual(4);
     expect(result.assumptionsUsed.join(" ")).toMatch(/Proxy estimate/);
@@ -131,12 +131,18 @@ describe("battle engine interface scaffold", () => {
       ),
     ).toBe(true);
     expect(
-      result.events.some((event) => event.message.includes("uses Tackle")),
+      result.events.some(
+        (event) =>
+          event.actor === "rocket" &&
+          event.kind === "fast-resolve" &&
+          event.attack &&
+          event.attack.totalDamage > 0,
+      ),
     ).toBe(true);
     expect(
       result.events.some((event) =>
         event.message.includes(
-          "pauses for 1.5 turn(s) after the player switch",
+          "pauses for 4 turn(s) after the player switch",
         ),
       ),
     ).toBe(true);
@@ -202,7 +208,7 @@ describe("battle engine interface scaffold", () => {
       "AURA_SPHERE",
     );
     const lineup = data.rocket.lineups.find(
-      (item) => item.id === "grunt-normal-2026-07-31",
+      (item) => item.id === "grunt-normal-male-2026-06-25",
     )!;
 
     const result = simulateRocketLineupExperimental({
@@ -237,7 +243,7 @@ describe("battle engine interface scaffold", () => {
       "EARTHQUAKE",
     );
     const lineup = data.rocket.lineups.find(
-      (item) => item.id === "grunt-normal-2026-07-31",
+      (item) => item.id === "grunt-normal-male-2026-06-25",
     )!;
 
     const result = simulateRocketLineupExperimental({
@@ -252,7 +258,108 @@ describe("battle engine interface scaffold", () => {
       (event) => event.actor === "player" && event.kind === "fast-resolve",
     );
 
-    expect(firstFastResolve?.message).toContain("Teddiursa HP is 100");
+    expect(firstFastResolve?.message).toContain("Teddiursa HP is 105");
+  });
+
+  it("uses the cheapest available charged move to break Rocket shields", () => {
+    const data = loadApplicationData();
+    const lucario = buildFor(
+      data,
+      "lucario",
+      "COUNTER",
+      "POWER_UP_PUNCH",
+      "AURA_SPHERE",
+    );
+    const swampert = buildFor(
+      data,
+      "swampert",
+      "MUD_SHOT",
+      "HYDRO_CANNON",
+      "EARTHQUAKE",
+    );
+    const lineup = data.rocket.lineups.find(
+      (item) => item.id === "leader-arlo-2026-07-31",
+    )!;
+
+    const result = simulateRocketLineupExperimental({
+      lead: {
+        ...lucario,
+        fastMove: { ...lucario.fastMove, energyGain: 100 },
+      },
+      backup: swampert,
+      lineup,
+      mechanics: data.mechanics,
+      rocketOpponents: data.pokemon.rocketOpponents,
+      moves: data.moves,
+      strategy: "fastest-expected-knockout",
+      maxTurns: 4,
+    });
+
+    expect(
+      result.events.some((event) =>
+        event.message.includes("shields Power-Up Punch"),
+      ),
+    ).toBe(true);
+    expect(
+      result.events.some((event) =>
+        event.message.includes("shields Aura Sphere"),
+      ),
+    ).toBe(false);
+  });
+
+  it("does not spend a charged move when the next fast move will knock out", () => {
+    const data = loadApplicationData();
+    const swampert = buildFor(
+      data,
+      "swampert",
+      "MUD_SHOT",
+      "HYDRO_CANNON",
+      "EARTHQUAKE",
+    );
+    const lucario = buildFor(
+      data,
+      "lucario",
+      "COUNTER",
+      "POWER_UP_PUNCH",
+      "AURA_SPHERE",
+    );
+    const baseLineup = data.rocket.lineups.find(
+      (item) => item.id === "grunt-normal-male-2026-06-25",
+    )!;
+    const singleOpponentLineup = {
+      ...baseLineup,
+      slots: [baseLineup.slots[0]],
+    };
+    const lowHpMechanics = {
+      ...data.mechanics,
+      values: data.mechanics.values.map((item) =>
+        item.key === "rocket_opponent_hp_slot_1"
+          ? { ...item, value: 15 }
+          : item,
+      ),
+    };
+
+    const result = simulateRocketLineupExperimental({
+      lead: swampert,
+      backup: lucario,
+      lineup: singleOpponentLineup,
+      mechanics: lowHpMechanics,
+      rocketOpponents: [],
+      moves: data.moves,
+      strategy: "fastest-expected-knockout",
+      maxTurns: 40,
+    });
+
+    expect(result.outcome).toBe("win");
+    expect(result.chargedAttacksUsed).toBe(0);
+    expect(
+      result.events.some((event) => event.kind === "charged-attack"),
+    ).toBe(false);
+    expect(
+      result.events.some((event) =>
+        event.message.includes("Mud Shot resolves; Teddiursa HP is 0"),
+      ),
+    ).toBe(true);
   });
 });
 

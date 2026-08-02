@@ -1222,10 +1222,12 @@ function TeamSlot({
           label={`${role} Pokemon`}
           value={build.species.id}
           onChange={setSpecies}
-          options={data.pokemon.candidates.map((candidate) => ({
-            value: candidate.id,
-            label: candidate.name,
-          }))}
+          options={[...data.pokemon.candidates]
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((candidate) => ({
+              value: candidate.id,
+              label: candidate.name,
+            }))}
         />
         <div className="grid gap-2 sm:grid-cols-2">
           <div className="sm:col-span-2">

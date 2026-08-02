@@ -15,6 +15,7 @@
     "typecheck": "tsc -b",
     "data:update:pvpoke": "tsx scripts/data/fetch-pvpoke.ts",
     "data:update:pokeminers": "tsx scripts/data/fetch-pokeminers.ts",
+    "data:update:rocket": "tsx scripts/data/fetch-rocket-lineups.ts",
     "data:sync": "tsx scripts/data/sync-generated-data.ts",
     "data:validate": "tsx scripts/data/validate-snapshots.ts",
     "data:diff": "tsx scripts/data/diff-snapshots.ts"

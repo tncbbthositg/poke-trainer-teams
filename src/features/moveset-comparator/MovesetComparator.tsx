@@ -153,7 +153,7 @@ export function MovesetComparator({ data }: { data: ApplicationData }) {
       <Panel>
         <PanelHeader title="Moveset Comparator" subtitle="Compare legal fast moves and dual Charged Attack combinations." />
         <div className="grid gap-3 p-3 sm:grid-cols-2 lg:grid-cols-3">
-          <DataSelect label="Pokemon" value={species.id} onChange={setSpecies} options={data.pokemon.candidates.map((candidate) => ({ value: candidate.id, label: candidate.name }))} />
+          <DataSelect label="Pokemon" value={species.id} onChange={setSpecies} options={[...data.pokemon.candidates].sort((a, b) => a.name.localeCompare(b.name)).map((candidate) => ({ value: candidate.id, label: candidate.name }))} />
           <DataSelect label="Build A fast" value={buildA.fast.id} selectedType={buildA.fast.type} onChange={setFastAId} options={fastMoves.map((move) => ({ value: move.id, label: fastMoveLabel(move), type: move.type }))} />
           <DataSelect label="Build B fast" value={buildB.fast.id} selectedType={buildB.fast.type} onChange={setFastBId} options={fastMoves.map((move) => ({ value: move.id, label: fastMoveLabel(move), type: move.type }))} />
         </div>

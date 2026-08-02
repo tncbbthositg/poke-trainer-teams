@@ -1,12 +1,12 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-07-31T17:15:00.000Z",
+  "generatedAt": "2026-08-02T02:43:56.575Z",
   "applicationName": "Rocket Pair Lab",
   "dataSummary": {
     "pokemonCount": 10,
     "fastMoveCount": 21,
     "chargedMoveCount": 44,
-    "rocketLineupCount": 5
+    "rocketLineupCount": 26
   },
   "sources": [
     {
@@ -48,12 +48,42 @@
       "license": "Attribution status not established; used for independent manual cross-check planning.",
       "category": "unverified",
       "notes": "Secondary lineup cross-check source; Cliff slot 2 currently disagrees with Leek Duck."
+    },
+    {
+      "sourceName": "Bulbapedia Trainer Battle (GO)",
+      "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/Trainer_Battle_%28GO%29",
+      "retrievedAt": "2026-08-02T00:00:00.000Z",
+      "sourceVersion": "retrieved-2026-08-02",
+      "parserVersion": "manual-mechanics-reference-0.1.0",
+      "license": "Community reference; used as a public factual mechanics reference with attribution.",
+      "category": "sourced",
+      "notes": "Reference for Trainer Battle damage boost, NPC move-pool constraints, send order, shield behavior, and 2-second/4-turn NPC pauses."
+    },
+    {
+      "sourceName": "Bulbapedia Team GO Rocket",
+      "sourceUrl": "https://bulbapedia.bulbagarden.net/wiki/GO_Rocket",
+      "retrievedAt": "2026-08-02T00:00:00.000Z",
+      "sourceVersion": "retrieved-2026-08-02",
+      "parserVersion": "manual-mechanics-reference-0.1.0",
+      "license": "Community reference; used as a public factual mechanics reference with attribution.",
+      "category": "sourced",
+      "notes": "Reference for Team GO Rocket shield behavior."
+    },
+    {
+      "sourceName": "Pokebattler Rocket CP Formula 2021",
+      "sourceUrl": "https://articles.pokebattler.com/2021/06/21/cracking-the-rocket-cp-formula-2021-edition/",
+      "retrievedAt": "2026-08-02T00:00:00.000Z",
+      "sourceVersion": "2021-06-21 article, retrieved 2026-08-02",
+      "parserVersion": "manual-mechanics-reference-0.1.0",
+      "license": "Public research article; used as a mechanics formula reference with attribution.",
+      "category": "sourced",
+      "notes": "Reference for Rocket opponent Attack, Defense, Stamina, HP, CP, rCPM, and rank multiplier formulas."
     }
   ],
   "limitations": [
-    "Verified Rocket simulation and universal pair rankings are not implemented; Pair Builder currently exposes an experimental proxy simulator only.",
-    "Rocket scaling, pauses, shield AI, and wall-clock timings remain unresolved or configurable.",
-    "Rocket lineups include a reconciled subset; Cliff slot 2 is explicitly disputed and most Grunt classes are not yet imported.",
+    "Rocket opponent stats, shield counts, ordered send-ins, and NPC pause windows are source-backed; universal pair rankings remain experimental until validated against recorded real battles.",
+    "Random Rocket move assignment probabilities, Rocket charged move timing, buffs/debuffs, fast-attack cancellation, and wall-clock timings remain unresolved or configurable.",
+    "Rocket lineups include Giovanni, current Leaders, current Grunt archetypes, and Decoy Grunts. Most newly imported Grunt lineups are single-source Leek Duck records until independently reconciled; Cliff slot 2 remains explicitly disputed.",
     "Morpeko is represented by PvPoke's Full Belly form and is marked Rocket-unreliable after a 2026-08-01 field report."
   ]
 }

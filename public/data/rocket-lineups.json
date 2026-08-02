@@ -1,8 +1,8 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-07-31T17:15:00.000Z",
-  "effectiveDate": "2026-07-31",
-  "sourceHash": "manual-leekduck-gohub-lineup-reconciliation-2026-07-31",
+  "generatedAt": "2026-08-02T02:58:04.632Z",
+  "effectiveDate": "2026-06-25",
+  "sourceHash": "61565ad3c386ab592d3c77f74552a7b76ab8663963659f0d923c9578dfce06a6",
   "lineups": [
     {
       "id": "giovanni-2026-07-31",
@@ -11,9 +11,26 @@
       "effectiveDate": "2026-07-31",
       "sourceAgreement": "verified-agreement",
       "slots": [
-        { "slot": 1, "pokemonIds": ["persian"] },
-        { "slot": 2, "pokemonIds": ["kangaskhan", "rhyperior", "machamp"] },
-        { "slot": 3, "pokemonIds": ["reshiram"] }
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "persian"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "kangaskhan",
+            "rhyperior",
+            "machamp"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "reshiram"
+          ]
+        }
       ],
       "provenance": [
         {
@@ -47,9 +64,28 @@
       "effectiveDate": "2026-07-31",
       "sourceAgreement": "verified-agreement",
       "slots": [
-        { "slot": 1, "pokemonIds": ["tyrunt"] },
-        { "slot": 2, "pokemonIds": ["steelix", "golurk", "slowbro"] },
-        { "slot": 3, "pokemonIds": ["alakazam", "charizard", "scizor"] }
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "tyrunt"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "steelix",
+            "golurk",
+            "slowbro"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "alakazam",
+            "charizard",
+            "scizor"
+          ]
+        }
       ],
       "provenance": [
         {
@@ -83,9 +119,28 @@
       "effectiveDate": "2026-07-31",
       "sourceAgreement": "disputed",
       "slots": [
-        { "slot": 1, "pokemonIds": ["axew"] },
-        { "slot": 2, "pokemonIds": ["snorlax", "golurk", "galarian-weezing"] },
-        { "slot": 3, "pokemonIds": ["tyranitar", "camerupt", "gallade"] }
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "axew"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "snorlax",
+            "golurk",
+            "weezing_galarian"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "tyranitar",
+            "camerupt",
+            "gallade"
+          ]
+        }
       ],
       "provenance": [
         {
@@ -96,7 +151,7 @@
           "parserVersion": "manual-lineup-snapshot-0.2.0",
           "license": "Attribution status not established; factual lineup snapshot with source citation.",
           "category": "sourced",
-          "notes": "Leek Duck lists Axew, Snorlax/Golurk/Galarian Weezing, and Tyranitar/Camerupt/Gallade."
+          "notes": "Leek Duck lists Axew, Snorlax/Golurk/Galarian Weezing, and Tyranitar/Camerupt/Gallade. Normalized as weezing_galarian to match PvPoke source IDs."
         },
         {
           "sourceName": "Pokemon GO Hub Cliff Counters",
@@ -119,9 +174,28 @@
       "effectiveDate": "2026-07-31",
       "sourceAgreement": "verified-agreement",
       "slots": [
-        { "slot": 1, "pokemonIds": ["amaura"] },
-        { "slot": 2, "pokemonIds": ["blastoise", "flygon", "ferrothorn"] },
-        { "slot": 3, "pokemonIds": ["milotic", "houndoom", "steelix"] }
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "amaura"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "blastoise",
+            "flygon",
+            "ferrothorn"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "milotic",
+            "houndoom",
+            "steelix"
+          ]
+        }
       ],
       "provenance": [
         {
@@ -148,40 +222,1028 @@
       "notes": "Sources agree on the listed Pokemon, with different display order in shared slots."
     },
     {
-      "id": "grunt-normal-2026-07-31",
-      "trainerName": "Normal-type Grunt",
+      "id": "grunt-normal-male-2026-06-25",
+      "trainerName": "Normal-type Male Grunt",
       "trainerClass": "grunt",
       "quote": "Normal does not mean weak.",
-      "effectiveDate": "2026-07-31",
-      "sourceAgreement": "verified-agreement",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
       "slots": [
-        { "slot": 1, "pokemonIds": ["teddiursa", "hoothoot", "porygon"] },
-        { "slot": 2, "pokemonIds": ["loudred", "stufful", "starly"] },
-        { "slot": 3, "pokemonIds": ["ursaring", "swellow", "kangaskhan"] }
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "teddiursa",
+            "hoothoot",
+            "porygon"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "loudred",
+            "stufful",
+            "starly"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "ursaring",
+            "swellow",
+            "kangaskhan"
+          ]
+        }
       ],
       "provenance": [
         {
           "sourceName": "Leek Duck Rocket Lineups",
           "sourceUrl": "https://leekduck.com/rocket-lineups/",
-          "retrievedAt": "2026-07-31T17:15:00.000Z",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
           "sourceVersion": "Updated on June 25, 2026",
-          "parserVersion": "manual-lineup-snapshot-0.2.0",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
           "license": "Attribution status not established; factual lineup snapshot with source citation.",
           "category": "sourced",
-          "notes": "Leek Duck lists Teddiursa/Hoothoot/Porygon, Loudred/Stufful/Starly, and Ursaring/Swellow/Kangaskhan."
-        },
-        {
-          "sourceName": "Pokemon GO Hub Grunt Guide",
-          "sourceUrl": "https://pokemongohub.net/post/guide/team-go-rocket-battle-guide/",
-          "retrievedAt": "2026-07-31T17:15:00.000Z",
-          "sourceVersion": "July 1, 2026",
-          "parserVersion": "manual-lineup-snapshot-0.2.0",
-          "license": "Attribution status not established; factual lineup snapshot with source citation.",
-          "category": "sourced",
-          "notes": "GO Hub lists Teddiursa/Hoothoot/Porygon, Stufful/Starly/Loudred, and Ursaring/Swellow/Kangaskhan."
+          "notes": "Normal-type Male Grunt lists slot 1: teddiursa/hoothoot/porygon; slot 2: loudred/stufful/starly; slot 3: ursaring/swellow/kangaskhan."
         }
       ],
-      "notes": "Representative verified Grunt lineup. Remaining Grunt classes still need import before universal pair evaluation."
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-fire-female-2026-06-25",
+      "trainerName": "Fire-type Female Grunt",
+      "trainerClass": "grunt",
+      "quote": "Do you know how hot Pokemon fire breath can get?",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "litwick",
+            "ponyta",
+            "torchic"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "magmar",
+            "blaziken",
+            "camerupt"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "darmanitan_standard",
+            "delphox",
+            "magmortar"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Fire-type Female Grunt lists slot 1: litwick/ponyta/torchic; slot 2: magmar/blaziken/camerupt; slot 3: darmanitan_standard/delphox/magmortar."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-water-female-2026-06-25",
+      "trainerName": "Water-type Female Grunt",
+      "trainerClass": "grunt",
+      "quote": "These waters are treacherous!",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "mudkip",
+            "tentacool",
+            "krabby"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "dewpider",
+            "swampert",
+            "sharpedo"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "walrein",
+            "greninja",
+            "tentacruel"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Water-type Female Grunt lists slot 1: mudkip/tentacool/krabby; slot 2: dewpider/swampert/sharpedo; slot 3: walrein/greninja/tentacruel."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-water-male-2026-06-25",
+      "trainerName": "Water-type Male Grunt",
+      "trainerClass": "grunt",
+      "quote": "These waters are treacherous!",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "magikarp",
+            "feebas"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "magikarp"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "magikarp",
+            "gyarados"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Water-type Male Grunt lists slot 1: magikarp/feebas; slot 2: magikarp; slot 3: magikarp/gyarados."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-electric-female-2026-06-25",
+      "trainerName": "Electric-type Female Grunt",
+      "trainerClass": "grunt",
+      "quote": "Get ready to be shocked!",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "voltorb",
+            "shinx",
+            "helioptile"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "electabuzz",
+            "voltorb",
+            "geodude_alolan"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "luxray",
+            "ampharos",
+            "galvantula"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Electric-type Female Grunt lists slot 1: voltorb/shinx/helioptile; slot 2: electabuzz/voltorb/geodude_alolan; slot 3: luxray/ampharos/galvantula."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-grass-male-2026-06-25",
+      "trainerName": "Grass-type Male Grunt",
+      "trainerClass": "grunt",
+      "quote": "Don't tangle with us!",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "phantump",
+            "treecko",
+            "tangela"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "lileep",
+            "sceptile",
+            "morelull"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "chesnaught",
+            "trevenant",
+            "cradily"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Grass-type Male Grunt lists slot 1: phantump/treecko/tangela; slot 2: lileep/sceptile/morelull; slot 3: chesnaught/trevenant/cradily."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-ice-female-2026-06-25",
+      "trainerName": "Ice-type Female Grunt",
+      "trainerClass": "grunt",
+      "quote": "You're gonna be frozen in your tracks.",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "seel",
+            "delibird",
+            "spheal"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "sealeo",
+            "froslass",
+            "ninetales_alolan"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "aurorus",
+            "froslass",
+            "glalie"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Ice-type Female Grunt lists slot 1: seel/delibird/spheal; slot 2: sealeo/froslass/ninetales_alolan; slot 3: aurorus/froslass/glalie."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-fighting-female-2026-06-25",
+      "trainerName": "Fighting-type Female Grunt",
+      "trainerClass": "grunt",
+      "quote": "This buff physique isn't just for show!",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "timburr",
+            "mankey",
+            "machop"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "hitmontop",
+            "hitmonlee",
+            "hitmonchan"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "conkeldurr",
+            "annihilape",
+            "infernape"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Fighting-type Female Grunt lists slot 1: timburr/mankey/machop; slot 2: hitmontop/hitmonlee/hitmonchan; slot 3: conkeldurr/annihilape/infernape."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-poison-female-2026-06-25",
+      "trainerName": "Poison-type Female Grunt",
+      "trainerClass": "grunt",
+      "quote": "Coiled and ready to strike!",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "oddish",
+            "zubat",
+            "qwilfish"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "weezing_galarian",
+            "nidorino",
+            "nidorina"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "weezing",
+            "toxicroak",
+            "amoonguss"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Poison-type Female Grunt lists slot 1: oddish/zubat/qwilfish; slot 2: weezing_galarian/nidorino/nidorina; slot 3: weezing/toxicroak/amoonguss."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-ground-male-2026-06-25",
+      "trainerName": "Ground-type Male Grunt",
+      "trainerClass": "grunt",
+      "quote": "You'll be defeated into the ground!",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "rhyhorn",
+            "gligar",
+            "trapinch"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "gligar",
+            "claydol",
+            "vibrava"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "golurk",
+            "hippowdon",
+            "flygon"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Ground-type Male Grunt lists slot 1: rhyhorn/gligar/trapinch; slot 2: gligar/claydol/vibrava; slot 3: golurk/hippowdon/flygon."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-flying-female-2026-06-25",
+      "trainerName": "Flying-type Female Grunt",
+      "trainerClass": "grunt",
+      "quote": "Battle against my Flying-type Pokemon!",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "taillow",
+            "rookidee",
+            "swablu"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "scyther",
+            "zubat",
+            "gligar"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "dragonite",
+            "toucannon",
+            "swanna"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Flying-type Female Grunt lists slot 1: taillow/rookidee/swablu; slot 2: scyther/zubat/gligar; slot 3: dragonite/toucannon/swanna."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-psychic-male-2026-06-25",
+      "trainerName": "Psychic-type Male Grunt",
+      "trainerClass": "grunt",
+      "quote": "Are you scared of psychics that use unseen power?",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "wobbuffet",
+            "ralts",
+            "drowzee"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "drowzee",
+            "duosion",
+            "wobbuffet"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "gallade",
+            "malamar",
+            "reuniclus"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Psychic-type Male Grunt lists slot 1: wobbuffet/ralts/drowzee; slot 2: drowzee/duosion/wobbuffet; slot 3: gallade/malamar/reuniclus."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-bug-male-2026-06-25",
+      "trainerName": "Bug-type Male Grunt",
+      "trainerClass": "grunt",
+      "quote": "Go, my super bug Pokemon!",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "venonat",
+            "weedle",
+            "grubbin"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "pinsir",
+            "anorith",
+            "dewpider"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "scizor",
+            "scolipede",
+            "vikavolt"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Bug-type Male Grunt lists slot 1: venonat/weedle/grubbin; slot 2: pinsir/anorith/dewpider; slot 3: scizor/scolipede/vikavolt."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-rock-male-2026-06-25",
+      "trainerName": "Rock-type Male Grunt",
+      "trainerClass": "grunt",
+      "quote": "Let's rock and roll!",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "onix",
+            "kabuto",
+            "cranidos"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "shieldon",
+            "graveler",
+            "cranidos"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "tyrantrum",
+            "golem",
+            "aurorus"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Rock-type Male Grunt lists slot 1: onix/kabuto/cranidos; slot 2: shieldon/graveler/cranidos; slot 3: tyrantrum/golem/aurorus."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-ghost-male-2026-06-25",
+      "trainerName": "Ghost-type Male Grunt",
+      "trainerClass": "grunt",
+      "quote": "Ke...ke...ke...ke...ke...ke!",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "duskull",
+            "gastly",
+            "yamask"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "dusclops",
+            "sableye",
+            "cofagrigus"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "gengar",
+            "froslass",
+            "cofagrigus"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Ghost-type Male Grunt lists slot 1: duskull/gastly/yamask; slot 2: dusclops/sableye/cofagrigus; slot 3: gengar/froslass/cofagrigus."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-dragon-female-2026-06-25",
+      "trainerName": "Dragon-type Female Grunt",
+      "trainerClass": "grunt",
+      "quote": "ROAR! ...How'd that sound?",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "noibat",
+            "deino",
+            "dratini"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "exeggutor_alolan",
+            "dragonair",
+            "gabite"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "dragonite",
+            "garchomp",
+            "salamence"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Dragon-type Female Grunt lists slot 1: noibat/deino/dratini; slot 2: exeggutor_alolan/dragonair/gabite; slot 3: dragonite/garchomp/salamence."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-dark-female-2026-06-25",
+      "trainerName": "Dark-type Female Grunt",
+      "trainerClass": "grunt",
+      "quote": "Wherever there is light, there is also shadow.",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "carvanha",
+            "poochyena",
+            "rattata_alolan"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "sneasel",
+            "houndour",
+            "absol"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "liepard",
+            "hydreigon"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Dark-type Female Grunt lists slot 1: carvanha/poochyena/rattata_alolan; slot 2: sneasel/houndour/absol; slot 3: liepard/hydreigon."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-steel-male-2026-06-25",
+      "trainerName": "Steel-type Male Grunt",
+      "trainerClass": "grunt",
+      "quote": "You're no match for my iron will!",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "sandshrew_alolan",
+            "aron",
+            "beldum"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "lairon",
+            "skarmory",
+            "metang"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "aggron",
+            "sandslash_alolan",
+            "probopass"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Steel-type Male Grunt lists slot 1: sandshrew_alolan/aron/beldum; slot 2: lairon/skarmory/metang; slot 3: aggron/sandslash_alolan/probopass."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-fairy-female-2026-06-25",
+      "trainerName": "Fairy-type Female Grunt",
+      "trainerClass": "grunt",
+      "quote": "Check out my cute Pokemon!",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "ralts",
+            "snubbull",
+            "vulpix_alolan"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "snubbull",
+            "weezing_galarian",
+            "kirlia"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "ninetales_alolan",
+            "weezing_galarian",
+            "granbull"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Fairy-type Female Grunt lists slot 1: ralts/snubbull/vulpix_alolan; slot 2: snubbull/weezing_galarian/kirlia; slot 3: ninetales_alolan/weezing_galarian/granbull."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-starter-male-2026-06-25",
+      "trainerName": "Mixed Starter Male Grunt",
+      "trainerClass": "grunt",
+      "quote": "Winning is for winners.",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "bulbasaur",
+            "charmander",
+            "squirtle"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "ivysaur",
+            "charmeleon",
+            "wartortle"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "venusaur",
+            "charizard",
+            "blastoise"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Mixed Starter Male Grunt lists slot 1: bulbasaur/charmander/squirtle; slot 2: ivysaur/charmeleon/wartortle; slot 3: venusaur/charizard/blastoise."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "grunt-winning-female-2026-06-25",
+      "trainerName": "Winning Female Grunt",
+      "trainerClass": "grunt",
+      "quote": "Winning is for winners.",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "snorlax",
+            "lapras"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "poliwrath",
+            "gardevoir",
+            "snorlax"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "gyarados",
+            "dragonite",
+            "snorlax"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Winning Female Grunt lists slot 1: snorlax/lapras; slot 2: poliwrath/gardevoir/snorlax; slot 3: gyarados/dragonite/snorlax."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
+    },
+    {
+      "id": "decoy-female-2026-06-25",
+      "trainerName": "Decoy Female Grunt",
+      "trainerClass": "decoy",
+      "quote": "Fooled ya, twerp.",
+      "effectiveDate": "2026-06-25",
+      "sourceAgreement": "single-source",
+      "slots": [
+        {
+          "slot": 1,
+          "pokemonIds": [
+            "bellsprout"
+          ]
+        },
+        {
+          "slot": 2,
+          "pokemonIds": [
+            "raticate",
+            "weepinbell"
+          ]
+        },
+        {
+          "slot": 3,
+          "pokemonIds": [
+            "raticate",
+            "snorlax"
+          ]
+        }
+      ],
+      "provenance": [
+        {
+          "sourceName": "Leek Duck Rocket Lineups",
+          "sourceUrl": "https://leekduck.com/rocket-lineups/",
+          "retrievedAt": "2026-08-02T02:58:04.632Z",
+          "sourceVersion": "Updated on June 25, 2026",
+          "parserVersion": "manual-leekduck-lineup-normalizer-0.1.0",
+          "license": "Attribution status not established; factual lineup snapshot with source citation.",
+          "category": "sourced",
+          "notes": "Decoy Female Grunt lists slot 1: bellsprout; slot 2: raticate/weepinbell; slot 3: raticate/snorlax."
+        }
+      ],
+      "notes": "Imported from the current Leek Duck lineup table. Needs independent source reconciliation before being treated as verified agreement."
     }
   ]
 }

@@ -28,7 +28,7 @@ export function DataSelect({
       <select
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        className="h-9 min-w-0 truncate rounded-md border border-[rgb(var(--border))] bg-[rgb(var(--panel))] px-2 text-xs text-[rgb(var(--foreground))]"
+        className="h-9 min-w-0 truncate rounded-md border border-[rgb(var(--border))] bg-[rgb(var(--panel))] py-0 pl-2 pr-10 text-xs text-[rgb(var(--foreground))]"
         style={
           selectedColor
             ? {

@@ -40,8 +40,16 @@ describe("checked-in data snapshots", () => {
   it("keeps Rocket lineups provenance-visible and duplicate-free", () => {
     const data = loadApplicationData();
     const ids = data.rocket.lineups.map((lineup) => lineup.id);
+    const pokemonIds = new Set(
+      [...data.pokemon.candidates, ...data.pokemon.rocketOpponents].map(
+        (pokemon) => pokemon.id,
+      ),
+    );
     expect(new Set(ids).size).toBe(ids.length);
-    expect(data.rocket.lineups.length).toBeGreaterThan(0);
+    expect(data.rocket.lineups.length).toBeGreaterThanOrEqual(26);
+    expect(data.rocket.lineups.some((lineup) => lineup.id.includes("decoy"))).toBe(
+      true,
+    );
     data.rocket.lineups.forEach((lineup) => {
       expect(lineup.provenance.length).toBeGreaterThan(0);
       expect([
@@ -53,6 +61,11 @@ describe("checked-in data snapshots", () => {
       if (lineup.sourceAgreement === "disputed") {
         expect(lineup.notes).toMatch(/disputed|disagree/i);
       }
+      lineup.slots.forEach((slot) => {
+        slot.pokemonIds.forEach((pokemonId) => {
+          expect(pokemonIds.has(pokemonId)).toBe(true);
+        });
+      });
     });
   });
 });

@@ -9,7 +9,10 @@ import type { RocketLineup } from "../../data/schemas/rocket";
 import type { PokemonBuild } from "../pokemon/types";
 import { calculateEffectiveStats } from "../stats/effectiveStats";
 import { stabMultiplier, typeEffectiveness } from "../types/effectiveness";
+import { calculateRocketEffectiveStats } from "./rocketStats";
 import type { BattleResult, BattleStrategy } from "./types";
+
+const TRAINER_BATTLE_DAMAGE_MULTIPLIER = 1.3;
 
 const knownRocketOpponentTypes: Record<string, PokemonType[]> = {
   alakazam: ["psychic"],
@@ -169,6 +172,11 @@ function selectChargedMove(
   build: PokemonBuild,
   energy: number,
   strategy: BattleStrategy,
+  context?: {
+    opponent: ExperimentalRocketOpponent;
+    opponentHp: number;
+    remainingOpponentShields: number;
+  },
 ): ChargedMove | undefined {
   const available = build.chargedMoves.filter(
     (move) => move.energyCost <= energy,
@@ -177,21 +185,134 @@ function selectChargedMove(
     return undefined;
   }
 
+  if (context) {
+    return selectMatchupChargedMove(build, energy, strategy, context);
+  }
+
   if (
     strategy === "fastest-expected-knockout" ||
     strategy === "minimal-interaction"
   ) {
-    return available.sort(
+    return [...available].sort(
       (a, b) => adjustedPower(build, b) - adjustedPower(build, a),
     )[0];
   }
 
-  return available.sort(
+  return [...available].sort(
     (a, b) =>
       a.energyCost - b.energyCost ||
       adjustedPower(build, b) / b.energyCost -
         adjustedPower(build, a) / a.energyCost,
   )[0];
+}
+
+function selectMatchupChargedMove(
+  build: PokemonBuild,
+  energy: number,
+  strategy: BattleStrategy,
+  {
+    opponent,
+    opponentHp,
+    remainingOpponentShields,
+  }: {
+    opponent: ExperimentalRocketOpponent;
+    opponentHp: number;
+    remainingOpponentShields: number;
+  },
+): ChargedMove | undefined {
+  const available = build.chargedMoves.filter(
+    (move) => move.energyCost <= energy,
+  );
+  if (available.length === 0) {
+    return undefined;
+  }
+
+  const fastDamage = playerMoveDamageDetails(
+    build,
+    build.fastMove,
+    opponent,
+  ).totalDamage;
+  if (remainingOpponentShields === 0 && fastDamage >= opponentHp) {
+    return undefined;
+  }
+
+  if (remainingOpponentShields > 0) {
+    return [...available].sort(
+      (a, b) =>
+        a.energyCost - b.energyCost ||
+        matchupDamage(build, b, opponent) - matchupDamage(build, a, opponent),
+    )[0];
+  }
+
+  const knockoutMoves = available.filter(
+    (move) => matchupDamage(build, move, opponent) >= opponentHp,
+  );
+  if (knockoutMoves.length > 0) {
+    return knockoutMoves.sort(
+      (a, b) =>
+        a.energyCost - b.energyCost ||
+        matchupDamage(build, a, opponent) - matchupDamage(build, b, opponent),
+    )[0];
+  }
+
+  if (strategy === "charge-asap") {
+    return [...available].sort(
+      (a, b) =>
+        a.energyCost - b.energyCost ||
+        matchupDamage(build, b, opponent) / b.energyCost -
+          matchupDamage(build, a, opponent) / a.energyCost,
+    )[0];
+  }
+
+  if (strategy === "shield-breaker") {
+    return [...available].sort(
+      (a, b) =>
+        matchupDamage(build, b, opponent) / b.energyCost -
+          matchupDamage(build, a, opponent) / a.energyCost ||
+        a.energyCost - b.energyCost,
+    )[0];
+  }
+
+  const allMovesByExpectedKoPressure = [...build.chargedMoves].sort(
+    (a, b) =>
+      chargedMovePressure(build, b, opponent, energy) -
+        chargedMovePressure(build, a, opponent, energy) ||
+      a.energyCost - b.energyCost,
+  );
+  const bestMove = allMovesByExpectedKoPressure[0];
+  if (bestMove && bestMove.energyCost <= energy) {
+    return bestMove;
+  }
+
+  if (strategy === "preserve-lead") {
+    return [...available].sort(
+      (a, b) =>
+        matchupDamage(build, b, opponent) - matchupDamage(build, a, opponent) ||
+        a.energyCost - b.energyCost,
+    )[0];
+  }
+
+  return undefined;
+}
+
+function chargedMovePressure(
+  build: PokemonBuild,
+  move: ChargedMove,
+  opponent: ExperimentalRocketOpponent,
+  currentEnergy: number,
+) {
+  const missingEnergy = Math.max(0, move.energyCost - currentEnergy);
+  const fastMovesNeeded = Math.ceil(missingEnergy / build.fastMove.energyGain);
+  const turnsUntilMove = fastMovesNeeded * build.fastMove.turns;
+  return matchupDamage(build, move, opponent) / Math.max(1, turnsUntilMove + 1);
+}
+
+function matchupDamage(
+  build: PokemonBuild,
+  move: FastMove | ChargedMove,
+  opponent: ExperimentalRocketOpponent,
+) {
+  return playerMoveDamageDetails(build, move, opponent).totalDamage;
 }
 
 function adjustedPower(build: PokemonBuild, move: ChargedMove) {
@@ -222,6 +343,7 @@ export function simulateRocketLineupExperimental({
     mechanics,
     rocketOpponents,
     moves,
+    lead.level,
   );
   const team = [lead, backup];
   let activeIndex = 0;
@@ -260,10 +382,7 @@ export function simulateRocketLineupExperimental({
   while (turn < maxTurns && currentOpponent && activeBuild) {
     const actionStartTurn = turn;
     const rocketWillAttack = actionStartTurn >= rocketPausedUntilTurn;
-    const opponentFastMove = worstOpponentFastMove(
-      currentOpponent,
-      activeBuild,
-    );
+    const opponentFastMove = currentOpponent.fastMove;
     const playerFastDetails = playerMoveDamageDetails(
       activeBuild,
       activeBuild.fastMove,
@@ -350,10 +469,7 @@ export function simulateRocketLineupExperimental({
     }
 
     if (rocketWillAttack && turn >= nextRocketChargedTurn) {
-      const opponentChargedMove = worstOpponentChargedMove(
-        currentOpponent,
-        activeBuild,
-      );
+      const opponentChargedMove = currentOpponent.chargedMove;
       const opponentChargedDetails = opponentChargedMove
         ? opponentMoveDamageDetails(
             currentOpponent,
@@ -408,7 +524,11 @@ export function simulateRocketLineupExperimental({
       }
     }
 
-    const chargedMove = selectChargedMove(activeBuild, energy, strategy);
+    const chargedMove = selectChargedMove(activeBuild, energy, strategy, {
+      opponent: currentOpponent,
+      opponentHp,
+      remainingOpponentShields: config.remainingShields,
+    });
     if (chargedMove) {
       energy -= chargedMove.energyCost;
       chargedAttacksUsed += 1;
@@ -571,7 +691,7 @@ export function simulateRocketLineupExperimental({
       outcome,
       totalTurns: turn,
       wallClockSeconds: turn * 0.5,
-      pokemonUsed: activeIndex + 1,
+      pokemonUsed: Math.min(team.length, activeIndex + 1),
       pokemonFainted,
       shieldsUsed: shieldsUsed + playerShieldsUsed,
       chargedAttacksUsed,
@@ -581,11 +701,14 @@ export function simulateRocketLineupExperimental({
       confidence: "proxy-estimate",
       assumptionsUsed: [
         `Proxy estimate for ${lineup.trainerName}; selected first listed Pokemon in each Rocket slot.`,
-        "Outcome is not a verified Rocket win/loss. Rocket opponent HP, scaling, and incoming damage use versioned assumptions, not sourced battle stats.",
-        "Rocket opponent Charged Attack timing uses a configurable placeholder cadence; buffs, debuffs, shield AI, type-specific opponent defense, and exact scaling are not implemented.",
+        "Outcome is not a verified Rocket win/loss until simulator output is compared against recorded real battles.",
+        "Rocket opponent HP, Attack, Defense, shield counts, ordered send-ins, and NPC pause windows use source-backed mechanics.",
+        "Player Charged Attack decisions use current opponent HP, type effectiveness, and remaining Rocket shields, but exact Rocket shield AI is still unverified.",
+        "Rocket move pools are sourced, but this deterministic branch selects the first available Rocket fast move and first available Rocket charged move instead of modeling random move assignment.",
+        "Rocket opponent Charged Attack timing uses a configurable placeholder cadence; buffs, debuffs, random move assignment probabilities, and live battle validation are not implemented.",
         `Third slot unavailable; strategy=${strategy}.`,
       ],
-      simulationVersion: "m2-experimental-rocket-0.1.0",
+      simulationVersion: "m2-experimental-rocket-0.3.0",
       events,
     };
   }
@@ -607,6 +730,7 @@ function experimentalRocketConfig(
   mechanics: MechanicsSnapshot,
   rocketOpponents: PokemonSpecies[],
   moves: MovesSnapshot | undefined,
+  trainerLevel: number,
 ) {
   const value = (key: string, fallback: number) =>
     mechanics.values.find((item) => item.key === key)?.value ?? fallback;
@@ -653,31 +777,50 @@ function experimentalRocketConfig(
     pauseAfterChargedTurns: Math.round(
       value("rocket_pause_after_charged_attack", 0) / 0.5,
     ),
-    pauseAfterSwitchTurns: value("rocket_pause_after_player_switch", 1.5),
+    pauseAfterSwitchTurns: value("rocket_pause_after_player_switch", 4),
     playerShields: Math.round(value("player_shields", 2)),
     remainingShields: Math.round(
       value(shieldKey, classKey === "grunt" ? 0 : 2),
     ),
-    opponents: lineup.slots.map((slot) => ({
-      id: slot.pokemonIds[0],
-      name:
-        opponentById.get(slot.pokemonIds[0])?.name ??
-        formatPokemonId(slot.pokemonIds[0]),
-      species: opponentById.get(slot.pokemonIds[0]),
-      types: opponentById.get(slot.pokemonIds[0])?.types ??
-        knownRocketOpponentTypes[slot.pokemonIds[0]] ?? ["normal"],
-      fastMoves:
-        opponentById
-          .get(slot.pokemonIds[0])
-          ?.fastMoves.map((id) => fastMoveById.get(id))
-          .filter((move): move is FastMove => Boolean(move)) ?? [],
-      chargedMoves:
-        opponentById
-          .get(slot.pokemonIds[0])
-          ?.chargedMoves.map((id) => chargedMoveById.get(id))
-          .filter((move): move is ChargedMove => Boolean(move)) ?? [],
-      hp: value(`rocket_opponent_hp_slot_${slot.slot}`, 100 + slot.slot * 25),
-    })),
+    opponents: lineup.slots.map((slot) => {
+      const species = opponentById.get(slot.pokemonIds[0]);
+      const stats = species
+        ? calculateRocketEffectiveStats({
+            species,
+            trainerLevel,
+            trainerClass: lineup.trainerClass,
+          })
+        : undefined;
+
+      return {
+        id: slot.pokemonIds[0],
+        name: species?.name ?? formatPokemonId(slot.pokemonIds[0]),
+        species,
+        types:
+          species?.types ??
+          knownRocketOpponentTypes[slot.pokemonIds[0]] ?? ["normal"],
+        fastMoves:
+          species?.fastMoves
+            .map((id) => fastMoveById.get(id))
+            .filter((move): move is FastMove => Boolean(move)) ?? [],
+        chargedMoves:
+          species?.chargedMoves
+            .map((id) => chargedMoveById.get(id))
+            .filter((move): move is ChargedMove => Boolean(move)) ?? [],
+        fastMove:
+          species?.fastMoves
+            .map((id) => fastMoveById.get(id))
+            .find((move): move is FastMove => Boolean(move)),
+        chargedMove:
+          species?.chargedMoves
+            .map((id) => chargedMoveById.get(id))
+            .find((move): move is ChargedMove => Boolean(move)),
+        stats,
+        hp:
+          stats?.hp ??
+          value(`rocket_opponent_hp_slot_${slot.slot}`, 100 + slot.slot * 25),
+      };
+    }),
   };
 }
 
@@ -690,11 +833,32 @@ function playerMoveDamageDetails(
   move: FastMove | ChargedMove,
   opponent: ExperimentalRocketOpponent,
 ) {
-  const baseDamage = move.power;
+  const attackerAttack = calculateEffectiveStats(
+    build.species,
+    build.level,
+  ).attack;
+  const defenderDefense = opponent.stats?.defense ?? attackerAttack;
   const stab = stabMultiplier(move.type, build.species.types);
   const type = typeEffectiveness(move.type, opponent.types);
+  const baseDamage =
+    Math.floor(
+      0.5 *
+        move.power *
+        (attackerAttack / defenderDefense) *
+        TRAINER_BATTLE_DAMAGE_MULTIPLIER,
+    ) + 1;
   const afterStab = baseDamage * stab;
-  const totalDamage = Math.max(1, afterStab * type);
+  const totalDamage = Math.max(
+    1,
+    Math.floor(
+      0.5 *
+        move.power *
+        (attackerAttack / defenderDefense) *
+        TRAINER_BATTLE_DAMAGE_MULTIPLIER *
+        stab *
+        type,
+    ) + 1,
+  );
 
   return {
     name: move.name,
@@ -707,36 +871,12 @@ function playerMoveDamageDetails(
   };
 }
 
-function worstOpponentFastMove(
-  opponent: ExperimentalRocketOpponent,
-  defender: PokemonBuild,
-) {
-  return opponent.fastMoves.sort(
-    (a, b) =>
-      opponentMoveDamageDetails(opponent, b, defender).totalDamage / b.turns -
-      opponentMoveDamageDetails(opponent, a, defender).totalDamage / a.turns,
-  )[0];
-}
-
-function worstOpponentChargedMove(
-  opponent: ExperimentalRocketOpponent,
-  defender: PokemonBuild,
-) {
-  return opponent.chargedMoves.sort(
-    (a, b) =>
-      opponentMoveDamageDetails(opponent, b, defender).totalDamage -
-      opponentMoveDamageDetails(opponent, a, defender).totalDamage,
-  )[0];
-}
-
 function opponentMoveDamageDetails(
   opponent: ExperimentalRocketOpponent,
   move: FastMove | ChargedMove,
   defender: PokemonBuild,
 ) {
-  const attackerAttack = opponent.species
-    ? calculateEffectiveStats(opponent.species, defender.level).attack
-    : defender.level;
+  const attackerAttack = opponent.stats?.attack ?? defender.level;
   const defenderDefense = calculateEffectiveStats(
     defender.species,
     defender.level,
@@ -744,12 +884,22 @@ function opponentMoveDamageDetails(
   const stab = stabMultiplier(move.type, opponent.types);
   const type = typeEffectiveness(move.type, defender.species.types);
   const baseDamage =
-    Math.floor(0.5 * move.power * (attackerAttack / defenderDefense)) + 1;
+    Math.floor(
+      0.5 *
+        move.power *
+        (attackerAttack / defenderDefense) *
+        TRAINER_BATTLE_DAMAGE_MULTIPLIER,
+    ) + 1;
   const afterStab = baseDamage * stab;
   const totalDamage = Math.max(
     1,
-    Math.floor(
-      0.5 * move.power * (attackerAttack / defenderDefense) * stab * type,
+      Math.floor(
+      0.5 *
+        move.power *
+        (attackerAttack / defenderDefense) *
+        TRAINER_BATTLE_DAMAGE_MULTIPLIER *
+        stab *
+        type,
     ) + 1,
   );
 

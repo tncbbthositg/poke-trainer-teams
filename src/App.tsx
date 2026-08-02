@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useMemo, useState } from "react";
+import { Suspense, lazy, useEffect, useState } from "react";
 import {
   Activity,
   BarChart3,
@@ -11,10 +11,17 @@ import {
   Table2,
   Users,
 } from "lucide-react";
-import { Overview } from "./features/overview/Overview";
-import { loadApplicationData } from "./data/loaders";
+import {
+  type ApplicationData,
+  loadApplicationDataAsync,
+} from "./data/loadApplicationDataAsync";
 import { cn } from "./lib/utils";
 
+const Overview = lazy(() =>
+  import("./features/overview/Overview").then((module) => ({
+    default: module.Overview,
+  })),
+);
 const PokemonExplorer = lazy(() =>
   import("./features/pokemon-explorer/PokemonExplorer").then((module) => ({
     default: module.PokemonExplorer,
@@ -97,8 +104,8 @@ function useHashView() {
 }
 
 export default function App() {
-  const data = useMemo(() => loadApplicationData(), []);
   const activeView = useHashView();
+  const dataState = useApplicationData();
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => readThemeMode());
   const [systemDark, setSystemDark] = useState(
     () => window.matchMedia("(prefers-color-scheme: dark)").matches,
@@ -165,22 +172,87 @@ export default function App() {
           </nav>
         </header>
         <main className="mx-auto max-w-7xl px-3 py-4 sm:px-4">
-          {activeView === "overview" && <Overview data={data} />}
-          <Suspense
-            fallback={
-              <div className="rounded-md border border-[rgb(var(--border))] bg-[rgb(var(--panel))] p-4 text-sm text-[rgb(var(--muted-foreground))]">
-                Loading view...
-              </div>
-            }
-          >
-            {activeView === "pokemon" && <PokemonExplorer data={data} />}
-            {activeView === "movesets" && <MovesetComparator data={data} />}
-            {activeView === "pairs" && <PairBuilder data={data} />}
-            {activeView === "lineups" && <LineupMatrix data={data} />}
-            {activeView === "methodology" && <Methodology data={data} />}
-          </Suspense>
+          <AppView activeView={activeView} dataState={dataState} />
         </main>
       </div>
+    </div>
+  );
+}
+
+type DataState =
+  | { status: "loading" }
+  | { status: "loaded"; data: ApplicationData }
+  | { status: "error"; message: string };
+
+function useApplicationData(): DataState {
+  const [dataState, setDataState] = useState<DataState>({ status: "loading" });
+
+  useEffect(() => {
+    let active = true;
+
+    loadApplicationDataAsync()
+      .then((data) => {
+        if (active) {
+          setDataState({ status: "loaded", data });
+        }
+      })
+      .catch((error: unknown) => {
+        if (active) {
+          setDataState({
+            status: "error",
+            message: error instanceof Error ? error.message : String(error),
+          });
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  return dataState;
+}
+
+function AppView({
+  activeView,
+  dataState,
+}: {
+  activeView: ViewId;
+  dataState: DataState;
+}) {
+  if (dataState.status === "loading") {
+    return <LoadingPanel label="Loading data..." />;
+  }
+
+  if (dataState.status === "error") {
+    return (
+      <div
+        role="alert"
+        className="rounded-md border border-[rgb(var(--danger)/0.5)] bg-[rgb(var(--danger)/0.08)] p-4 text-sm text-[rgb(var(--foreground))]"
+      >
+        Could not load application data: {dataState.message}
+      </div>
+    );
+  }
+
+  const { data } = dataState;
+
+  return (
+    <Suspense fallback={<LoadingPanel label="Loading view..." />}>
+      {activeView === "overview" && <Overview data={data} />}
+      {activeView === "pokemon" && <PokemonExplorer data={data} />}
+      {activeView === "movesets" && <MovesetComparator data={data} />}
+      {activeView === "pairs" && <PairBuilder data={data} />}
+      {activeView === "lineups" && <LineupMatrix data={data} />}
+      {activeView === "methodology" && <Methodology data={data} />}
+    </Suspense>
+  );
+}
+
+function LoadingPanel({ label }: { label: string }) {
+  return (
+    <div className="rounded-md border border-[rgb(var(--border))] bg-[rgb(var(--panel))] p-4 text-sm text-[rgb(var(--muted-foreground))]">
+      {label}
     </div>
   );
 }

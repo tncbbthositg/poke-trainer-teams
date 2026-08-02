@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "generatedAt": "2026-07-31T16:00:00.000Z",
-  "simulationVersion": "m1-interface-only",
+  "generatedAt": "2026-08-02T00:00:00.000Z",
+  "simulationVersion": "m2-experimental-rocket-0.3.0",
   "values": [
     {
       "key": "trainer_level_demo_default",
@@ -22,18 +22,18 @@
     {
       "key": "rocket_pause_after_charged_attack",
       "label": "Rocket pause after player Charged Attack",
-      "value": 1.5,
+      "value": 2,
       "unit": "seconds",
-      "category": "configurable-assumption",
-      "note": "Experimental simulator default. Modeled as a 3-turn Rocket stun lock after player Charged Attacks; duration is not yet verified and must remain visible as an assumption."
+      "category": "sourced",
+      "note": "NPC battles are documented as pausing for 2 seconds, or 4 turns, after either side uses a Charged Attack."
     },
     {
       "key": "rocket_pause_after_player_switch",
       "label": "Rocket pause after player switch",
-      "value": 1.5,
+      "value": 4,
       "unit": "turns",
-      "category": "configurable-assumption",
-      "note": "Experimental simulator default. Modeled as a 1.5-turn Rocket pause after the player switches Pokemon."
+      "category": "sourced",
+      "note": "NPC battles are documented as pausing for 2 seconds, or 4 turns, after a switch-in except the initial send-in."
     },
     {
       "key": "charged_attack_wall_clock",
@@ -52,6 +52,70 @@
       "note": "Experimental simulator default. Charged Attacks register as a 0.5-turn span on the battle-turn timeline, while real animation takes longer."
     },
     {
+      "key": "trainer_battle_damage_multiplier",
+      "label": "Trainer Battle damage multiplier",
+      "value": 1.3,
+      "unit": "multiplier",
+      "category": "sourced",
+      "note": "Trainer Battles apply a 30% attack damage boost."
+    },
+    {
+      "key": "rocket_packet_capture_cpm",
+      "label": "Rocket packet-capture CP multiplier",
+      "value": 0.85374104,
+      "unit": "multiplier",
+      "category": "sourced",
+      "note": "Pokebattler Rocket CP research reports this multiplier from packet-capture examples and applies it to the Rocket difficulty multiplier table."
+    },
+    {
+      "key": "rocket_attack_stat_multiplier",
+      "label": "Rocket attack stat multiplier",
+      "value": 2,
+      "unit": "multiplier",
+      "category": "sourced",
+      "note": "Rocket Shadow Pokemon attack uses 2 * (base attack + Rocket attack IV) * rCPM * rank multiplier."
+    },
+    {
+      "key": "rocket_defense_stat_multiplier",
+      "label": "Rocket defense stat multiplier",
+      "value": 0.8,
+      "unit": "multiplier",
+      "category": "sourced",
+      "note": "Rocket Shadow Pokemon defense uses 0.8 * (base defense + 15) * rCPM * rank multiplier."
+    },
+    {
+      "key": "rocket_stamina_stat_multiplier",
+      "label": "Rocket stamina stat multiplier",
+      "value": 1.1,
+      "unit": "multiplier",
+      "category": "sourced",
+      "note": "Rocket Shadow Pokemon stamina uses 1.1 * (base stamina + 9) * rCPM * rank multiplier, with battle HP rounded down."
+    },
+    {
+      "key": "rocket_grunt_rank_multiplier",
+      "label": "Rocket Grunt rank multiplier",
+      "value": 1,
+      "unit": "multiplier",
+      "category": "sourced",
+      "note": "Rocket CP research and Bulbapedia list Grunts, Jessie, and James at rank multiplier 1."
+    },
+    {
+      "key": "rocket_leader_rank_multiplier",
+      "label": "Rocket Leader rank multiplier",
+      "value": 1.05,
+      "unit": "multiplier",
+      "category": "sourced",
+      "note": "Rocket CP research and Bulbapedia list Team GO Rocket Leaders at rank multiplier 1.05."
+    },
+    {
+      "key": "rocket_giovanni_rank_multiplier",
+      "label": "Giovanni rank multiplier",
+      "value": 1.15,
+      "unit": "multiplier",
+      "category": "sourced",
+      "note": "Rocket CP research and Bulbapedia list Giovanni at rank multiplier 1.15."
+    },
+    {
       "key": "rocket_opponent_charged_attack_interval",
       "label": "Rocket opponent Charged Attack interval",
       "value": 18,
@@ -64,40 +128,40 @@
       "label": "Rocket opponent Charged Attack damage",
       "value": 35,
       "unit": "hp",
-      "category": "configurable-assumption",
-      "note": "Experimental simulator default. Damage after player shields are exhausted is a placeholder until Rocket charged moves and scaling are implemented."
+      "category": "experimental",
+      "note": "Fallback damage when a Rocket charged move is unavailable. Sourced Rocket charged moves use the Trainer Battle damage formula."
     },
     {
       "key": "player_shields",
       "label": "Player shields",
       "value": 2,
       "unit": "shields",
-      "category": "configurable-assumption",
-      "note": "Experimental simulator default. Modeled naively as shielding the first two opponent Charged Attacks."
+      "category": "sourced",
+      "note": "Trainer Battles use two player Protect Shields; the simulator currently shields the first two opponent Charged Attacks."
     },
     {
       "key": "rocket_grunt_shields",
       "label": "Rocket Grunt shields",
       "value": 0,
       "unit": "shields",
-      "category": "configurable-assumption",
-      "note": "Experimental simulator default. Grunt shield behavior is treated as configurable until validated."
+      "category": "sourced",
+      "note": "Team GO Rocket Grunts are documented as never using Protect Shields."
     },
     {
       "key": "rocket_leader_shields",
       "label": "Rocket Leader shields",
       "value": 2,
       "unit": "shields",
-      "category": "configurable-assumption",
-      "note": "Experimental simulator default. Leaders are modeled as shielding the first available player Charged Attacks."
+      "category": "sourced",
+      "note": "Team GO Rocket Leaders are documented as always shielding the player's first two Charged Attacks."
     },
     {
       "key": "rocket_giovanni_shields",
       "label": "Giovanni shields",
       "value": 2,
       "unit": "shields",
-      "category": "configurable-assumption",
-      "note": "Experimental simulator default. Giovanni is modeled as shielding the first available player Charged Attacks."
+      "category": "sourced",
+      "note": "Giovanni is documented as always shielding the player's first two Charged Attacks."
     },
     {
       "key": "rocket_opponent_hp_slot_1",
@@ -105,7 +169,7 @@
       "value": 115,
       "unit": "proxy hp",
       "category": "experimental",
-      "note": "Temporary proxy HP for deterministic simulation before exact Rocket scaling and individual opponent stats are implemented."
+      "note": "Fallback proxy HP only when a Rocket species is missing from normalized PvPoke data; sourced Rocket stats are used when species data exists."
     },
     {
       "key": "rocket_opponent_hp_slot_2",
@@ -113,7 +177,7 @@
       "value": 140,
       "unit": "proxy hp",
       "category": "experimental",
-      "note": "Temporary proxy HP for deterministic simulation before exact Rocket scaling and individual opponent stats are implemented."
+      "note": "Fallback proxy HP only when a Rocket species is missing from normalized PvPoke data; sourced Rocket stats are used when species data exists."
     },
     {
       "key": "rocket_opponent_hp_slot_3",
@@ -121,7 +185,7 @@
       "value": 170,
       "unit": "proxy hp",
       "category": "experimental",
-      "note": "Temporary proxy HP for deterministic simulation before exact Rocket scaling and individual opponent stats are implemented."
+      "note": "Fallback proxy HP only when a Rocket species is missing from normalized PvPoke data; sourced Rocket stats are used when species data exists."
     },
     {
       "key": "rocket_incoming_damage_per_turn_grunt",

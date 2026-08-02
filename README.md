@@ -74,14 +74,21 @@ snapshot edits. The app does not scrape third-party sites at runtime.
   cross-checking and is not scraped by the deployed app.
 - [Leek Duck Rocket Lineups](https://leekduck.com/rocket-lineups/): primary
   practical Rocket lineup snapshot source for the checked-in Milestone 1
-  lineups. Attribution status is not established; records are manually reviewed
-  factual lineup snapshots.
+  lineups. Attribution status is not established; records are manually
+  normalized factual lineup snapshots. `yarn data:update:rocket` checks the
+  Leek Duck source version before regenerating the snapshot.
 - [Pokemon GO Hub Rocket Guide](https://pokemongohub.net/post/guide/team-go-rocket-battle-guide/):
   secondary manual lineup cross-check source. Disagreements are marked disputed
   or unverified instead of silently resolved.
 - Niantic Help Center: general Team GO Rocket terminology and game-flow
   reference. It is not treated as a complete lineup, formula, or battle
   mechanics source.
+- [Bulbapedia Trainer Battle (GO)](https://bulbapedia.bulbagarden.net/wiki/Trainer_Battle_%28GO%29)
+  and Team GO Rocket pages: public references for Trainer Battle damage rules,
+  NPC send order, Protect Shield behavior, and pause windows.
+- [Pokebattler Rocket CP Formula research](https://articles.pokebattler.com/2021/06/21/cracking-the-rocket-cp-formula-2021-edition/):
+  public research source for Team GO Rocket stat scaling, rCPM values, and
+  Grunt/Leader/Giovanni rank multipliers.
 - PokeMiners: planned lower-level Game Master verification source. The
   verification adapter is scaffolded, but PokeMiners data is not a runtime
   browser dependency.
@@ -94,8 +101,11 @@ Duck, Pokemon GO Hub, or PokeMiners.
 - Verified Rocket simulation and universal pair rankings are not implemented;
   Pair Builder currently exposes an experimental proxy simulator only.
 - Rocket lineups are a manually reviewable scaffold and need source
-  reconciliation before ranking.
-- Rocket scaling, pauses, shield AI, and wall-clock timings are unresolved.
+  reconciliation before ranking. Current Grunt archetypes are imported from
+  Leek Duck as single-source records unless independently cross-checked.
+- Rocket opponent stats, shield counts, ordered send-ins, and NPC pause windows
+  are source-backed. Random move assignment, charged move timing, buffs/debuffs,
+  wall-clock timings, and real-battle win/loss validation remain unresolved.
 - The candidate pool is curated for practical Rocket options, not complete
   Pokedex coverage.
 - Morpeko uses PvPoke's Full Belly form in the candidate snapshot and is marked
@@ -115,9 +125,11 @@ changes.
 
 ## Updating Rocket Lineups
 
-Edit `public/data/rocket-lineups.json` with source citations, effective date,
-and source agreement status. Mark disagreements as `disputed` or `unverified`.
-Run `yarn data:validate`.
+Run `yarn data:update:rocket` to refresh the normalized Leek Duck snapshot. If
+Leek Duck has changed its page version, the script fails and the hardcoded
+normalization table in `scripts/data/fetch-rocket-lineups.ts` must be reviewed
+before regenerating. Mark disagreements as `disputed` or `unverified`, then run
+`yarn data:sync` and `yarn data:validate`.
 
 ## Adding Mechanics Assumptions
 
