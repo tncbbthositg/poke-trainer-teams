@@ -52,7 +52,7 @@ const views: Array<{
   path: string;
   icon: typeof Activity;
 }> = [
-  { id: "overview", label: "Overview", path: "/", icon: BarChart3 },
+  { id: "overview", label: "Overview", path: "/overview", icon: BarChart3 },
   { id: "pokemon", label: "Pokemon", path: "/pokemon", icon: ListFilter },
   { id: "movesets", label: "Movesets", path: "/movesets", icon: GitCompare },
   { id: "pairs", label: "Battle Sim", path: "/pairs", icon: Users },
@@ -76,7 +76,11 @@ function getHashPath() {
 }
 
 function getCurrentView() {
-  return viewByPath.get(getHashPath())?.id ?? "overview";
+  const path = getHashPath();
+  if (path === "/") {
+    return "pokemon";
+  }
+  return viewByPath.get(path)?.id ?? "pokemon";
 }
 
 function useHashView() {

@@ -1,15 +1,17 @@
 import { expect, test } from "@playwright/test";
 
-test("loads the data explorer shell", async ({ page }) => {
+test("loads the pokemon explorer shell by default", async ({ page }) => {
   await page.goto("/");
   await expect(
     page.getByRole("heading", { name: "Rocket Pair Lab" }),
   ).toBeVisible();
-  await page.getByRole("link", { name: "Pokemon" }).click();
   await expect(
     page.getByRole("heading", { name: "Pokemon Explorer" }),
   ).toBeVisible();
-  await expect(page).toHaveURL(/#\/pokemon$/);
+  await expect(page.getByRole("link", { name: "Pokemon" })).toHaveAttribute(
+    "aria-current",
+    "page",
+  );
   await expect(page.getByText("Kingambit")).toBeVisible();
   await expect(
     page.getByRole("checkbox", { name: "Hide scarce candy" }),
