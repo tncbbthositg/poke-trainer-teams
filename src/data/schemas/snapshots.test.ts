@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
+import battleObservationsJson from "../generated/battle-observations.json";
 import { loadApplicationData } from "../loaders";
+import { battleObservationSnapshotSchema } from "./battleObservations";
 
 describe("checked-in data snapshots", () => {
   it("resolves every candidate and legal move reference", () => {
@@ -47,9 +49,9 @@ describe("checked-in data snapshots", () => {
     );
     expect(new Set(ids).size).toBe(ids.length);
     expect(data.rocket.lineups.length).toBeGreaterThanOrEqual(26);
-    expect(data.rocket.lineups.some((lineup) => lineup.id.includes("decoy"))).toBe(
-      true,
-    );
+    expect(
+      data.rocket.lineups.some((lineup) => lineup.id.includes("decoy")),
+    ).toBe(true);
     data.rocket.lineups.forEach((lineup) => {
       expect(lineup.provenance.length).toBeGreaterThan(0);
       expect([
@@ -67,5 +69,13 @@ describe("checked-in data snapshots", () => {
         });
       });
     });
+  });
+
+  it("validates the recorded battle observation snapshot", () => {
+    const observations = battleObservationSnapshotSchema.parse(
+      battleObservationsJson,
+    );
+    expect(observations.schemaVersion).toBe("1.0.0");
+    expect(observations.observations).toEqual([]);
   });
 });

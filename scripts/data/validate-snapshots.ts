@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
+import { battleObservationSnapshotSchema } from "../../src/data/schemas/battleObservations";
 import { mechanicsSnapshotSchema } from "../../src/data/schemas/mechanics";
 import { metadataSnapshotSchema } from "../../src/data/schemas/metadata";
 import { movesSnapshotSchema } from "../../src/data/schemas/moves";
@@ -25,6 +26,9 @@ async function main() {
   );
   const rocket = rocketLineupSnapshotSchema.parse(
     await parse("public/data/rocket-lineups.json"),
+  );
+  const battleObservations = battleObservationSnapshotSchema.parse(
+    await parse("public/data/battle-observations.json"),
   );
   mechanicsSnapshotSchema.parse(await parse("public/data/mechanics.json"));
   metadataSnapshotSchema.parse(await parse("public/data/metadata.json"));
@@ -71,6 +75,49 @@ async function main() {
     );
   }
 
+  const lineupIds = new Set(rocket.lineups.map((lineup) => lineup.id));
+  for (const observation of battleObservations.observations) {
+    if (!lineupIds.has(observation.lineupId)) {
+      throw new Error(
+        `${observation.id} references unknown lineup ${observation.lineupId}`,
+      );
+    }
+    for (const pokemonId of [
+      observation.lead.speciesId,
+      observation.backup.speciesId,
+      ...observation.opponentPokemonIds,
+    ]) {
+      if (!pokemonIds.has(pokemonId)) {
+        throw new Error(
+          `${observation.id} references unknown Pokemon ${pokemonId}`,
+        );
+      }
+    }
+    for (const fastMoveId of [
+      observation.lead.fastMoveId,
+      observation.backup.fastMoveId,
+      ...observation.observedOpponentFastMoveIds,
+    ]) {
+      if (!fastIds.has(fastMoveId)) {
+        throw new Error(
+          `${observation.id} references unknown fast move ${fastMoveId}`,
+        );
+      }
+    }
+    for (const chargedMoveId of [
+      ...observation.lead.chargedMoveIds,
+      ...observation.backup.chargedMoveIds,
+      ...observation.observedOpponentChargedMoveIds,
+    ]) {
+      if (!chargedIds.has(chargedMoveId)) {
+        throw new Error(
+          `${observation.id} references unknown charged move ${chargedMoveId}`,
+        );
+      }
+    }
+  }
+
+  await assertMirroredSnapshot("battle-observations.json");
   await assertMirroredSnapshot("pokemon.json");
   await assertMirroredSnapshot("moves.json");
   await assertMirroredSnapshot("rocket-lineups.json");

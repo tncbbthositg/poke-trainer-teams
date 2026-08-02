@@ -37,13 +37,20 @@ Known calculations:
 - NPC pause windows after Charged Attacks and switch-ins are modeled as 2
   seconds, or 4 turns.
 - Rocket move pools come from normalized PvPoke data. The simulator uses the
-  first available fast move and first available charged move as a deterministic
-  branch for the source-documented random NPC move assignment.
+  first available fast move and highest-damage affordable charged move as a
+  deterministic branch for the source-documented random NPC move assignment.
+- Rocket charged attacks use sourced fast-move energy gain and charged-move
+  energy costs when moves are available. The configurable cadence is only a
+  fallback for opponents without a sourced charged move.
+- Universal proxy evaluation runs one ordered pair across every checked-in
+  Rocket lineup and reports proxy clears and failures without treating them as
+  verified rankings.
 
 Unresolved Rocket mechanics remain configurable or unverified:
 
 - Exact random Rocket move assignment probabilities.
-- Rocket charged move energy timing/cadence.
+- Exact Rocket charged move selection policy and random move assignment
+  probabilities.
 - Buffs and debuffs during battle.
 - Fast-attack cancellation and charged-attack priority edge cases.
 - Wall-clock animation timings.
