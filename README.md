@@ -98,14 +98,17 @@ Duck, Pokemon GO Hub, or PokeMiners.
 
 ## Current Limitations
 
-- Verified Rocket simulation and universal pair rankings are not implemented;
-  Pair Builder currently exposes an experimental proxy simulator only.
+- Pair Builder exposes an experimental Rocket simulator and universal proxy
+  pass/fail summary. These are not verified rankings until recorded battle
+  validation exists.
 - Rocket lineups are a manually reviewable scaffold and need source
   reconciliation before ranking. Current Grunt archetypes are imported from
   Leek Duck as single-source records unless independently cross-checked.
-- Rocket opponent stats, shield counts, ordered send-ins, and NPC pause windows
-  are source-backed. Random move assignment, charged move timing, buffs/debuffs,
-  wall-clock timings, and real-battle win/loss validation remain unresolved.
+- Rocket opponent stats, shield counts, ordered send-ins, NPC pause windows,
+  move damage, sourced charged-move energy timing, and guaranteed stage effects
+  are modeled. Random move assignment probabilities, chance-based move effects,
+  wall-clock animation timings, and real-battle win/loss validation remain
+  unresolved.
 - The candidate pool is curated for practical Rocket options, not complete
   Pokedex coverage.
 - Morpeko uses PvPoke's Full Belly form in the candidate snapshot and is marked
