@@ -1,4 +1,9 @@
-import { type CSSProperties, useMemo, useState } from "react";
+import {
+  type CSSProperties,
+  type PointerEvent,
+  useMemo,
+  useState,
+} from "react";
 import { Shield } from "lucide-react";
 import { Badge } from "../../components/atoms/Badge";
 import { MetricBar } from "../../components/atoms/MetricBar";
@@ -324,6 +329,9 @@ function BattleTimeline({
     (event) => event.actor === "rocket" && event.kind === "shield",
   );
   const hpSegments = battleHpSegments(events, maxTurn);
+  const [hoverTurn, setHoverTurn] = useState<number | undefined>();
+  const hoverState =
+    hoverTurn === undefined ? undefined : hpStateAtTurn(hpSegments, hoverTurn);
   const playerPokemonSegments = pokemonTransitionSegments(
     events,
     maxTurn,
@@ -354,6 +362,8 @@ function BattleTimeline({
       <div
         className="relative min-h-28 rounded border border-[rgb(var(--border))] bg-[rgb(var(--muted)/0.12)] px-5 py-4"
         aria-label={`Battle timeline from 0.0 seconds to ${number(maxTurn * 0.5)} seconds`}
+        onPointerMove={(event) => setHoverTurn(pointerTurn(event, maxTurn))}
+        onPointerLeave={() => setHoverTurn(undefined)}
       >
         <div className="text-[11px] font-semibold uppercase text-[rgb(var(--muted-foreground))]">
           Player
@@ -398,6 +408,60 @@ function BattleTimeline({
         />
         <div className="text-[11px] font-semibold uppercase text-[rgb(var(--muted-foreground))]">
           Opponent
+        </div>
+        {hoverTurn !== undefined && hoverState ? (
+          <TimelineHoverReadout
+            turn={hoverTurn}
+            maxTurn={maxTurn}
+            state={hoverState}
+          />
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function TimelineHoverReadout({
+  turn,
+  maxTurn,
+  state,
+}: {
+  turn: number;
+  maxTurn: number;
+  state: TimelineHoverState;
+}) {
+  const leftPercent = (turn / maxTurn) * 100;
+  const alignClass =
+    leftPercent > 74
+      ? "-translate-x-full"
+      : leftPercent < 26
+        ? "translate-x-0"
+        : "-translate-x-1/2";
+
+  return (
+    <div className="pointer-events-none absolute inset-x-5 top-4 bottom-4 z-30">
+      <div
+        className="absolute top-0 bottom-0 w-px bg-[rgb(var(--primary))] shadow-[0_0_0_1px_rgb(var(--panel)/0.9)]"
+        style={{ left: `${leftPercent}%` }}
+        aria-hidden="true"
+      />
+      <div
+        className={`absolute top-2 ${alignClass} rounded-md border border-[rgb(var(--border))] bg-[rgb(var(--panel)/0.96)] px-2.5 py-2 text-xs text-[rgb(var(--foreground))] shadow-lg`}
+        style={{ left: `${leftPercent}%` }}
+        role="status"
+        aria-live="polite"
+      >
+        <div className="font-semibold tabular-nums">
+          {number(turn * 0.5)}s · Turn {number(turn)}
+        </div>
+        <div className="mt-1 grid gap-1 tabular-nums">
+          <div>
+            Player HP: {integer(state.playerHp)} / {integer(state.playerMaxHp)}
+          </div>
+          <div>
+            Opponent HP: {integer(state.opponentHp)} /{" "}
+            {integer(state.opponentMaxHp)}
+          </div>
         </div>
       </div>
     </div>
@@ -725,14 +789,72 @@ type FastAttackSpan = {
 type BattleHpSegment = {
   startTurn: number;
   endTurn: number;
+  playerHp: number;
+  playerEndHp: number;
+  playerMaxHp: number;
   playerRatio: number;
   playerEndRatio: number;
   playerTypes: PokemonType[];
+  opponentHp: number;
+  opponentEndHp: number;
+  opponentMaxHp: number;
   opponentRatio: number;
   opponentEndRatio: number;
   opponentTypes: PokemonType[];
   interpolation: "step" | "attack";
 };
+
+type TimelineHoverState = {
+  playerHp: number;
+  playerMaxHp: number;
+  opponentHp: number;
+  opponentMaxHp: number;
+};
+
+function pointerTurn(event: PointerEvent<HTMLDivElement>, maxTurn: number) {
+  const rect = event.currentTarget.getBoundingClientRect();
+  const styles = window.getComputedStyle(event.currentTarget);
+  const leftPadding = Number.parseFloat(styles.paddingLeft) || 0;
+  const rightPadding = Number.parseFloat(styles.paddingRight) || 0;
+  const graphLeft = rect.left + leftPadding;
+  const graphWidth = Math.max(1, rect.width - leftPadding - rightPadding);
+  const ratio = clampNumber((event.clientX - graphLeft) / graphWidth, 0, 1);
+  return ratio * maxTurn;
+}
+
+function hpStateAtTurn(
+  segments: BattleHpSegment[],
+  turn: number,
+): TimelineHoverState | undefined {
+  const segment =
+    segments.find((item) => turn >= item.startTurn && turn <= item.endTurn) ??
+    segments.at(-1);
+  if (!segment) {
+    return undefined;
+  }
+  const spanTurns = Math.max(1, segment.endTurn - segment.startTurn);
+  const progress = clampNumber((turn - segment.startTurn) / spanTurns, 0, 1);
+  const attackProgress = segment.interpolation === "attack" ? progress : 0;
+
+  return {
+    playerHp: Math.round(
+      interpolateNumber(segment.playerHp, segment.playerEndHp, attackProgress),
+    ),
+    playerMaxHp: segment.playerMaxHp,
+    opponentHp: Math.round(
+      interpolateNumber(
+        segment.opponentHp,
+        segment.opponentEndHp,
+        attackProgress,
+      ),
+    ),
+    opponentMaxHp: segment.opponentMaxHp,
+  };
+}
+
+function interpolateNumber(start: number, end: number, progress: number) {
+  return start + (end - start) * progress;
+}
 
 type BattleHpSample = {
   turn: number;
@@ -901,12 +1023,18 @@ function battleHpSegments(
       {
         startTurn: sample.turn,
         endTurn: nextTurn,
+        playerHp: sample.playerHp,
+        playerEndHp: nextSample?.playerHp ?? sample.playerHp,
+        playerMaxHp: sample.playerMaxHp,
         playerRatio: hpRatio(sample.playerHp, sample.playerMaxHp),
         playerEndRatio: hpRatio(
           nextSample?.playerHp ?? sample.playerHp,
           nextSample?.playerMaxHp ?? sample.playerMaxHp,
         ),
         playerTypes: sample.playerTypes,
+        opponentHp: sample.opponentHp,
+        opponentEndHp: nextSample?.opponentHp ?? sample.opponentHp,
+        opponentMaxHp: sample.opponentMaxHp,
         opponentRatio: hpRatio(sample.opponentHp, sample.opponentMaxHp),
         opponentEndRatio: hpRatio(
           nextSample?.opponentHp ?? sample.opponentHp,
