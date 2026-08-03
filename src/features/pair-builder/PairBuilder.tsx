@@ -1082,14 +1082,10 @@ function hpAreaPath(
       const startX = xForTurn(segment.startTurn, maxTurn);
       const endX = xForTurn(segment.endTurn, maxTurn);
 
-      if (segment.interpolation === "attack") {
-        const deltaX = endX - startX;
-        commands.push(
-          `C ${startX + deltaX * 0.38} ${startY}, ${startX + deltaX * 0.62} ${endY}, ${endX} ${endY}`,
-        );
-      } else {
-        commands.push(`L ${endX} ${startY}`, `L ${endX} ${endY}`);
-      }
+      const deltaX = endX - startX;
+      commands.push(
+        `C ${startX + deltaX * 0.38} ${startY}, ${startX + deltaX * 0.62} ${endY}, ${endX} ${endY}`,
+      );
     }
   }
 
