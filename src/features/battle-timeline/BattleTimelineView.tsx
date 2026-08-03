@@ -5,10 +5,7 @@ import { DataSelect } from "../../components/molecules/DataSelect";
 import { Panel, PanelHeader } from "../../components/molecules/Panel";
 import type { ApplicationData } from "../../data/loaders";
 import { simulateRocketLineupExperimental } from "../../domain/battle/engine";
-import type {
-  BattleEvent,
-  BattleOutcome,
-} from "../../domain/battle/types";
+import type { BattleEvent, BattleOutcome } from "../../domain/battle/types";
 import type { PokemonBuild } from "../../domain/pokemon/types";
 import {
   bestMovesetForStrategy,
@@ -24,6 +21,7 @@ import {
 
 export function BattleTimelineView({ data }: { data: ApplicationData }) {
   const [trainerLevel, setTrainerLevel] = useState(50);
+  const [startWithSwap, setStartWithSwap] = useState(false);
   const [strategy, setStrategy] =
     useState<PokemonFocusStrategy>("fastest-victory");
   const [lineupId, setLineupId] = useState(data.rocket.lineups[0]?.id ?? "");
@@ -47,18 +45,14 @@ export function BattleTimelineView({ data }: { data: ApplicationData }) {
     () =>
       simulateRocketLineupExperimental({
         lead: toRecommendedBuild(data, lead.id, candidateLevel, strategy),
-        backup: toRecommendedBuild(
-          data,
-          backup.id,
-          candidateLevel,
-          strategy,
-        ),
+        backup: toRecommendedBuild(data, backup.id, candidateLevel, strategy),
         lineup,
         mechanics: data.mechanics,
         rocketOpponents: data.pokemon.rocketOpponents,
         moves: data.moves,
         strategy: battleStrategy,
         trainerLevel: boundedTrainerLevel,
+        startWithSwap,
       }),
     [
       backup.id,
@@ -68,6 +62,7 @@ export function BattleTimelineView({ data }: { data: ApplicationData }) {
       data,
       lead.id,
       lineup,
+      startWithSwap,
       strategy,
     ],
   );
@@ -166,9 +161,18 @@ export function BattleTimelineView({ data }: { data: ApplicationData }) {
           <Panel>
             <PanelHeader
               title="Team"
-              subtitle={`${pokemonFocusStrategyLabels[strategy]} · Pokemon Level ${candidateLevel} · Trainer Level ${boundedTrainerLevel}`}
+              subtitle={`${pokemonFocusStrategyLabels[strategy]} · Pokemon Level ${candidateLevel} · Trainer Level ${boundedTrainerLevel}${startWithSwap ? " · Opening swap" : ""}`}
             />
             <div className="grid gap-3 p-3">
+              <label className="inline-flex items-center gap-2 text-xs font-medium text-[rgb(var(--foreground))]">
+                <input
+                  type="checkbox"
+                  checked={startWithSwap}
+                  onChange={(event) => setStartWithSwap(event.target.checked)}
+                  className="size-4 accent-[rgb(var(--accent))]"
+                />
+                Start with swap
+              </label>
               <PokemonSummary
                 label="Lead"
                 build={toRecommendedBuild(

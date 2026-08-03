@@ -542,6 +542,75 @@ describe("battle engine interface scaffold", () => {
     expect(result.assumptionsUsed.join(" ")).toMatch(/Third slot unavailable/);
   });
 
+  it("can start with a player swap and keep the lead available", () => {
+    const data = loadApplicationData();
+    const lucario = buildFor(
+      data,
+      "lucario",
+      "COUNTER",
+      "POWER_UP_PUNCH",
+      "AURA_SPHERE",
+    );
+    const swampert = buildFor(
+      data,
+      "swampert",
+      "MUD_SHOT",
+      "HYDRO_CANNON",
+      "EARTHQUAKE",
+    );
+    const baseLineup = data.rocket.lineups.find(
+      (item) => item.id === "grunt-normal-male-2026-06-25",
+    )!;
+    const punishingMechanics = {
+      ...data.mechanics,
+      values: data.mechanics.values.map((item) => {
+        if (item.key === "rocket_opponent_hp_slot_1") {
+          return { ...item, value: 999 };
+        }
+        if (item.key === "rocket_incoming_damage_per_turn_grunt") {
+          return { ...item, value: 999 };
+        }
+        return item;
+      }),
+    };
+
+    const result = simulateRocketLineupExperimental({
+      lead: lucario,
+      backup: swampert,
+      lineup: {
+        ...baseLineup,
+        slots: [baseLineup.slots[0]],
+      },
+      mechanics: punishingMechanics,
+      rocketOpponents: [],
+      moves: data.moves,
+      strategy: "charge-asap",
+      startWithSwap: true,
+      maxTurns: 16,
+    });
+
+    const playerSwitches = result.events.filter(
+      (event) => event.actor === "player" && event.kind === "switch",
+    );
+
+    expect(result.events[0].message).toContain("Swampert enters");
+    expect(playerSwitches[0].message).toContain(
+      "Lucario enters after an opening player switch",
+    );
+    expect(
+      result.events.some((event) =>
+        event.message.includes("pauses for 4 turn(s) after the player switch"),
+      ),
+    ).toBe(true);
+    expect(
+      playerSwitches.some((event) =>
+        event.message.includes("Swampert enters as the remaining Pokemon"),
+      ),
+    ).toBe(true);
+    expect(result.pokemonUsed).toBe(2);
+    expect(result.assumptionsUsed.join(" ")).toMatch(/Opening player switch/);
+  });
+
   it("treats the pair as ordered by entering the selected lead first", () => {
     const data = loadApplicationData();
     const lucario = buildFor(

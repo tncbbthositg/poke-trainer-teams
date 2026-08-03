@@ -62,6 +62,7 @@ type SlotBuild = {
 export function PairBuilder({ data }: { data: ApplicationData }) {
   const maps = useMemo(() => moveMaps(data), [data]);
   const [trainerLevel, setTrainerLevel] = useState(50);
+  const [startWithSwap, setStartWithSwap] = useState(false);
   const [strategy, setStrategy] =
     useState<PokemonFocusStrategy>("fastest-victory");
   const [lineupId, setLineupId] = useState(data.rocket.lineups[0]?.id ?? "");
@@ -91,6 +92,7 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
         moves: data.moves,
         strategy: battleStrategy,
         trainerLevel: boundedTrainerLevel,
+        startWithSwap,
       }),
     [
       backup,
@@ -102,6 +104,7 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
       data.pokemon.rocketOpponents,
       lead,
       lineup,
+      startWithSwap,
     ],
   );
   const universalEvaluation = useMemo(
@@ -115,6 +118,7 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
         moves: data.moves,
         strategy: battleStrategy,
         trainerLevel: boundedTrainerLevel,
+        startWithSwap,
       }),
     [
       backup,
@@ -126,6 +130,7 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
       data.pokemon.rocketOpponents,
       data.rocket.lineups,
       lead,
+      startWithSwap,
     ],
   );
 
@@ -183,6 +188,7 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
             <Badge tone="info">Trainer Level {trainerLevel}</Badge>
             <Badge tone="info">Pokemon Level {candidateLevel}</Badge>
             <Badge tone="warning">{pokemonFocusStrategyLabels[strategy]}</Badge>
+            {startWithSwap ? <Badge tone="warning">Opening swap</Badge> : null}
             <Badge tone="danger">Third slot unavailable</Badge>
           </div>
         </div>
@@ -234,7 +240,18 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
           </div>
         </div>
         <div className="mt-4 border-t border-[rgb(var(--border))] pt-3">
-          <h3 className="mb-3 text-sm font-semibold">Proxy Estimate Result</h3>
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <h3 className="text-sm font-semibold">Proxy Estimate Result</h3>
+            <label className="inline-flex items-center gap-2 text-xs font-medium text-[rgb(var(--foreground))]">
+              <input
+                type="checkbox"
+                checked={startWithSwap}
+                onChange={(event) => setStartWithSwap(event.target.checked)}
+                className="size-4 accent-[rgb(var(--accent))]"
+              />
+              Start with swap
+            </label>
+          </div>
           <div className="flex flex-wrap items-center gap-2">
             <Badge tone="warning">{formatConfidence(result.confidence)}</Badge>
             <Badge tone={result.outcome === "win" ? "ok" : "danger"}>
@@ -242,6 +259,7 @@ export function PairBuilder({ data }: { data: ApplicationData }) {
             </Badge>
             <Badge tone="info">{lead.species.name} lead</Badge>
             <Badge tone="info">{backup.species.name} backup</Badge>
+            {startWithSwap ? <Badge tone="warning">Opening swap</Badge> : null}
           </div>
           <p className="mt-2 text-xs text-[rgb(var(--muted-foreground))]">
             This is not a verified Rocket result. Treat a proxy clear as a

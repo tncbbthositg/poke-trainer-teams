@@ -34,6 +34,7 @@ export function evaluateUniversalPairExperimental({
   moves,
   strategy,
   trainerLevel = lead.level,
+  startWithSwap = false,
 }: {
   lead: PokemonBuild;
   backup: PokemonBuild;
@@ -43,6 +44,7 @@ export function evaluateUniversalPairExperimental({
   moves: MovesSnapshot;
   strategy: BattleStrategy;
   trainerLevel?: number;
+  startWithSwap?: boolean;
 }): UniversalPairEvaluation {
   const lineupEvaluations = lineups.map((lineup) => ({
     lineup,
@@ -55,6 +57,7 @@ export function evaluateUniversalPairExperimental({
       moves,
       strategy,
       trainerLevel,
+      startWithSwap,
     }),
   }));
   const failingLineups = lineupEvaluations.filter(
