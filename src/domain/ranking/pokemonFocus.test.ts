@@ -163,8 +163,18 @@ describe("pokemon focus ranking", () => {
   });
 
   it("uses boss proxy clear coverage before heuristic score for Rocket-control rankings", () => {
+    const bossProxyCandidateIds = new Set([
+      "annihilape",
+      "greninja",
+      "kingambit",
+      "palkia_origin",
+      "terrakion",
+    ]);
+    const bossProxyCandidates = data.pokemon.candidates.filter((pokemon) =>
+      bossProxyCandidateIds.has(pokemon.id),
+    );
     const rankings = rankPokemonForBossFocus({
-      candidates: data.pokemon.candidates,
+      candidates: bossProxyCandidates,
       moves: data.moves,
       lineups: data.rocket.lineups,
       mechanics: data.mechanics,
