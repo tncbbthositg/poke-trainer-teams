@@ -19,6 +19,7 @@ import {
   hasRocketReliabilityWarning,
   pokemonFocusStrategyLabels,
   pokemonFocusStrategyNotes,
+  rankPokemonForBossFocus,
   rankPokemonForFocus,
   type PokemonFocusStrategy,
 } from '../../domain/ranking/pokemonFocus'
@@ -59,9 +60,16 @@ type ExplorerRow = {
   chargedTwoDpe: number
   dpt: number
   ept: number
+  fastMoveTurns: number
   firstChargeTurns: number
   repeatChargeTurns: number
   neutralOutputPerTurn: number
+  bossClears?: number
+  bossTotal?: number
+  bossTotalTurns?: number
+  bossBestPartner?: string
+  bossBestRole?: 'lead' | 'backup'
+  bossPerfectPartnerCount?: number
   scarceCandy: boolean
   rocketReliabilityWarning: boolean
   reason: string
@@ -86,7 +94,19 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
 
   const rows = useMemo<ExplorerRow[]>(
     () => {
-      const rankings = rankPokemonForFocus(data.pokemon.candidates, data.moves, strategy, 40)
+      const rankings =
+        strategy === 'fastest-victory'
+          ? rankPokemonForFocus(data.pokemon.candidates, data.moves, strategy, 40)
+          : rankPokemonForBossFocus({
+              candidates: data.pokemon.candidates,
+              moves: data.moves,
+              lineups: data.rocket.lineups,
+              mechanics: data.mechanics,
+              rocketOpponents: data.pokemon.rocketOpponents,
+              strategy,
+              level: 40,
+              trainerLevel: 40,
+            })
 
       return rankings
         .map((ranking) => {
@@ -118,9 +138,16 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
             chargedTwoDpe: chargedDpe(species.types, moveset.chargedMoves[1]),
             dpt: moveset.fastDamagePerTurn,
             ept: moveset.fastEnergyPerTurn,
+            fastMoveTurns: moveset.fastMoveTurns,
             firstChargeTurns: moveset.firstChargeTurns,
             repeatChargeTurns: moveset.repeatChargeTurns,
             neutralOutputPerTurn: moveset.neutralOutputPerTurn,
+            bossClears: ranking.bossProxy?.clears,
+            bossTotal: ranking.bossProxy?.total,
+            bossTotalTurns: ranking.bossProxy?.totalTurns,
+            bossBestPartner: ranking.bossProxy?.bestPartner.name,
+            bossBestRole: ranking.bossProxy?.bestRole,
+            bossPerfectPartnerCount: ranking.bossProxy?.perfectPartnerCount,
             scarceCandy: hasScarceCandyAccess(species),
             rocketReliabilityWarning: hasRocketReliabilityWarning(species),
             reason: ranking.reason,
@@ -190,6 +217,27 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
         ),
       },
       { accessorKey: 'rank', header: sortableHeader('Rank'), cell: (info) => integer(info.getValue<number>()) },
+      {
+        id: 'bossProxy',
+        header: sortableHeader('Boss proxy'),
+        accessorFn: (row) => row.bossClears ?? -1,
+        cell: (info) => {
+          const row = info.row.original
+
+          return row.bossClears !== undefined && row.bossTotal !== undefined ? (
+            <span className="grid gap-0.5">
+              <span className="font-semibold">
+                {integer(row.bossClears)} / {integer(row.bossTotal)}
+              </span>
+              <span className="text-xs text-[rgb(var(--muted-foreground))]">
+                {bossPartnerLabel(row)}
+              </span>
+            </span>
+          ) : (
+            <span className="text-xs text-[rgb(var(--muted-foreground))]">Heuristic</span>
+          )
+        },
+      },
       {
         accessorKey: 'name',
         header: 'Pokemon',
@@ -279,7 +327,7 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
     <Panel>
       <PanelHeader
         title="Pokemon Explorer"
-        subtitle={`Level 40, 15/15/15 heuristic focus ranking. ${pokemonFocusStrategyNotes[strategy]}`}
+        subtitle={`Level 40, 15/15/15 focus ranking. ${pokemonFocusStrategyNotes[strategy]}`}
         right={
           <div className="grid gap-2 sm:grid-cols-[190px_160px_170px]">
             <DataSelect
@@ -316,8 +364,8 @@ export function PokemonExplorer({ data }: { data: ApplicationData }) {
       <div className="border-t border-[rgb(var(--border))] px-3 py-2 text-xs text-[rgb(var(--muted-foreground))]">
         <Badge tone="warning">Heuristic</Badge>
         <span className="ml-2">
-          This ranking recommends which Pokemon and movesets to focus on before Rocket win/loss
-          simulation is available.
+          Rocket-control rankings sort by boss proxy clears first, then use the focus heuristic as
+          a tie-breaker.
         </span>
         <a
           href={selectedBattleTeamHref(selectedTeam)}
@@ -506,13 +554,23 @@ function ChargedHeader({ label }: { label: string }) {
 
 function ExpandedDetails({ row }: { row: ExplorerRow }) {
   return (
-    <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-[rgb(var(--muted-foreground))] sm:grid-cols-4 xl:grid-cols-[80px_210px_110px_110px_110px_145px_90px_minmax(260px,1fr)]">
+    <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-[rgb(var(--muted-foreground))] sm:grid-cols-4 xl:grid-cols-[80px_210px_110px_110px_110px_110px_145px_90px_minmax(260px,1fr)]">
       <Detail label="CP" value={integer(row.cp)} />
       <Detail label="Atk / Def / HP" value={`${number(row.attack)} / ${number(row.defense)} / ${integer(row.hp)}`} />
       <Detail label="Bulk proxy" value={integer(row.bulk)} />
+      <Detail label="Fast cadence" value={`${integer(row.fastMoveTurns)} turns`} />
       <Detail label="First charge" value={`${integer(row.firstChargeTurns)} turns`} />
       <Detail label="Repeat charge" value={`${integer(row.repeatChargeTurns)} turns`} />
       <Detail label="Neutral output" value={`${number(row.neutralOutputPerTurn)} per turn`} />
+      {row.bossClears !== undefined && row.bossTotal !== undefined ? (
+        <Detail
+          label="Boss proxy"
+          value={`${integer(row.bossClears)} / ${integer(row.bossTotal)} ${bossPartnerLabel(row)}`}
+        />
+      ) : null}
+      {row.bossPerfectPartnerCount !== undefined ? (
+        <Detail label="4/4 pair options" value={integer(row.bossPerfectPartnerCount)} />
+      ) : null}
       <Detail label="Confidence" value={row.confidence} />
       <Detail label="Heuristic read" value={row.reason} className="col-span-2 sm:col-span-4 xl:col-span-1" />
       {row.rocketReliabilityWarning ? (
@@ -524,6 +582,16 @@ function ExpandedDetails({ row }: { row: ExplorerRow }) {
       ) : null}
     </div>
   )
+}
+
+function bossPartnerLabel(row: ExplorerRow) {
+  if (!row.bossBestPartner || !row.bossBestRole) {
+    return 'No boss pair'
+  }
+
+  return row.bossBestRole === 'lead'
+    ? `as lead with ${row.bossBestPartner}`
+    : `as backup to ${row.bossBestPartner}`
 }
 
 function movesetHref(row: ExplorerRow, strategy: PokemonFocusStrategy) {

@@ -1,28 +1,52 @@
 import { describe, expect, it } from "vitest";
 import { loadApplicationData } from "../../data/loaders";
-import { calculateRocketEffectiveStats } from "./rocketStats";
+import { calculateRocketEffectiveStats, getRocketCpm } from "./rocketStats";
 
 describe("Rocket opponent stats", () => {
-  it("calculates sourced Rocket stats at trainer level 50 for Grunts", () => {
-    const data = loadApplicationData();
-    const teddiursa = data.pokemon.rocketOpponents.find(
-      (species) => species.id === "teddiursa",
-    );
+  it("converts Rocket CPM decimals to single-precision floats", () => {
+    expect(getRocketCpm(8)).toBeCloseTo(0.29899999499320984, 16);
+    expect(getRocketCpm(50)).toBeCloseTo(1.1109999418258667, 16);
+    expect(getRocketCpm(70)).toBeCloseTo(1.2649999856948853, 16);
+    expect(getRocketCpm(80)).toBeCloseTo(1.315000057220459, 16);
+  });
 
-    if (!teddiursa) {
-      throw new Error("Missing Teddiursa Rocket opponent fixture");
-    }
-
+  it("calculates level-80 Grunt Granbull stats and displayed CP", () => {
     const stats = calculateRocketEffectiveStats({
-      species: teddiursa,
-      trainerLevel: 50,
+      species: {
+        id: "granbull",
+        name: "Granbull",
+        dex: 210,
+        types: ["fairy"],
+        baseStats: {
+          attack: 212,
+          defense: 131,
+          stamina: 207,
+        },
+        fastMoves: [],
+        chargedMoves: [],
+        tags: [],
+        provenance: {
+          sourceName: "test",
+          sourceUrl: "https://example.com",
+          retrievedAt: "2026-08-03T00:00:00.000Z",
+          sourceVersion: "test",
+          parserVersion: "test",
+          license: "test",
+          category: "sourced",
+          notes: "test fixture",
+        },
+      },
+      trainerLevel: 80,
       trainerClass: "grunt",
     });
 
-    expect(stats.cp).toBe(4750);
-    expect(stats.hp).toBe(154);
-    expect(stats.attack).toBeCloseTo(445.653, 3);
-    expect(stats.defense).toBeCloseTo(73.763, 3);
+    expect(getRocketCpm(80)).toBeCloseTo(1.315000057220459, 16);
+    expect(stats.attackIv).toBe(166);
+    expect(stats.attack).toBeCloseTo(497.0700216293335, 12);
+    expect(stats.defense).toBeCloseTo(191.990008354187, 12);
+    expect(stats.stamina).toBeCloseTo(174.89500761032104, 12);
+    expect(stats.hp).toBe(174);
+    expect(stats.cp).toBe(9108);
   });
 
   it("applies higher rank multipliers for Leaders and Giovanni", () => {

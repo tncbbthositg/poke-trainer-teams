@@ -12,6 +12,7 @@ import type { RocketLineup } from "../../data/schemas/rocket";
 import type { PokemonBuild } from "../pokemon/types";
 import { calculateEffectiveStats } from "../stats/effectiveStats";
 import { stabMultiplier, typeEffectiveness } from "../types/effectiveness";
+import { calculateTrainerBattleDamage } from "./damage";
 import { calculateRocketEffectiveStats } from "./rocketStats";
 import type { BattleResult, BattleStrategy } from "./types";
 
@@ -562,6 +563,7 @@ export function simulateRocketLineupExperimental({
   let activeHp = calculateEffectiveStats(
     activeBuild.species,
     activeBuild.level,
+    activeBuild.ivs,
   ).hp;
   let activeMaxHp = activeHp;
   let playerAttackStage = 0;
@@ -718,6 +720,7 @@ export function simulateRocketLineupExperimental({
             {
               attackerAttackStage: opponentAttackStage,
               defenderDefenseStage: playerDefenseStage,
+              shielded: remainingPlayerShields > 0,
             },
           )
         : undefined;
@@ -732,6 +735,7 @@ export function simulateRocketLineupExperimental({
       if (playerShielded) {
         remainingPlayerShields -= 1;
         playerShieldsUsed += 1;
+        activeHp = clampHp(activeHp - 1);
       } else {
         activeHp = clampHp(
           activeHp -
@@ -802,12 +806,14 @@ export function simulateRocketLineupExperimental({
         {
           attackerAttackStage: playerAttackStage,
           defenderDefenseStage: opponentDefenseStage,
+          shielded: config.remainingShields > 0,
         },
       );
 
       if (config.remainingShields > 0) {
         config.remainingShields -= 1;
         shieldsUsed += 1;
+        opponentHp = clampHp(opponentHp - playerChargedDetails.totalDamage);
         events.push({
           turn,
           wallClockSeconds: wallClockSeconds(),
@@ -923,6 +929,7 @@ export function simulateRocketLineupExperimental({
     activeHp = calculateEffectiveStats(
       activeBuild.species,
       activeBuild.level,
+      activeBuild.ivs,
     ).hp;
     activeMaxHp = activeHp;
     energy = 0;
@@ -1163,6 +1170,7 @@ function experimentalRocketConfig(
         "trainer_battle_damage_multiplier",
         FALLBACK_TRAINER_BATTLE_DAMAGE_MULTIPLIER,
       ),
+      aiChargedAttackQuality: value("rocket_ai_charged_attack_quality", 1),
       usesFallbackStats: !stats,
       usesFallbackFastDamage: fastMoves.length === 0,
       usesFallbackChargedDamage: chargedMoves.length === 0,
@@ -1228,6 +1236,7 @@ function experimentalRocketConfig(
       ),
       mechanicSummary("charged_attack_registration_turns", 0.5),
       mechanicSummary("rocket_opponent_charged_attack_interval", 18),
+      mechanicSummary("rocket_ai_charged_attack_quality", 1),
       mechanicSummary("rocket_pause_after_charged_attack", 0),
       mechanicSummary("rocket_pause_after_player_switch", 4),
       mechanicSummary("player_shields", 2),
@@ -1286,35 +1295,44 @@ function playerMoveDamageDetails(
   stages: {
     attackerAttackStage: number;
     defenderDefenseStage: number;
+    shielded?: boolean;
   } = { attackerAttackStage: 0, defenderDefenseStage: 0 },
 ) {
-  const attackerAttack =
-    calculateEffectiveStats(build.species, build.level).attack *
-    stageMultiplier(stages.attackerAttackStage);
-  const defenderDefense =
-    (opponent.stats?.defense ?? attackerAttack) *
-    stageMultiplier(stages.defenderDefenseStage);
+  const attackerAttack = calculateEffectiveStats(
+    build.species,
+    build.level,
+    build.ivs,
+  ).attack;
+  const defenderDefense = opponent.stats?.defense ?? attackerAttack;
   const stab = stabMultiplier(move.type, build.species.types);
   const type = typeEffectiveness(move.type, opponent.types);
-  const baseDamage =
-    Math.floor(
-      0.5 *
-        move.power *
-        (attackerAttack / defenderDefense) *
-        opponent.damageMultiplier,
-    ) + 1;
+  const damageMultiplier =
+    opponent.damageMultiplier / FALLBACK_TRAINER_BATTLE_DAMAGE_MULTIPLIER;
+  const baseDamage = calculateTrainerBattleDamage({
+    movePower: move.power,
+    attackerAttack,
+    defenderDefense,
+    attackerIsShadow: build.shadow,
+    defenderIsShadow: true,
+    attackStage: stages.attackerAttackStage,
+    defenseStage: stages.defenderDefenseStage,
+    otherApplicableModifiers: damageMultiplier,
+    shielded: stages.shielded,
+  });
   const afterStab = baseDamage * stab;
-  const totalDamage = Math.max(
-    1,
-    Math.floor(
-      0.5 *
-        move.power *
-        (attackerAttack / defenderDefense) *
-        opponent.damageMultiplier *
-        stab *
-        type,
-    ) + 1,
-  );
+  const totalDamage = calculateTrainerBattleDamage({
+    movePower: move.power,
+    attackerAttack,
+    defenderDefense,
+    attackerIsShadow: build.shadow,
+    defenderIsShadow: true,
+    stab,
+    effectiveness: type,
+    attackStage: stages.attackerAttackStage,
+    defenseStage: stages.defenderDefenseStage,
+    otherApplicableModifiers: damageMultiplier,
+    shielded: stages.shielded,
+  });
 
   return {
     name: move.name,
@@ -1334,35 +1352,49 @@ function opponentMoveDamageDetails(
   stages: {
     attackerAttackStage: number;
     defenderDefenseStage: number;
+    shielded?: boolean;
   } = { attackerAttackStage: 0, defenderDefenseStage: 0 },
 ) {
-  const attackerAttack =
-    (opponent.stats?.attack ?? defender.level) *
-    stageMultiplier(stages.attackerAttackStage);
-  const defenderDefense =
-    calculateEffectiveStats(defender.species, defender.level).defense *
-    stageMultiplier(stages.defenderDefenseStage);
+  const attackerAttack = opponent.stats?.attack ?? defender.level;
+  const defenderDefense = calculateEffectiveStats(
+    defender.species,
+    defender.level,
+    defender.ivs,
+  ).defense;
   const stab = stabMultiplier(move.type, opponent.types);
   const type = typeEffectiveness(move.type, defender.species.types);
-  const baseDamage =
-    Math.floor(
-      0.5 *
-        move.power *
-        (attackerAttack / defenderDefense) *
-        opponent.damageMultiplier,
-    ) + 1;
+  const chargedAttackQuality = isChargedMove(move)
+    ? opponent.aiChargedAttackQuality
+    : 1;
+  const damageMultiplier =
+    opponent.damageMultiplier / FALLBACK_TRAINER_BATTLE_DAMAGE_MULTIPLIER;
+  const baseDamage = calculateTrainerBattleDamage({
+    movePower: move.power,
+    attackerAttack,
+    defenderDefense,
+    attackerIsShadow: true,
+    defenderIsShadow: defender.shadow,
+    attackStage: stages.attackerAttackStage,
+    defenseStage: stages.defenderDefenseStage,
+    chargedAttackQuality,
+    otherApplicableModifiers: damageMultiplier,
+    shielded: stages.shielded,
+  });
   const afterStab = baseDamage * stab;
-  const totalDamage = Math.max(
-    1,
-    Math.floor(
-      0.5 *
-        move.power *
-        (attackerAttack / defenderDefense) *
-        opponent.damageMultiplier *
-        stab *
-        type,
-    ) + 1,
-  );
+  const totalDamage = calculateTrainerBattleDamage({
+    movePower: move.power,
+    attackerAttack,
+    defenderDefense,
+    attackerIsShadow: true,
+    defenderIsShadow: defender.shadow,
+    stab,
+    effectiveness: type,
+    attackStage: stages.attackerAttackStage,
+    defenseStage: stages.defenderDefenseStage,
+    chargedAttackQuality,
+    otherApplicableModifiers: damageMultiplier,
+    shielded: stages.shielded,
+  });
 
   return {
     name: move.name,
@@ -1390,7 +1422,6 @@ function clampStage(stage: number) {
   return Math.max(-4, Math.min(4, stage));
 }
 
-function stageMultiplier(stage: number) {
-  const clamped = clampStage(stage);
-  return clamped >= 0 ? (4 + clamped) / 4 : 4 / (4 - clamped);
+function isChargedMove(move: FastMove | ChargedMove): move is ChargedMove {
+  return "energyCost" in move;
 }

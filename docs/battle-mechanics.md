@@ -28,9 +28,10 @@ Known calculations:
   shields, chooses low-energy knockout moves when several are available, and
   lets non-ASAP strategies wait for a stronger charged move when the current
   available move is not the best pressure option.
-- Rocket opponent Attack, Defense, Stamina, HP, and CP use the Pokebattler 2021
-  Rocket CP formula, including Rocket attack IV, Defense IV 15, Stamina IV 9,
-  trainer-level rCPM values, and Grunt/Leader/Giovanni rank multipliers.
+- Rocket opponent Attack, Defense, Stamina, HP, and CP use the August 2026
+  formula in `docs/team-go-rocket-math.md`, including synthetic Rocket IVs,
+  Trainer Level 8 through 80 rCPM values converted with `Math.fround()`, and
+  Grunt/Leader/Giovanni rank multipliers.
 - NPC Pokemon are modeled as sent in order and never switched until fainting.
 - Team GO Rocket Grunts use zero shields. Leaders and Giovanni use two shields
   against the player's first two Charged Attacks.
@@ -64,5 +65,6 @@ References:
   Trainer Battle damage rules.
 - Bulbapedia Team GO Rocket / Grunt pages: Team GO Rocket shield behavior and
   same-order Grunt send-ins.
-- Pokebattler, "Cracking the Rocket CP Formula - 2021 edition": Rocket stat,
-  rCPM, and rank multiplier formulas.
+- The Silph Road March 2023 Rocket stat research and August 2026 level-80 rCPM
+  research, plus current Game Master move data as listed in
+  `docs/team-go-rocket-math.md`.

@@ -64,11 +64,18 @@ export function Methodology({ data }: { data: ApplicationData }) {
             one charged move costing 45 energy or less.
           </p>
           <p>
-            Focus rankings are experimental heuristics. Practical spam starts
-            from charged-pause-control scoring, then downweights legendary,
-            mythical, Ultra Beast, and high-value raid attacker overlap while
-            slightly upweighting starter candidates to reflect candy competition
-            and build accessibility.
+            Focus rankings are experimental. Charged pause control and
+            practical spam sort by boss proxy clear coverage first, using the
+            checked-in Giovanni, Arlo, Cliff, and Sierra lineups. Their
+            tie-breaker heuristic emphasizes first and repeat charged-attack
+            timing, fast-move cadence for Rocket pause control, cheap
+            charged-move count, and bulk reliability more than raw fast-move
+            damage. Ties prefer candidates with more 4/4 boss pair options
+            before falling back to total pair clears, clear time, and focus
+            score. Practical spam also downweights legendary, mythical, Ultra
+            Beast, and high-value raid attacker overlap while slightly
+            upweighting starter candidates to reflect candy competition and
+            build accessibility.
           </p>
           <p>
             Pair Builder uses an experimental Rocket estimate. Rocket stats,

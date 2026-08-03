@@ -322,10 +322,17 @@ function distinctMovesetIds(
         const repeatChargeTurns = Math.min(...analytics.timings.map((timing) => timing.repeatTurns))
         const neutralOutputPerTurn =
           Math.max(...analytics.neutralOutput.map((output) => output.totalPower)) / 100
+        const fastMoveCadence = 100 / fastMove.turns
         const score =
           strategy === 'fastest-victory'
-            ? neutralOutputPerTurn * 100 + analytics.fast.damagePerTurn * 16 + 100 / firstChargeTurns
-            : 100 / firstChargeTurns + 100 / repeatChargeTurns + analytics.cheapChargedMoveCount * 20
+            ? neutralOutputPerTurn * 100 +
+              analytics.fast.damagePerTurn * 8 +
+              fastMoveCadence * 2 +
+              100 / firstChargeTurns
+            : 100 / firstChargeTurns +
+              (100 / repeatChargeTurns) * 1.3 +
+              fastMoveCadence * 1.5 +
+              analytics.cheapChargedMoveCount * 24
         alternatives.push({ ids, score })
       }
     }

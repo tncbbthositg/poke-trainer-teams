@@ -265,7 +265,7 @@ describe("battle engine interface scaffold", () => {
       (event) => event.actor === "player" && event.kind === "fast-resolve",
     );
 
-    expect(firstFastResolve?.message).toContain("Teddiursa HP is 105");
+    expect(firstFastResolve?.message).toContain("Teddiursa HP is 103");
   });
 
   it("prefers matchup-effective charged damage over cheaper spam after shields are gone", () => {

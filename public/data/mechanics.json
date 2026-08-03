@@ -60,36 +60,20 @@
       "note": "Trainer Battles apply a 30% attack damage boost."
     },
     {
-      "key": "rocket_packet_capture_cpm",
-      "label": "Rocket packet-capture CP multiplier",
-      "value": 0.85374104,
-      "unit": "multiplier",
+      "key": "rocket_cpm_level_min",
+      "label": "Rocket CPM minimum trainer level",
+      "value": 8,
+      "unit": "level",
       "category": "sourced",
-      "note": "Pokebattler Rocket CP research reports this multiplier from packet-capture examples and applies it to the Rocket difficulty multiplier table."
+      "note": "Rocket CPM values are stored as decimal configuration values for Trainer Levels 8 through 80 and converted with Math.fround before stat calculations."
     },
     {
-      "key": "rocket_attack_stat_multiplier",
-      "label": "Rocket attack stat multiplier",
-      "value": 2,
-      "unit": "multiplier",
+      "key": "rocket_cpm_level_max",
+      "label": "Rocket CPM maximum trainer level",
+      "value": 80,
+      "unit": "level",
       "category": "sourced",
-      "note": "Rocket Shadow Pokemon attack uses 2 * (base attack + Rocket attack IV) * rCPM * rank multiplier."
-    },
-    {
-      "key": "rocket_defense_stat_multiplier",
-      "label": "Rocket defense stat multiplier",
-      "value": 0.8,
-      "unit": "multiplier",
-      "category": "sourced",
-      "note": "Rocket Shadow Pokemon defense uses 0.8 * (base defense + 15) * rCPM * rank multiplier."
-    },
-    {
-      "key": "rocket_stamina_stat_multiplier",
-      "label": "Rocket stamina stat multiplier",
-      "value": 1.1,
-      "unit": "multiplier",
-      "category": "sourced",
-      "note": "Rocket Shadow Pokemon stamina uses 1.1 * (base stamina + 9) * rCPM * rank multiplier, with battle HP rounded down."
+      "note": "The current level-80 Rocket CPM table replaces the old pre-level-80 assumption that Trainer Level 50 used approximately 1.31502."
     },
     {
       "key": "rocket_grunt_rank_multiplier",
@@ -122,6 +106,14 @@
       "unit": "turns",
       "category": "configurable-assumption",
       "note": "Fallback cadence used only when a Rocket opponent has no sourced charged move. Sourced Rocket moves now use fast-move energy gain and charged-move costs."
+    },
+    {
+      "key": "rocket_ai_charged_attack_quality",
+      "label": "Rocket AI Charged Attack quality",
+      "value": 1,
+      "unit": "multiplier",
+      "category": "configurable-assumption",
+      "note": "Fully charged player Charged Attacks use 1.0. Rocket AI Charged Attack quality is configurable because historical estimates around 0.5625 have not been sufficiently revalidated after the 2026 battle-engine rewrite."
     },
     {
       "key": "rocket_opponent_charged_attack_damage",
